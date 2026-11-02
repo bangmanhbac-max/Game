@@ -1,0 +1,21 @@
+=== TÀI LIỆU SCAN TẠP NHAM & NHIỄU OCR (BẢN TEST VLM) ===
+Trang 18/95 - Giáo trình tổng hợp 2026 - [Watermark: AI EduPlay Studio]
+Mã lớp: HSK-ENG-AI-999 || Thời gian quét: 2026-10-13
+
+--- PHẦN 1: TỪ VỰNG TIẾNG TRUNG DÍNH CHÙM KHÔNG KHOẢNG TRẮNG ---
+1.你好(nǐhǎo):Xinchào-Lờichàohỏicơbảnhàngngày.
+2.谢谢(xièxie):Cảmơn-Biếtơnkhiđượcngườikhácgiúpđỡ.
+3.不客气(búkèqi):Đừngkháchsáo-Khôngcóchi-Đápnhẹnhàng.
+4.对不起(duìbuqǐ):Xinlỗi-Thànhthậtkhibảnthânmắclỗi.
+5.没关系(méiguānxi):Khôngsaocả-Đápkhingườikhácxinlỗi.
+6.再见(zàijiàn):Tạmbiệt-Hẹngặplạilầnsau.
+7.老师(lǎoshī):Thầycôgiáo-Ngườitruyềnthụtrivàkiếnthức.
+8.电脑(diànnǎo):Máyvitính-Thiếtbịcôngnghệthôngminh.
+9.手机(shǒujī):Điệnthoạidiđộng-Phươngtiệnliênlạctiệndụng.
+10.开心(kāixīn):Vuivẻ-Tâmtrạnghạnhphúcyêuđời.
+
+--- PHẦN 2: THUẬT NGỮ CÔNG NGHỆ & AI DÍNH CHỮ ---
+Algorithm(/ˈæl.ɡə.rɪ.ðəm/):Thuậttoángiảiquyếtbàitoán
+Database(/ˈdeɪ.tə.beɪs/):Cơsởdữliệulưutrữhệthống
+Framework(/ˈfreɪm.wɜːk/):Khungphầnmềmxâydựngứngdụng
+Neural(/ˈnjʊə.rəl/):Thuộcvềnơronnhântạo

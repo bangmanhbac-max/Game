@@ -1,0 +1,12 @@
+LESSON: ARTIFICIAL INTELLIGENCE & COMPUTER SCIENCE ESSENTIALS
+
+1. Algorithm (/ˈæl.ɡə.rɪ.ðəm/) : Thuật toán - Tập hợp các chỉ dẫn từng bước để giải quyết một bài toán.
+2. Database (/ˈdeɪ.tə.beɪs/) : Cơ sở dữ liệu - Hệ thống lưu trữ và quản lý dữ liệu có cấu trúc.
+3. Neural (/ˈnjʊə.rəl/) : Thuộc về nơ-ron - Mạng nơ-ron nhân tạo mô phỏng não bộ người.
+4. Framework (/ˈfreɪm.wɜːk/) : Khung phần mềm - Nền tảng xây dựng và phát triển ứng dụng.
+5. Compiler (/kəmˈpaɪ.lər/) : Trình biên dịch - Chương trình dịch mã nguồn thành mã máy thực thi.
+6. Vector (/ˈvek.tər/) : Véc-tơ toán học - Mảng số nhiều chiều dùng trong Machine Learning.
+7. Quantum (/ˈkwɒn.təm/) : Lượng tử - Điện toán lượng tử thế hệ mới.
+8. Cyber (/ˈsaɪ.bər/) : Không gian mạng - Liên quan đến an ninh mạng và máy tính.
+9. Matrix (/ˈmeɪ.trɪks/) : Ma trận - Bảng số hai chiều dùng trong tính toán đồ họa và AI.
+10. Robot (/ˈrəʊ.bɒt/) : Người máy - Cỗ máy tự động hóa thông minh.
