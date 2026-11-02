@@ -1,5 +1,5 @@
 # Xem tài liệu giải thích chi tiết toàn bộ cấu trúc và mã nguồn tại:
-👉 [PROJECT_STRUCTURE_AND_CODE_GUIDE.md](file:///m:/Game/PROJECT_STRUCTURE_AND_CODE_GUIDE.md)
+👉 [PROJECT_STRUCTURE_AND_CODE_GUIDE.md](./PROJECT_STRUCTURE_AND_CODE_GUIDE.md)
 
 Tài liệu bao gồm:
 1. Sơ đồ kiến trúc & Luồng dữ liệu (Data Pipeline).
