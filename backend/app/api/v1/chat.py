@@ -93,7 +93,17 @@ def post_chat_message(
 
         if api_key:
             # Phương án A: Thử dùng Google Generative AI SDK với các model đời mới nhất
-            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-flash-latest", "gemini-2.5-flash"]
+            candidate_models = [
+                "gemini-2.5-flash",
+                "gemini-2.0-flash",
+                "gemini-1.5-flash",
+                "gemini-1.5-pro",
+                "gemini-3.8-flash",
+                "gemini-3.5-flash",
+                "gemini-3.1-flash-lite",
+                "gemini-3-flash-preview",
+                "gemini-flash-latest",
+            ]
             for model_name in candidate_models:
                 try:
                     import google.generativeai as genai
@@ -117,7 +127,7 @@ def post_chat_message(
 
             # Phương án B: Nếu SDK lỗi, thử gọi trực tiếp REST API qua urllib với gemini-3.8-flash
             if not reply_text:
-                for rest_model in ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]:
+                for rest_model in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]:
                     try:
                         import json
                         import urllib.request

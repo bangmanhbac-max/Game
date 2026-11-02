@@ -80,7 +80,7 @@ class VLMEngine:
         self.api_key = api_key or settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY", "")
 
     def _create_gemini_model(self, genai, generation_config=None):
-        for m_name in ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"]:
+        for m_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"]:
             try:
                 kwargs = {}
                 if generation_config:
@@ -88,7 +88,7 @@ class VLMEngine:
                 return genai.GenerativeModel(model_name=m_name, **kwargs)
             except Exception:
                 continue
-        return genai.GenerativeModel(model_name="gemini-3.8-flash", generation_config=generation_config)
+        return genai.GenerativeModel(model_name="gemini-2.0-flash", generation_config=generation_config)
 
     def process_file(
         self, 

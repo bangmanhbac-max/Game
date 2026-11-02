@@ -151,7 +151,7 @@ export const AICopilotChatWidget: React.FC = () => {
       if (currentKey) {
         try {
           const directRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${currentKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${currentKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },

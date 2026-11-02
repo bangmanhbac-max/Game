@@ -22,7 +22,16 @@ class GeminiClient:
 
         import google.generativeai as genai
         response = None
-        for m_name in ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"]:
+        for m_name in [
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-3.8-flash",
+            "gemini-3.5-flash",
+            "gemini-3.1-flash-lite",
+            "gemini-flash-latest"
+        ]:
             try:
                 model = genai.GenerativeModel(
                     model_name=m_name,
