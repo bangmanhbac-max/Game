@@ -13,6 +13,10 @@ backend/.env
 *.db
 *.sqlite3
 
+# Submodules / Nested clones
+VLM_Game/
+Game/
+
 # Logs
 *.log
 npm-debug.log*
