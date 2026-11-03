@@ -15,7 +15,7 @@
 
 > **EduPlay** là nền tảng giáo dục tương tác thế hệ mới, ứng dụng **Trí tuệ Nhân tạo Đa phương thức (Multimodal VLM)** và **Đồ họa 3D thời gian thực**. Hệ thống tự động phân tích mọi loại tài liệu học tập thô (sách giáo trình PDF, file Word DOCX, văn bản TXT, hình ảnh chụp bài giảng) để biến thành các **đấu trường trò chơi sinh động**, giúp nâng cao 300% khả năng ghi nhớ và tạo cảm hứng học tập bất tận.
 
-[🌐 Trải Nghiệm Web Trực Tiếp](#-triển-khai-lên-web-deployment) • [✨ 5 Chế Độ Game](#-5-chế-độ-trò-chơi-độc-quyền) • [🏗️ Kiến Trúc Hệ Thống](#-kiến-trúc-hệ-thống) • [🚀 Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy-nhanh) • [📚 Tài Liệu API](#-tài-liệu-api-endpoints)
+[🌐 Trải Nghiệm Web Trực Tiếp](#-triển-khai-lên-web-deployment) • [✨ 5 Chế Độ Game](#-5-chế-độ-trò-chơi-độc-quyền) • [🏗️ Kiến Trúc Hệ Thống](#-kiến-trúc-và-thiết-kế-hệ-thống) • [🚀 Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy-nhanh) • [📚 Tài Liệu API](#-tài-liệu-api-endpoints)
 
 ---
 
@@ -25,12 +25,12 @@
 1. [Giới thiệu Dự án](#-giới-thiệu-dự-án)
 2. [5 Chế độ Trò chơi Độc quyền](#-5-chế-độ-trò-chơi-độc-quyền)
 3. [Lõi Xử lý AI Đa Phương Thức (VLM Engine)](#-lõi-xử-lý-ai-đa-phương-thức-vlm-engine)
-4. [Kiến Trúc Hệ Thống Chuyên Sâu (System Architecture)](#-kiến-trúc-hệ-thống)
-   - 4.1. [Xác định rõ loại kiến trúc hệ thống đang sử dụng](#41-xác-định-rõ-loại-kiến-trúc-hệ-thống-đang-sử-dụng)
-   - 4.2. [Trả lời câu hỏi cốt lõi: Service trong Microservice hay Component trong Kiến trúc Layer?](#42-trả-lời-câu-hỏi-cốt-lõi-service-trong-microservice-hay-component-trong-kiến-trúc-layer)
-   - 4.3. [Mô tả đầy đủ tất cả các Components của Giao diện (Frontend Components)](#43-mô-tả-đầy-đủ-tất-cả-các-components-của-giao-diện-frontend-components)
-   - 4.4. [Mô tả đầy đủ tất cả các Services trong Backend](#44-mô-tả-đầy-đủ-tất-cả-các-services-trong-backend)
-   - 4.5. [Bảng so sánh chuyên sâu 8 tiêu chí: Service (Microservices) vs Component (Layered)](#45-bảng-so-sánh-chuyên-sâu-8-tiêu-chí-service-microservices-vs-component-layered)
+4. [Kiến Trúc và Thiết Kế Hệ Thống (System Architecture)](#-kiến-trúc-và-thiết-kế-hệ-thống)
+   - 4.1. [Mô hình Kiến trúc Tổng thể: 3-Tier Decoupled Architecture](#41-mô-hình-kiến-trúc-tổng-thể-3-tier-decoupled-architecture)
+   - 4.2. [Định vị Thiết kế: Kiến trúc Phân tầng (Layered) vs Microservices](#42-định-vị-thiết-kế-kiến-trúc-phân-tầng-layered-vs-microservices)
+   - 4.3. [Đặc tả Toàn diện Tầng Giao diện (Frontend Component Architecture)](#43-đặc-tả-toàn-diện-tầng-giao-diện-frontend-component-architecture)
+   - 4.4. [Đặc tả Tầng Dịch vụ Xử lý Nghiệp vụ Backend (Backend Service Architecture)](#44-đặc-tả-tầng-dịch-vụ-xử-lý-nghiệp-vụ-backend-backend-service-architecture)
+   - 4.5. [Bảng Ma trận Đối chiếu Kỹ thuật: Layered Components vs Distributed Microservices](#45-bảng-ma-trận-đối-chiếu-kỹ-thuật-layered-components-vs-distributed-microservices)
 5. [Công Nghệ Sử Dụng (Tech Stack)](#-công-nghệ-sử-dụng-tech-stack)
 6. [Cấu Trúc Thư Mục Chuẩn Hóa](#-cấu-trúc-thư-mục-chuẩn-hóa)
 7. [Cài Đặt & Khởi Chạy Nhanh](#-cài-đặt--khởi-chạy-nhanh)
@@ -79,21 +79,15 @@ flowchart LR
 
 ---
 
-## 🏗️ KIẾN TRÚC HỆ THỐNG
+## 🏗️ KIẾN TRÚC VÀ THIẾT KẾ HỆ THỐNG
 
-### 4.1. Xác định rõ loại kiến trúc hệ thống đang sử dụng
+### 4.1. Mô hình Kiến trúc Tổng thể: 3-Tier Decoupled Architecture
 
-Hệ thống **EduPlay** được xây dựng dựa trên sự kết hợp của 2 mô hình kiến trúc chuẩn trong kỹ nghệ phần mềm:
+Hệ thống **EduPlay** được thiết kế dựa trên nguyên lý **Phân tách Trách nhiệm (Separation of Concerns)** theo mô hình **Kiến trúc Phân tầng 3 Tầng Hiện Đại (Modern 3-Tier Decoupled Layered Architecture)**:
 
-1. **Kiến trúc Tổng thể Toàn hệ thống: Mô hình Khách - Chủ 3 tầng tách rời (Decoupled Client-Server / Modern 3-Tier Layered Architecture)**:
-   - **Tầng 1 - Presentation Tier (Tầng trình diễn / Frontend)**: Single Page Application (SPA) viết bằng **React 18 + TypeScript + Vite**, kết xuất toàn bộ giao diện và đồ họa thời gian thực trực tiếp trên trình duyệt máy khách (Client Browser).
-   - **Tầng 2 - Application / Logic Tier (Tầng ứng dụng & nghiệp vụ / Backend)**: RESTful API Server độc lập xây dựng bằng **FastAPI (Python)**, chịu trách nhiệm xử lý nghiệp vụ, bóc tách tài liệu, bảo mật JWT và điều phối mô hình AI.
-   - **Tầng 3 - Data & External Services Tier (Tầng dữ liệu và Dịch vụ đám mây)**:
-     - Cơ sở dữ liệu quan hệ **SQLite** (`eduplay.db` qua SQLAlchemy ORM) và bộ nhớ Web Storage dự phòng.
-     - Dịch vụ AI đám mây: **Google Gemini Flash 2.0 API** (Vision-Language Model).
-
-2. **Kiến trúc Nội bộ Backend: Khối module hóa (Modular Monolith)**:
-   - Toàn bộ các module chức năng (*Auth, Upload, Generate, Games, Chat, Admin*) được tổ chức thành các gói module (components) độc lập nhưng **chạy chung trong một tiến trình thực thi duy nhất (Single Runtime Process)** của máy chủ FastAPI, chia sẻ chung một cơ sở dữ liệu `eduplay.db`.
+- **Tầng Trình Diễn (Presentation Tier - Client)**: Xây dựng độc lập dưới dạng Single Page Application (SPA) bằng **React 18**, **TypeScript** và **Vite**. Tầng này chịu trách nhiệm hiển thị giao diện, tiếp nhận tương tác người dùng, quản lý hoạt ảnh và render đồ họa thời gian thực (Three.js 3D và Canvas 2D).
+- **Tầng Nghiệp Vụ (Application / Logic Tier - Server)**: Được đóng gói dưới dạng RESTful API Server bằng **FastAPI (Python)**, vận hành trên nền tảng máy chủ bất đồng bộ Uvicorn ASGI Server. Tầng này chịu trách nhiệm điều phối toàn bộ nghiệp vụ (Business Logic): xác thực bảo mật JWT, xử lý pipeline trích xuất tài liệu, tích hợp trí tuệ nhân tạo và tính toán kết quả xếp hạng.
+- **Tầng Dữ Liệu & Dịch Vụ Đám Mây (Data & Cloud Service Tier)**: Quản lý tính bền vững của dữ liệu thông qua cơ sở dữ liệu quan hệ **SQLite** (sử dụng SQLAlchemy ORM) kết hợp cơ chế Web Database Storage dự phòng trên trình duyệt; đồng thời tích hợp dịch vụ trí tuệ nhân tạo ngoại vi **Google Gemini Flash 2.0 API**.
 
 ```mermaid
 flowchart TD
@@ -123,29 +117,48 @@ flowchart TD
 
 ---
 
-### 4.2. Trả lời câu hỏi cốt lõi: Service trong Microservice hay Component trong Kiến trúc Layer?
+### 4.2. Định vị Thiết kế: Kiến trúc Phân tầng (Layered) vs Microservices
 
-> [!IMPORTANT]
-> ### 🎯 KẾT LUẬN KIẾN TRÚC XÁC ĐÁNG:
-> **Kiến trúc hệ thống đang sử dụng là COMPONENT TRONG KIẾN TRÚC PHÂN TẦNG (Layered Architecture), HOÀN TOÀN KHÔNG PHẢI là Service trong kiến trúc Microservices!**
+Về mặt bản chất kỹ thuật phần mềm, hệ thống EduPlay được thiết kế và triển khai theo mô hình **Kiến trúc Phân tầng dựa trên Thành phần (Component-based Layered Architecture / Modular Monolith)**, hoàn toàn khác biệt với mô hình Dịch vụ Siêu nhỏ phân tán (Distributed Microservices).
 
-#### 4 lý do kỹ thuật chứng minh rõ ràng:
-1. **Cùng một tiến trình thực thi (In-Process Runtime)**:
-   - Toàn bộ Backend chạy trong **cùng một tiến trình máy chủ Python duy nhất** (`uvicorn app.main:app`). 
-   - Các phần xử lý như Auth, Parser, AI Generator, Games, Decks không hề chạy trên các tiến trình/container mạng riêng rẽ, mà cùng chia sẻ chung tài nguyên CPU và bộ nhớ RAM của tiến trình đó.
-2. **Cơ chế giao tiếp nội bộ qua Lời gọi hàm (In-Memory Method Calls)**:
-   - Khi một API Router gọi đến bộ Parser hoặc AI Generator, chúng gọi nhau thông qua **lời gọi hàm trực tiếp trong bộ nhớ (In-memory Python function/class calls)** với tốc độ nano-giây.
-   - Chúng **hoàn toàn không** giao tiếp qua giao thức mạng (Network HTTP, gRPC, hay Message Broker) như nguyên lý bắt buộc của Microservices.
-3. **Cơ sở dữ liệu tập trung dùng chung (Shared Database)**:
-   - Toàn bộ các module trong Backend cùng đọc và ghi vào **một file cơ sở dữ liệu SQLite duy nhất** (`eduplay.db`). Điều này trái ngược hoàn toàn với nguyên tắc bất biến của Microservices là **Database-per-Service** (mỗi microservice sở hữu một DB riêng biệt).
-4. **Phân tầng hướng giao diện (Frontend Layered Structure)**:
-   - Phía Frontend tuân theo cấu trúc phân tầng nghiêm ngặt: `Presentation Layer (React UI Components)` ➔ `State Management Layer (AuthContext, Game Hooks)` ➔ `Data Access Layer (API Client)` ➔ Mạng HTTP.
+Thiết kế kiến trúc này được định hình bởi 4 đặc tính công nghệ cốt lõi:
+
+1. **Môi trường thực thi đơn tiến trình (In-Process Monolithic Runtime)**:
+   Toàn bộ máy chủ Backend vận hành trong **cùng một tiến trình máy chủ duy nhất** (`uvicorn app.main:app`). Toàn bộ các module nghiệp vụ như Xác thực, Bóc tách tài liệu, Tạo sinh AI, Quản lý bài học và Bảng xếp hạng đều được tải vào chung một không gian địa chỉ bộ nhớ (RAM) và chia sẻ cùng tiến trình CPU, không bị phân tách thành các tiến trình/container độc lập qua mạng.
+2. **Cơ chế giao tiếp nội bộ qua Lời gọi hàm (In-Memory Function Calls)**:
+   Các thành phần trong Backend tương tác trực tiếp với nhau thông qua lời gọi hàm/phương thức nội bộ trong RAM (In-Memory Python class/function calls) với độ trễ cực thấp (nano-giây), không phát sinh chi phí truyền tải qua mạng (Network Latency) hay rủi ro đứt gãy kết nối mạng giữa các dịch vụ.
+3. **Mô hình Dữ liệu Tập trung Dùng chung (Centralized Shared Database)**:
+   Mọi thành phần nghiệp vụ của Backend đều kết nối và thao tác đồng nhất trên **một cơ sở dữ liệu quan hệ duy nhất** (`eduplay.db`), đảm bảo tính toàn vẹn giao dịch (ACID) mà không cần triển khai các mô hình quản lý phân tán phức tạp như Two-Phase Commit hay Saga Pattern của kiến trúc Microservices.
+4. **Cấu trúc Giao diện Hướng Thành phần (Component-Driven Frontend)**:
+   Phía Client được tổ chức theo cấu trúc phân tầng nghiêm ngặt: *Presentation Layer (React Components)* ➔ *State Management Layer (AuthContext, Game Hooks)* ➔ *Data Access Layer (API Client)* ➔ *Network Layer*.
+
+```mermaid
+flowchart TD
+    subgraph LAYERED_ARCH ["Kiến trúc Phân tầng EduPlay (Layered Component Architecture) - In-Process"]
+        subgraph P_LAYER ["Tầng Trình diễn (Presentation Layer)"]
+            C1["Component Giao diện (Navbar)"]
+            C2["Component Giao diện (ScoreHUD)"]
+        end
+        subgraph B_LAYER ["Tầng Nghiệp vụ (Business / Service Layer)"]
+            C3["Component Xử lý (PDFParser)"]
+            C4["Component Xử lý (GeminiClient)"]
+        end
+        C1 -. "Lời gọi hàm nội bộ RAM (In-memory Call)" .-> C3
+    end
+
+    subgraph MICROSERVICES_ARCH ["Kiến trúc Microservices Đối chứng - Out-of-Process"]
+        S1["Auth Service\n(Process/Port riêng, DB riêng)"]
+        S2["Game Service\n(Process/Port riêng, DB riêng)"]
+        S3["AI Service\n(Process/Port riêng, GPU riêng)"]
+        S1 <== "Giao thức Mạng (HTTP/REST, gRPC, Message Queue)" ==> S2
+    end
+```
 
 ---
 
-### 4.3. Mô tả đầy đủ tất cả các Components của Giao diện (Frontend Components)
+### 4.3. Đặc tả Toàn diện Tầng Giao diện (Frontend Component Architecture)
 
-Trong thư mục `frontend/src`, toàn bộ giao diện được cấu thành từ các **Components** tái sử dụng, phân chia theo 7 nhóm chức năng đầy đủ:
+Toàn bộ giao diện người dùng được module hóa thành các **Components** độc lập, có khả năng tái sử dụng cao, phân bố theo cây phân cấp thành phần (Component Hierarchy Tree):
 
 ```mermaid
 graph TD
@@ -207,94 +220,50 @@ graph TD
     App --> G7
 ```
 
-#### Chi tiết vai trò từng Component giao diện:
-1. **Khởi tạo & Ngữ cảnh Toàn cục**:
-   - `App.tsx`: Component gốc điều phối trạng thái Tab hiển thị, nạp bài học mặc định (HSK1 Tiếng Trung, Tiếng Anh CNTT) và lắng nghe sự kiện toàn cục.
-   - `AuthContext.tsx`: Cung cấp trạng thái xác thực (`user`, `token`, `login`, `register`, `logout`) trên toàn ứng dụng, tích hợp cơ chế tự động chuyển đổi sang LocalStorage DB khi chạy trên Vercel.
-2. **Điều hướng & Tiện ích Header**:
-   - `Navbar.tsx`: Thanh điều hướng phong cách Cyberpunk 4K, logo phát sáng, chuyển đổi nhanh giữa Dashboard, Studio và các Game, điều chỉnh âm lượng và mở các Modal chức năng.
-   - `UserProfileMenu.tsx`: Thả menu xem cấp bậc chiến binh, chọn lại Avatar Siêu Anh Hùng hoặc đăng xuất.
-3. **Hiệu ứng & Không gian Điện ảnh**:
-   - `AtmosphereController.tsx`: Tự động đồng bộ hóa nhạc nền và nhịp điệu ánh sáng của trang web.
-   - `VietnamStarCursor.tsx`: Tùy biến con trỏ chuột thành ngôi sao vàng cách điệu phát vệt sáng khi di chuyển.
-   - `DolphinCompanion.tsx`: Trợ thủ cá heo hoạt họa 3D bơi lội, cổ vũ tinh thần người học khi đạt combo cao.
-   - `SoundSynthesizer.ts`: Bộ tổng hợp âm thanh số sử dụng Web Audio API thuần, sinh tiếng đạn laser, tiếng nổ bóng bay, tiếng vỗ tay chiến thắng mà không cần tải file mp3 nặng.
-4. **Màn hình chính (Views)**:
-   - `DashboardView.tsx`: Banner điện ảnh 4K, thống kê tiến độ học tập, danh sách các gói bài học (Decks) và các nút bấm vào thẳng 5 chế độ chơi.
-   - `UploadStudioView.tsx`: Khu vực tải tài liệu hỗ trợ kéo thả file PDF, Word, Ảnh chụp OCR hoặc dán trực tiếp đoạn văn để AI trích xuất bài học.
-   - `ChickenShooterView.tsx`: Màn hình chứa GameLoop bắn tàu vũ trụ 60 FPS kết hợp bàn phím nhận diện gõ chữ.
-   - `MagicTouchView.tsx`: Màn hình chứa bảng vẽ Canvas 2D nhận dạng cử chỉ nét vẽ diệt quái.
-   - `QuizArenaView.tsx`: Màn hình thi đấu trắc nghiệm đếm ngược 10 giây với hiệu ứng combo bùng nổ.
-5. **Game 3D & Flashcard Độc lập**:
-   - `GrannyEscapeGame.tsx`: Render không gian ngục tối 3D thời gian thực bằng **Three.js** và `@react-three/fiber`, camera FPS góc nhìn thứ nhất, tương tác nhặt chìa khóa và giải câu đố từ vựng để mở cổng thoát hiểm.
-   - `FlashcardArena.tsx`: Thẻ học 3D lật mặt mượt mà, tích hợp Web Speech API phát âm chuẩn bản xứ, hỗ trợ ôn luyện ngắt quãng (Spaced Repetition).
-6. **Thành phần Game Dùng chung (Game-Shared)**:
-   - `ScoreHUD.tsx`: Hiển thị điểm số hiện tại, cấp độ nhân điểm (x1 -> x4), thời gian còn lại.
-   - `HealthBar.tsx`: Thanh máu sinh lực có hiệu ứng rung lắc (screen shake) khi nhận sát thương.
-   - `GameOverModal.tsx`: Hộp thoại tổng kết ván chơi hiển thị số từ đã thuộc, độ chính xác (%) và số sao vinh danh.
-7. **Hộp thoại Chức năng & Quản trị (Modals)**:
-   - `AuthModal.tsx`: Hộp thoại đăng nhập/đăng ký với 8 nhân vật Marvel, có sẵn nút *"Điền tài khoản mẫu (Tony Stark)"* để đăng nhập tức thì, hỗ trợ đăng nhập mạng xã hội.
-   - `LeaderboardModal.tsx`: Bảng vàng vinh danh xếp hạng thành tích người chơi toàn cầu.
-   - `AICopilotChatWidget.tsx`: Khung chat thu nhỏ luôn nổi ở góc màn hình, đóng vai trò gia sư AI giải đáp thắc mắc 24/7.
-   - `DeckEditor.tsx`: Cho phép người dùng chỉnh sửa từng câu hỏi, 4 đáp án A-B-C-D, lời giải thích trước khi lưu.
-   - `DocumentsManagerModal.tsx`: Quản lý, xem lại hoặc xóa các file tài liệu đã tải lên hệ thống.
-   - `WebDatabaseAdminModal.tsx`: Bảng quản trị viên xem trực tiếp các bảng dữ liệu trong SQLite, tìm kiếm và xóa bản ghi.
-   - `ApiKeyModal.tsx`, `WorldCommunityModal.tsx`, `ContactModal.tsx`: Các tiện ích cấu hình key Gemini cá nhân, kết bạn cộng đồng và gửi form liên hệ.
+#### Bảng danh mục đặc tả chi tiết các Components giao diện:
+
+| Phân Nhóm Component | Tên File / Module | Chức Năng Kỹ Thuật & Nghiệp Vụ |
+| :--- | :--- | :--- |
+| **Khởi tạo & Ngữ cảnh** | `App.tsx`<br>`AuthContext.tsx` | - `App.tsx`: Thành phần gốc điều phối trạng thái Tab hiển thị, nạp dữ liệu bài học toàn cục.<br>- `AuthContext.tsx`: Quản lý phiên làm việc, lưu trữ JWT Token và tự động kích hoạt Web Database Fallback khi chạy trên Vercel. |
+| **Điều hướng & Header** | `Navbar.tsx`<br>`UserProfileMenu.tsx` | - `Navbar.tsx`: Thanh điều hướng trung tâm phong cách Cyberpunk 4K, hỗ trợ chuyển Tab, chỉnh âm lượng và mở các Modal.<br>- `UserProfileMenu.tsx`: Menu thả xuống quản lý thông tin tài khoản, cấp bậc chiến binh và thay đổi Avatar Siêu Anh Hùng. |
+| **Hiệu ứng & Âm thanh** | `AtmosphereController.tsx`<br>`VietnamStarCursor.tsx`<br>`DolphinCompanion.tsx`<br>`SoundSynthesizer.ts` | - `AtmosphereController.tsx`: Đồng bộ hóa nhạc nền và nhịp điệu ánh sáng môi trường.<br>- `VietnamStarCursor.tsx`: Con trỏ chuột tùy biến hình ngôi sao vàng phát vệt sáng.<br>- `DolphinCompanion.tsx`: Trợ thủ cá heo 3D tương tác, khích lệ khi đạt chuỗi Combo.<br>- `SoundSynthesizer.ts`: Bộ tổng hợp âm thanh số bằng Web Audio API thuần, phát sinh âm thanh Laser, nổ bóng, tiếng vỗ tay mà không cần tải file mp3. |
+| **Màn hình chính (Views)** | `DashboardView.tsx`<br>`UploadStudioView.tsx`<br>`ChickenShooterView.tsx`<br>`MagicTouchView.tsx`<br>`QuizArenaView.tsx` | - `DashboardView.tsx`: Banner điện ảnh 4K, thống kê tiến độ học tập và cổng vào 5 chế độ chơi.<br>- `UploadStudioView.tsx`: Khu vực tải tài liệu PDF, DOCX, Ảnh chụp OCR hoặc dán văn bản để AI phân tích.<br>- `ChickenShooterView.tsx`: Màn hình chứa GameLoop bắn tàu vũ trụ 60 FPS kết hợp bàn phím gõ từ vựng.<br>- `MagicTouchView.tsx`: Màn hình chứa Canvas 2D nhận dạng cử chỉ nét vẽ diệt quái.<br>- `QuizArenaView.tsx`: Màn hình thi đấu trắc nghiệm đếm ngược 10 giây với hiệu ứng Combo bùng nổ. |
+| **Game 3D & Flashcard** | `GrannyEscapeGame.tsx`<br>`FlashcardArena.tsx` | - `GrannyEscapeGame.tsx`: Kết xuất không gian phòng giam 3D thời gian thực bằng **Three.js** và `@react-three/fiber`, camera FPS góc nhìn thứ nhất, giải câu đố từ vựng để mở cổng thoát hiểm.<br>- `FlashcardArena.tsx`: Thẻ học không gian 3D lật mặt mượt mà, tích hợp Text-to-Speech (TTS) phát âm chuẩn bản xứ, hỗ trợ lặp lại ngắt quãng (Spaced Repetition). |
+| **Thành phần Game dùng chung** | `ScoreHUD.tsx`<br>`HealthBar.tsx`<br>`GameOverModal.tsx` | - `ScoreHUD.tsx`: Hiển thị điểm số, cấp độ nhân điểm (x1 -> x4), thời gian còn lại.<br>- `HealthBar.tsx`: Thanh máu sinh lực có hiệu ứng rung lắc (screen shake) khi nhận sát thương.<br>- `GameOverModal.tsx`: Hộp thoại tổng kết ván chơi hiển thị số từ đã thuộc, độ chính xác (%) và số sao vinh danh. |
+| **Hộp thoại Chức năng & Quản trị** | `AuthModal.tsx`<br>`LeaderboardModal.tsx`<br>`AICopilotChatWidget.tsx`<br>`DeckEditor.tsx`<br>`DocumentsManagerModal.tsx`<br>`WebDatabaseAdminModal.tsx`<br>`ApiKeyModal.tsx`<br>`WorldCommunityModal.tsx`<br>`ContactModal.tsx` | - `AuthModal.tsx`: Đăng nhập/đăng ký với 8 nhân vật Marvel, nút *"Điền tài khoản mẫu (Tony Stark)"* 1-click, hỗ trợ OAuth.<br>- `LeaderboardModal.tsx`: Bảng vàng xếp hạng Top cao thủ toàn cầu.<br>- `AICopilotChatWidget.tsx`: Khung chat thu nhỏ nổi ở góc màn hình, gia sư AI giải đáp thắc mắc 24/7.<br>- `DeckEditor.tsx`: Cho phép chỉnh sửa câu hỏi, đáp án A-B-C-D và lời giải thích.<br>- `DocumentsManagerModal.tsx`: Quản lý danh sách các file tài liệu đã tải lên.<br>- `WebDatabaseAdminModal.tsx`: Giao diện Admin quản trị và truy vấn CSDL SQLite trực quan.<br>- `ApiKeyModal.tsx`, `WorldCommunityModal.tsx`, `ContactModal.tsx`: Cấu hình API key, kết bạn và liên hệ hỗ trợ. |
 
 ---
 
-### 4.4. Mô tả đầy đủ tất cả các Services trong Backend
+### 4.4. Đặc tả Tầng Dịch vụ Xử lý Nghiệp vụ Backend (Backend Service Architecture)
 
-Trong thư mục `backend/app`, logic nghiệp vụ được đóng gói thành các **Services** nội bộ chuyên biệt:
+Toàn bộ các quy trình xử lý dữ liệu và logic nghiệp vụ phía Backend được tổ chức thành các **Services** nội bộ chuyên trách, phân bố theo từng phân hệ chức năng:
 
-| Nhóm Dịch Vụ (Service Group) | File Mã Nguồn | Mô Tả Chức Năng Chi Tiết |
+| Nhóm Dịch Vụ Nghiệp Vụ | File Mã Nguồn | Chức Năng Kỹ Thuật Chi Tiết |
 | :--- | :--- | :--- |
-| **1. Parser Services**<br>*(Dịch vụ Trích xuất & Bóc tách Tài liệu)* | `base_parser.py`<br>`pdf_parser.py`<br>`docx_parser.py`<br>`txt_parser.py`<br>`image_parser.py` | - `base_parser`: Lớp trừu tượng định nghĩa hợp đồng phương thức `extract_text()`.<br>- `pdf_parser`: Dùng thư viện `pypdf` đọc hiểu cấu trúc phân trang của sách giáo trình PDF.<br>- `docx_parser`: Dùng `python-docx` bóc tách văn bản, bảng biểu trong tài liệu Word.<br>- `txt_parser`: Đọc file văn bản thô, tự động phát hiện bảng mã UTF-8 tiếng Việt.<br>- `image_parser`: Dùng mô hình Gemini Vision OCR nhận diện chữ in và chữ viết tay từ ảnh chụp. |
-| **2. AI & VLM Services**<br>*(Dịch vụ Trí tuệ Nhân tạo & Tạo sinh)* | `gemini_client.py`<br>`prompt_templates.py`<br>`content_generator.py`<br>`vlm_engine.py` | - `gemini_client`: Kết nối trực tiếp với Google Gemini Flash 2.0 API, cấu hình temperature và ép kiểu đầu ra JSON Schema chuẩn xác.<br>- `prompt_templates`: Lưu trữ các mẫu System Prompt chuyên biệt cho từng dạng bài học.<br>- `content_generator`: Điều phối luồng xử lý AI, phân loại độ khó và kích hoạt **Fallback Heuristic** (dùng dữ liệu mẫu) khi mất kết nối mạng.<br>- `vlm_engine`: Lõi xử lý đa phương thức kết hợp văn bản và hình ảnh học tập. |
-| **3. Authentication & Security Services**<br>*(Dịch vụ Xác thực & Bảo mật)* | `core/security.py`<br>`api/v1/auth.py`<br>`core/deps.py` | - `core/security`: Băm và xác thực mật khẩu bằng thuật toán một chiều an toàn `Bcrypt / Passlib`; tạo và giải mã chữ ký số **JWT Bearer Token**.<br>- `api/v1/auth`: Cung cấp các endpoint đăng ký tài khoản, đăng nhập, lấy hồ sơ cá nhân (`/auth/me`) và cập nhật Avatar (`/auth/profile`).<br>- `core/deps`: Dependency Middleware kiểm tra tính hợp lệ của token và phân quyền truy cập `user` vs `admin`. |
-| **4. Decks & Data Services**<br>*(Dịch vụ Quản lý Bài học & Kho dữ liệu)* | `api/v1/decks.py`<br>`services/sample_data.py` | - `api/v1/decks`: Quản lý các gói học tập `LearningPackage`, lưu trữ và nạp các bộ câu hỏi `QuizDeck` và từ vựng `VocabularyDeck`.<br>- `services/sample_data`: Cung cấp kho dữ liệu mẫu chuẩn (Tiếng Trung HSK1, Tiếng Anh CNTT) để hệ thống luôn sẵn sàng chơi ngay cả khi chạy ngoại tuyến. |
-| **5. Game Analytics & Leaderboard Services**<br>*(Dịch vụ Kết quả & Bảng xếp hạng)* | `api/v1/games.py` | - Lưu trữ chi tiết thông số từng ván chơi (`game_sessions`): số điểm, độ chính xác (accuracy), chuỗi combo cao nhất, thời gian chơi.<br>- Tổng hợp và tính toán danh sách Top người chơi đạt điểm cao nhất toàn cầu trên Bảng xếp hạng (`/games/leaderboard`). |
-| **6. Web Database Admin Services**<br>*(Dịch vụ Quản trị CSDL Trực quan)* | `api/v1/admin_db.py` | - Trích xuất lược đồ (Schema) CSDL SQLite (`eduplay.db`), liệt kê danh sách các bảng và số lượng dòng dữ liệu.<br>- Hỗ trợ xem dữ liệu có phân trang, tìm kiếm bản ghi theo từ khóa và xóa dữ liệu trực tiếp từ giao diện Admin. |
-| **7. Chat & Community Services**<br>*(Dịch vụ Trợ lý AI & Cộng đồng)* | `api/v1/chat.py`<br>`api/v1/community.py`<br>`api/v1/contact.py` | - `chat`: Xử lý phòng chat thế giới và kết nối trực tiếp với Trợ lý ảo AI Copilot giải đáp bài tập.<br>- `community`: Quản lý danh sách thành viên và tính năng gửi lời mời kết bạn.<br>- `contact`: Tiếp nhận ý kiến đóng góp và phản hồi từ người học. |
+| **Dịch vụ Bóc tách Tài liệu (Parser Services)** | `base_parser.py`<br>`pdf_parser.py`<br>`docx_parser.py`<br>`txt_parser.py`<br>`image_parser.py` | - `base_parser.py`: Định nghĩa Interface trừu tượng `BaseParser` chuẩn hóa phương thức bóc tách.<br>- `pdf_parser.py`: Sử dụng thư viện `pypdf` bóc tách cấu trúc phân trang của sách giáo trình PDF.<br>- `docx_parser.py`: Sử dụng `python-docx` đọc hiểu văn bản, danh sách gạch đầu dòng trong tài liệu Word.<br>- `txt_parser.py`: Đọc file văn bản thuần, tự động nhận diện bảng mã UTF-8 tiếng Việt.<br>- `image_parser.py`: Tích hợp Gemini Vision OCR nhận diện chữ in và chữ viết tay từ ảnh chụp bài giảng. |
+| **Dịch vụ Trí tuệ Nhân tạo (AI & VLM Services)** | `gemini_client.py`<br>`prompt_templates.py`<br>`content_generator.py`<br>`vlm_engine.py` | - `gemini_client.py`: Quản lý kết nối Google Gemini Flash 2.0 API, thiết lập cấu hình tham số sinh và ép kiểu đầu ra JSON Schema chuẩn.<br>- `prompt_templates.py`: Kho lưu trữ System Prompt kỹ thuật tối ưu hóa cho từng môn học.<br>- `content_generator.py`: Điều phối luồng xử lý AI, phân loại độ khó và kích hoạt **Fallback Heuristic** (dùng dữ liệu mẫu) khi mất kết nối mạng.<br>- `vlm_engine.py`: Lõi xử lý đa phương thức kết hợp văn bản và hình ảnh học tập. |
+| **Dịch vụ Xác thực & Bảo mật (Auth & Security Services)** | `core/security.py`<br>`api/v1/auth.py`<br>`core/deps.py` | - `core/security.py`: Mã hóa mật khẩu một chiều bằng thuật toán an toàn `Bcrypt / Passlib`; sinh và kiểm tra chữ ký điện tử **JWT Bearer Token**.<br>- `api/v1/auth.py`: Xử lý endpoint đăng ký tài khoản, đăng nhập, lấy hồ sơ cá nhân (`/auth/me`) và cập nhật Avatar (`/auth/profile`).<br>- `core/deps.py`: Dependency Middleware xác thực token và kiểm tra phân quyền truy cập `user` vs `admin`. |
+| **Dịch vụ Quản lý Bài học (Decks & Data Services)** | `api/v1/decks.py`<br>`services/sample_data.py` | - `api/v1/decks.py`: Quản lý các gói học tập `LearningPackage`, lưu trữ và nạp các bộ câu hỏi `QuizDeck` và từ vựng `VocabularyDeck`.<br>- `services/sample_data.py`: Cung cấp kho dữ liệu mẫu chuẩn (Tiếng Trung HSK1, Tiếng Anh CNTT) để hệ thống hoạt động ngay cả khi ngoại tuyến. |
+| **Dịch vụ Ghi nhận & Xếp hạng (Game Analytics Services)** | `api/v1/games.py` | - Lưu trữ chi tiết thông số từng ván chơi (`game_sessions`): số điểm, độ chính xác (accuracy), chuỗi combo cao nhất, thời gian chơi.<br>- Tổng hợp và tính toán danh sách Top người chơi đạt điểm cao nhất toàn cầu trên Bảng xếp hạng (`/games/leaderboard`). |
+| **Dịch vụ Quản trị CSDL (Web Database Admin Services)** | `api/v1/admin_db.py` | - Trích xuất lược đồ (Schema) CSDL SQLite (`eduplay.db`), liệt kê danh sách các bảng và số lượng dòng dữ liệu.<br>- Hỗ trợ xem dữ liệu có phân trang, tìm kiếm bản ghi theo từ khóa và xóa dữ liệu trực tiếp từ giao diện Admin. |
+| **Dịch vụ Tương tác & Cộng đồng (Chat & Community Services)** | `api/v1/chat.py`<br>`api/v1/community.py`<br>`api/v1/contact.py` | - `api/v1/chat.py`: Xử lý phòng chat thế giới và kết nối trực tiếp với Trợ lý ảo AI Copilot giải đáp bài tập.<br>- `api/v1/community.py`: Quản lý danh sách thành viên và tính năng gửi lời mời kết bạn.<br>- `api/v1/contact.py`: Tiếp nhận ý kiến đóng góp và phản hồi từ người học. |
 
 ---
 
-### 4.5. Bảng so sánh chuyên sâu 8 tiêu chí: Service (Microservices) vs Component (Layered)
+### 4.5. Bảng Ma trận Đối chiếu Kỹ thuật: Layered Components vs Distributed Microservices
 
-Để hiểu rõ sự khác biệt giữa hai mô hình kiến trúc, bảng dưới đây phân tích chi tiết dựa trên 8 tiêu chí kỹ thuật cốt lõi:
+Bảng dưới đây đóng vai trò như một tài liệu tham chiếu kỹ thuật (Technical Reference Matrix), làm rõ các tiêu chí kiến trúc giữa mô hình **Component trong Kiến trúc Phân tầng (áp dụng trong EduPlay)** và mô hình **Service trong Kiến trúc Microservices**:
 
-```mermaid
-flowchart TD
-    subgraph LAYERED_ARCH ["Kiến trúc Phân tầng (Layered Architecture) - 1 Tiến trình duy nhất"]
-        subgraph P_LAYER ["Presentation Layer"]
-            C1["Component UI (Navbar)"]
-            C2["Component UI (ScoreHUD)"]
-        end
-        subgraph B_LAYER ["Business / Service Layer"]
-            C3["Component Logic (PDFParser)"]
-            C4["Component Logic (GeminiClient)"]
-        end
-        C1 -. "Gọi hàm trong bộ nhớ (In-memory Call)" .-> C3
-    end
-
-    subgraph MICROSERVICES_ARCH ["Kiến trúc Microservices - Các tiến trình mạng độc lập"]
-        S1["Auth Microservice\n(Port 8001, DB riêng)"]
-        S2["Game Leaderboard Microservice\n(Port 8002, DB riêng)"]
-        S3["AI Generator Microservice\n(Port 8003, GPU riêng)"]
-        S1 <== "Gọi qua Mạng (HTTP/REST, gRPC, Message Queue)" ==> S2
-    end
-```
-
-| Tiêu chí so sánh | Component (trong Kiến trúc Phân tầng - Layered) | Service (trong Kiến trúc Microservices) |
+| Tiêu Chí So Sánh | Component (trong Kiến trúc Phân tầng Layered - EduPlay) | Service (trong Kiến trúc Microservices Phân tán) |
 | :--- | :--- | :--- |
-| **1. Bản chất (Definition)** | Là một **đơn vị cấu thành code** (file, class, function, module) nằm bên trong một tầng của ứng dụng. | Là một **ứng dụng/tiến trình phần mềm hoàn chỉnh và độc lập** (autonomous process) phục vụ một nghiệp vụ riêng biệt. |
-| **2. Không gian chạy (Runtime Process)** | Chạy **trong cùng một tiến trình (In-Process)**. Chia sẻ chung không gian bộ nhớ RAM, CPU với toàn bộ ứng dụng. | Chạy trên **các tiến trình riêng biệt (Out-of-Process)**. Mỗi Service đóng gói trong container riêng (Docker), chạy trên server riêng. |
-| **3. Cơ chế giao tiếp (Communication)** | Giao tiếp thông qua **lời gọi hàm trực tiếp trong RAM (In-Memory Function/Method Call)**. Tốc độ cực nhanh tính bằng nano-giây, không có độ trễ mạng. | Giao tiếp thông qua **Giao thức mạng (Network Protocols)** như HTTP/REST, gRPC, WebSocket hoặc Message Broker (RabbitMQ, Kafka). Có độ trễ mạng và nguy cơ mất kết nối. |
-| **4. Cơ sở dữ liệu (Database)** | **Chia sẻ chung một CSDL (Shared Database)**. Mọi Component trong tầng Business Logic đều thao tác với cùng một cơ sở dữ liệu. | Tuân theo nguyên tắc **Database-per-Service**: Mỗi Service sở hữu CSDL riêng biệt, không service nào được truy cập trực tiếp vào CSDL của service khác. |
-| **5. Triển khai (Deployment)** | **Đồng loạt (Monolithic/Atomic Deploy)**: Khi sửa 1 Component, bắt buộc phải build và deploy lại toàn bộ ứng dụng. | **Độc lập (Independent Deployability)**: Mỗi Service có quy trình CI/CD riêng, có thể cập nhật Service A mà không ảnh hưởng tới Service B. |
-| **6. Khả năng mở rộng (Scalability)** | Phải nhân bản (scale) **toàn bộ ứng dụng**, không thể chỉ scale riêng một component tốn tài nguyên. | **Co giãn linh hoạt (Granular Scaling)**: Service nào chịu tải nặng (ví dụ Service Xử lý AI) có thể được cấp riêng nhiều RAM/GPU mà không lãng phí tài nguyên cho các service khác. |
-| **7. Ranh giới công nghệ (Technology)** | Bị ràng buộc trong **cùng một ngôn ngữ lập trình** của cả tầng đó (ví dụ toàn bộ Backend viết bằng Python). | **Đa ngôn ngữ (Polyglot)**: Service A có thể viết bằng Python, Service B bằng Go, Service C bằng Node.js tùy theo đặc thù. |
-| **8. Ví dụ thực tế trong dự án EduPlay** | - `pdf_parser.py`, `gemini_client.py` là các **Component** thuộc tầng Business Logic của Backend.<br>- `Navbar.tsx`, `ScoreHUD.tsx` là các **Component** thuộc tầng Presentation của Frontend. | Nếu ta tách phần xử lý `AI Generator` ra thành một server độc lập chạy ở cổng 9000, có database riêng và giao tiếp với Backend chính qua gRPC, lúc đó nó mới trở thành một **Microservice**. |
+| **Bản chất Kiến trúc** | Đơn vị cấu thành mã nguồn (Module, Class, File) nằm trong một tầng logic của ứng dụng. | Tiến trình phần mềm hoàn chỉnh, độc lập (Autonomous Service Process) phục vụ một nghiệp vụ riêng biệt. |
+| **Môi trường Thực thi (Runtime)** | Chạy **trong cùng một tiến trình (In-Process)**. Chia sẻ chung không gian bộ nhớ RAM, CPU của máy chủ ứng dụng. | Chạy trên **các tiến trình riêng biệt (Out-of-Process)**. Thường được đóng gói trong các Container riêng (Docker, Kubernetes). |
+| **Giao thức Giao tiếp** | Sử dụng **lời gọi hàm trực tiếp trong RAM (In-Memory Method Call)**. Tốc độ thực thi cực nhanh (nano-giây), không có độ trễ mạng. | Sử dụng **Giao thức Mạng (Network Protocols)** như HTTP/REST, gRPC, WebSocket hoặc Message Broker (Kafka, RabbitMQ). Có độ trễ mạng. |
+| **Chiến lược Quản lý Dữ liệu** | **Cơ sở dữ liệu tập trung dùng chung (Shared Database)**. Mọi Component trong tầng Business Logic đều thao tác với cùng một CSDL. | Tuân theo nguyên tắc **Database-per-Service**: Mỗi Service quản lý một CSDL độc lập, nghiêm cấm truy cập trực tiếp chéo CSDL. |
+| **Mô hình Triển khai** | **Triển khai đồng loạt (Atomic/Monolithic Deploy)**: Khi cập nhật một Component, toàn bộ ứng dụng Backend được đóng gói và triển khai cùng nhau. | **Triển khai độc lập (Independent Deployability)**: Mỗi Service có pipeline CI/CD riêng, có thể triển khai cập nhật Service A mà không ảnh hưởng tới Service B. |
+| **Chiến lược Co giãn (Scaling)** | Mở rộng theo chiều ngang (Scale) bằng cách nhân bản **toàn bộ tiến trình ứng dụng Backend**. | **Co giãn linh hoạt từng phần (Granular Scaling)**: Có thể cấp riêng tài nguyên phần cứng (CPU/GPU) cho Service có tải trọng lớn (ví dụ AI Service). |
+| **Ranh giới Công nghệ** | Thống nhất trong **cùng một nền tảng ngôn ngữ và runtime** của tầng đó (toàn bộ Backend sử dụng Python / FastAPI). | **Đa ngôn ngữ linh hoạt (Polyglot Architecture)**: Mỗi Service có thể lựa chọn công nghệ riêng biệt (Python, Go, Node.js, Java). |
+| **Ứng dụng Thực tế trong EduPlay** | - `pdf_parser.py`, `gemini_client.py` là các **Component** thuộc tầng Business Logic của Backend.<br>- `Navbar.tsx`, `ScoreHUD.tsx` là các **Component** thuộc tầng Presentation của Frontend. | Trường hợp tách riêng bộ xử lý AI thành một máy chủ độc lập chạy cổng riêng với Database riêng giao tiếp qua gRPC, lúc đó mới hình thành **Microservice**. |
 
 ---
 
