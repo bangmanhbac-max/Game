@@ -132,6 +132,13 @@ Thiết kế kiến trúc này được định hình bởi 4 đặc tính công
 4. **Cấu trúc Giao diện Hướng Thành phần (Component-Driven Frontend)**:
    Phía Client được tổ chức theo cấu trúc phân tầng nghiêm ngặt: *Presentation Layer (React Components)* ➔ *State Management Layer (AuthContext, Game Hooks)* ➔ *Data Access Layer (API Client)* ➔ *Network Layer*.
 
+> 📖 **Xem tài liệu kiến trúc chuyên sâu & minh chứng mã nguồn chi tiết**: [KIEN_TRUC_HE_THONG.md](KIEN_TRUC_HE_THONG.md)
+
+#### Minh chứng kỹ thuật trực tiếp từ mã nguồn hệ thống:
+- **Đơn tiến trình (Single Process)**: File `backend/app/main.py` nạp toàn bộ các router (`auth`, `upload`, `generate`, `decks`, `games`, `admin_db`) vào duy nhất 1 đối tượng `app = FastAPI()` và khởi chạy trên 1 tiến trình máy chủ ở cổng 8000.
+- **Lời gọi hàm nội bộ (In-memory Calls)**: File `backend/app/api/v1/upload.py` import trực tiếp `from ...services.ai.vlm_engine import VLMEngine` và thực thi phương thức trong RAM, không qua giao thức mạng HTTP như Microservices.
+- **CSDL quan hệ dùng chung (Shared Database & Foreign Keys)**: File `backend/app/db/session.py` và `models.py` dùng chung 1 engine kết nối tới file SQLite `eduplay.db`, các bảng liên kết bằng khóa ngoại `ForeignKey("users.id")` (điều không thể có trong Microservices độc lập cơ sở dữ liệu).
+
 ```mermaid
 flowchart TD
     subgraph LAYERED_ARCH ["Kiến trúc Phân tầng EduPlay (Layered Component Architecture) - In-Process"]
