@@ -224,7 +224,7 @@ export const AICopilotChatWidget: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-sm shadow-2xl shadow-purple-500/30 transition-all hover:scale-105 cursor-pointer border border-cyan-400/40"
+          className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-purple-500/30 transition-all hover:scale-105 cursor-pointer border border-cyan-400/40 min-h-[44px]"
           title="Trò chuyện với AI Copilot"
         >
           <div className="relative">
@@ -232,7 +232,8 @@ export const AICopilotChatWidget: React.FC = () => {
             <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${apiKey ? 'bg-emerald-400 animate-ping' : 'bg-amber-400 animate-pulse'}`} />
             <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${apiKey ? 'bg-emerald-400' : 'bg-amber-400'}`} />
           </div>
-          <span>JARVIS AI Copilot</span>
+          <span className="hidden sm:inline">JARVIS AI Copilot</span>
+          <span className="sm:hidden font-bold">AI Copilot</span>
           {!apiKey && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/50 px-1.5 py-0.5 rounded-full">
               Cần Key
@@ -243,7 +244,7 @@ export const AICopilotChatWidget: React.FC = () => {
 
       {/* Expanded Chat Drawer */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[580px] max-h-[88vh] bg-[#0d1527] border-2 border-cyan-500/40 rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-96 h-[580px] max-h-[85dvh] bg-[#0d1527] border-2 border-cyan-500/40 rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl animate-in slide-in-from-bottom-5">
           {/* Header */}
           <div className="p-3.5 bg-gradient-to-r from-[#141e33] to-[#1c1335] border-b border-gray-800 flex items-center justify-between">
             <div className="flex items-center gap-2.5">

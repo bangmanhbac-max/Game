@@ -98,7 +98,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
 
         <div className="flex items-center gap-2 bg-[#161F30] border border-cyan-500/30 rounded-2xl px-4 py-2 text-xs text-cyan-300 font-mono font-bold">
           <Layers className="w-4 h-4 text-cyan-400" />
-          <span>Thẻ: {currentIndex + 1} / {vocabularyItems.length}</span>
+          <span>Thẻ: {currentIndex + 1} / {activeItems.length}</span>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
           </div>
 
           {/* Action Buttons (Spaced Repetition) */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <button
               onClick={() => handleNext(false)}
               className="py-4 rounded-2xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 font-bold text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer"

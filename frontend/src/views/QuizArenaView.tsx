@@ -120,7 +120,7 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
       </div>
 
       {!isFinished && currentQuestion && (
-        <div className="bg-[#161F30] border border-emerald-500/30 rounded-3xl p-6 lg:p-10 3xl:p-12 shadow-2xl space-y-8 animate-fade-in">
+        <div className="bg-[#161F30] border border-emerald-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10 3xl:p-12 shadow-2xl space-y-6 sm:space-y-8 animate-fade-in">
           {/* Progress & Countdown Bar */}
           <div>
             <div className="flex items-center justify-between text-xs 3xl:text-sm font-bold text-gray-400 mb-3">

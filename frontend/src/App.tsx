@@ -131,7 +131,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-[100dvh] bg-[#0B0F19] text-white flex flex-col antialiased selection:bg-cyan-500 selection:text-black overflow-x-hidden">
       {/* 4K Weather Atmosphere Controller (Cosmic Storm, Rain, Quantum) */}
       <AtmosphereController />
 
@@ -159,7 +159,7 @@ const AppContent: React.FC = () => {
       />
 
       {/* Main Container with Full Wide-Screen & 4K Scaling */}
-      <main className="flex-1 w-full max-w-[98%] 2xl:max-w-[1950px] 3xl:max-w-[2400px] mx-auto px-2 sm:px-4 lg:px-6 py-6 relative z-10">
+      <main className="flex-1 w-full max-w-[98%] 2xl:max-w-[1950px] 3xl:max-w-[2400px] mx-auto px-2.5 sm:px-4 lg:px-6 py-4 sm:py-6 relative z-10">
         {activeTab === 'dashboard' && (
           <DashboardView
             decks={decks}
@@ -218,7 +218,7 @@ const AppContent: React.FC = () => {
       <AICopilotChatWidget />
 
       {/* Footer */}
-      <footer className="border-t border-gray-900 bg-[#070A12] py-6 px-4 text-center text-xs 3xl:text-sm text-gray-500 relative z-10">
+      <footer className="border-t border-gray-900 bg-[#070A12] py-5 sm:py-6 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] text-center text-xs 3xl:text-sm text-gray-500 relative z-10">
         <p>AI EduPlay Platform • Nền Tảng Học Tập Trò Chơi Hóa Thế Hệ Mới • 🛡️ Biệt Đội Avengers 4K & Hệ Thống Cơ Sở Dữ Liệu Toàn Diện</p>
       </footer>
 

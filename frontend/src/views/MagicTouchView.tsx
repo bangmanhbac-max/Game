@@ -106,7 +106,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
   return (
     <div className="space-y-4 py-2 w-full mx-auto">
       {/* Top Game Bar */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-4">
         <button
           onClick={onBackToDashboard}
           className="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2 rounded-xl bg-[#161F30] border border-gray-800 transition hover:border-pink-500/40"
@@ -123,7 +123,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
       </div>
 
       {/* 4K Ultra-Sharp Game Canvas Container */}
-      <div className="relative w-full h-[660px] xl:h-[720px] 2xl:h-[780px] 3xl:h-[860px] 4k:h-[920px] rounded-3xl overflow-hidden border border-pink-500/40 bg-[#0B0A16] shadow-2xl shadow-pink-950/40 touch-none">
+      <div className="relative w-full h-[55vh] min-h-[420px] sm:h-[620px] xl:h-[720px] 2xl:h-[780px] 3xl:h-[860px] 4k:h-[920px] rounded-2xl sm:rounded-3xl overflow-hidden border border-pink-500/40 bg-[#0B0A16] shadow-2xl shadow-pink-950/40 touch-none">
         <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair" />
 
         {/* Floating Gesture Feedback */}
