@@ -22,6 +22,7 @@ import { WebDatabaseAdminModal } from './components/admin/WebDatabaseAdminModal'
 import { LearningPackage } from './types/learning_content';
 import { fetchDecks, saveCustomDeck, deleteCustomDeck } from './lib/api';
 import { soundManager } from './games/common/SoundSynthesizer';
+import { ALL_CURRICULUM_DECKS } from './lib/curriculumData';
 
 const DEFAULT_CHINESE_DECK: LearningPackage = {
   package_id: 'default-chinese-hsk1',
@@ -77,9 +78,18 @@ const DEFAULT_CHINESE_DECK: LearningPackage = {
   },
 };
 
+const INITIAL_DEFAULT_DECKS: LearningPackage[] = [
+  DEFAULT_CHINESE_DECK,
+  ALL_CURRICULUM_DECKS[0],  // HSK 1 - Bài 1: Chào Hỏi
+  ALL_CURRICULUM_DECKS[3],  // HSK 1 - Bài 4: Ẩm Thực & Ăn Uống
+  ALL_CURRICULUM_DECKS[6],  // HSK 2 - Bài 7: Mua Sắm & Tiền Tệ
+  ALL_CURRICULUM_DECKS[11], // HSK 3 - Bài 12: Đời Sống Công Sở
+  ALL_CURRICULUM_DECKS[14], // English - Bài 15: CNTT & Lập Trình
+];
+
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
-  const [decks, setDecks] = useState<LearningPackage[]>([DEFAULT_CHINESE_DECK]);
+  const [decks, setDecks] = useState<LearningPackage[]>(INITIAL_DEFAULT_DECKS);
   const [activeDeck, setActiveDeck] = useState<LearningPackage>(DEFAULT_CHINESE_DECK);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -95,7 +105,13 @@ const AppContent: React.FC = () => {
     fetchDecks()
       .then((serverDecks) => {
         if (serverDecks && serverDecks.length > 0) {
-          setDecks(serverDecks);
+          const merged = [...serverDecks];
+          for (const cur of INITIAL_DEFAULT_DECKS) {
+            if (!merged.some(d => d.package_id === cur.package_id)) {
+              merged.push(cur);
+            }
+          }
+          setDecks(merged);
           setActiveDeck(serverDecks[0]);
         }
       })

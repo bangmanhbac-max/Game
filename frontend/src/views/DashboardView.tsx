@@ -16,12 +16,13 @@ import {
   X, 
   Check, 
   AlertTriangle, 
-  FolderPlus, 
-  Wand2 
+  Wand2,
+  Search,
+  Library
 } from 'lucide-react';
 import { LearningPackage } from '../types/learning_content';
 import { ActiveTab } from '../components/Navbar';
-import { DEMO_CHINESE_DATA, DEMO_ENGLISH_DATA, DEMO_MESSY_DATA } from '../lib/demoPackages';
+import { ALL_CURRICULUM_DECKS } from '../lib/curriculumData';
 
 interface DashboardViewProps {
   decks: LearningPackage[];
@@ -47,31 +48,56 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [newDesc, setNewDesc] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // States cho thư viện 20 bộ bài học
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'hsk1' | 'hsk2' | 'hsk3' | 'english'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeModalTab, setActiveModalTab] = useState<'library' | 'manual'>('library');
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleAddPreset = (type: 'chinese' | 'english' | 'messy') => {
-    let baseData;
-    if (type === 'chinese') baseData = DEMO_CHINESE_DATA;
-    else if (type === 'english') baseData = DEMO_ENGLISH_DATA;
-    else baseData = DEMO_MESSY_DATA;
-
-    const uniqueId = `pkg_${type}_${Date.now()}`;
-    const newPkg: LearningPackage = {
-      ...baseData.package,
-      package_id: uniqueId,
-      created_at: new Date().toISOString(),
-    };
-
-    if (onAddDeck) {
-      onAddDeck(newPkg);
+  const handleSelectCurriculumDeck = (deck: LearningPackage) => {
+    if (onAddDeck && !decks.some((d) => d.package_id === deck.package_id)) {
+      onAddDeck(deck);
     }
-    onSelectDeck(newPkg);
+    onSelectDeck(deck);
     setIsAddDeckModalOpen(false);
-    showToast(`Đã thêm bộ từ "${newPkg.title}" thành công!`);
+    showToast(`Đã nạp bài học "${deck.title}" thành công!`);
   };
+
+  const handleAddAllCurriculum = () => {
+    let count = 0;
+    for (const deck of ALL_CURRICULUM_DECKS) {
+      if (!decks.some((d) => d.package_id === deck.package_id)) {
+        if (onAddDeck) onAddDeck(deck);
+        count++;
+      }
+    }
+    showToast(`Đã nạp toàn bộ 20 bộ bài học (${count} bài mới) vào hệ thống!`);
+  };
+
+  const filteredCurriculum = ALL_CURRICULUM_DECKS.filter((deck) => {
+    const matchesCat = 
+      selectedCategory === 'all' ||
+      (selectedCategory === 'hsk1' && deck.package_id.startsWith('hsk1')) ||
+      (selectedCategory === 'hsk2' && deck.package_id.startsWith('hsk2')) ||
+      (selectedCategory === 'hsk3' && deck.package_id.startsWith('hsk3')) ||
+      (selectedCategory === 'english' && deck.package_id.startsWith('en'));
+    
+    const matchesQuery = 
+      !searchQuery.trim() ||
+      deck.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      deck.vocabulary_deck.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      deck.vocabulary_deck.items.some((it) => 
+        it.target_text.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        it.meaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        it.phonetic.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+    return matchesCat && matchesQuery;
+  });
 
   const handleCreateManualDeck = (e: React.FormEvent) => {
     e.preventDefault();
@@ -467,122 +493,298 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Modal Thêm Bộ Từ Vựng Mới */}
+      {/* Modal Thêm Bộ Từ Vựng Mới / Kho 20 Bài Học Chuẩn */}
       {isAddDeckModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-[#0f172a] border border-cyan-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 animate-in fade-in">
+          <div className="bg-[#0f172a] border border-cyan-500/40 rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl space-y-5 max-h-[92vh] flex flex-col overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-gray-800 pb-4 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 flex items-center justify-center">
-                  <FolderPlus className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-400/40 flex items-center justify-center">
+                  <Library className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-white">Thêm Bộ Từ Vựng Mới</h3>
-                  <p className="text-xs text-gray-400">Chọn mẫu có sẵn hoặc tạo thủ công bộ từ mới</p>
+                  <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                    <span>Kho Học Liệu Mẫu & Thêm Bộ Từ Vựng</span>
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      20 Bài Học • 400 Từ Vựng Chuẩn
+                    </span>
+                  </h3>
+                  <p className="text-xs text-gray-400">Khám phá lộ trình Tiếng Trung HSK 1 - HSK 3 và Tiếng Anh chuyên đề</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsAddDeckModalOpen(false)}
-                className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition"
+                className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Section 1: Thêm nhanh từ các mẫu chuẩn */}
-            <div className="space-y-3">
-              <h4 className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                Cách 1: Thêm Nhanh Bộ Mẫu Có Sẵn (Không Cần API)
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Navigation Tabs Inside Modal */}
+            <div className="flex items-center justify-between gap-3 border-b border-gray-800/80 pb-3 shrink-0 flex-wrap">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => handleAddPreset('chinese')}
-                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-cyan-500/30 hover:border-cyan-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
+                  onClick={() => setActiveModalTab('library')}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    activeModalTab === 'library'
+                      ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                      : 'bg-gray-800/80 text-gray-300 hover:text-white hover:bg-gray-700'
+                  }`}
                 >
-                  <span className="text-2xl block mb-2">🇨🇳</span>
-                  <div className="font-bold text-white text-xs group-hover:text-cyan-300">Tiếng Trung HSK 1</div>
-                  <p className="text-[11px] text-gray-400 mt-1">12 từ vựng, Pinyin & 5 câu Quiz</p>
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Kho 20 Bài Học Chuẩn (Có Sẵn)</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleAddPreset('english')}
-                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-purple-500/30 hover:border-purple-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
+                  onClick={() => setActiveModalTab('manual')}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    activeModalTab === 'manual'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                      : 'bg-gray-800/80 text-gray-300 hover:text-white hover:bg-gray-700'
+                  }`}
                 >
-                  <span className="text-2xl block mb-2">🇬🇧</span>
-                  <div className="font-bold text-white text-xs group-hover:text-purple-300">Tiếng Anh AI & Tech</div>
-                  <p className="text-[11px] text-gray-400 mt-1">10 thuật ngữ công nghệ & 3 câu Quiz</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleAddPreset('messy')}
-                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-pink-500/30 hover:border-pink-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
-                >
-                  <span className="text-2xl block mb-2">🧪</span>
-                  <div className="font-bold text-white text-xs group-hover:text-pink-300">File Khử Nhiễu</div>
-                  <p className="text-[11px] text-gray-400 mt-1">10 từ bóc tách dính chữ & 2 câu Quiz</p>
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Tự Tạo Bộ Từ Thủ Công</span>
                 </button>
               </div>
+
+              {activeModalTab === 'library' && (
+                <button
+                  type="button"
+                  onClick={handleAddAllCurriculum}
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold transition shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
+                  title="Thêm nhanh tất cả 20 bộ bài vào danh sách học"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                  <span>⚡ Nạp Toàn Bộ 20 Bộ Bài Vào Học</span>
+                </button>
+              )}
             </div>
 
-            {/* Section 2: Tạo bộ từ thủ công */}
-            <form onSubmit={handleCreateManualDeck} className="space-y-4 pt-4 border-t border-gray-800">
-              <h4 className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
-                <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
-                Cách 2: Tạo Bộ Từ Thủ Công Mới
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">Tên bộ từ vựng (*):</label>
-                  <input
-                    type="text"
-                    required
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Vd: Tiếng Trung HSK 2 Căn Bản, IELTS Speaking, Từ Vựng Lập Trình..."
-                    className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">Ngôn ngữ mục tiêu:</label>
-                    <select
-                      value={newLang}
-                      onChange={(e) => setNewLang(e.target.value)}
-                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none transition"
+            {/* TAB 1: THƯ VIỆN 20 BÀI HỌC CÓ SẴN */}
+            {activeModalTab === 'library' && (
+              <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
+                {/* Filter Category & Search Bar */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0">
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 text-xs font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('all')}
+                      className={`px-2.5 py-1 rounded-lg transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === 'all'
+                          ? 'bg-white/20 text-white font-bold'
+                          : 'bg-[#162032] text-gray-400 hover:text-white'
+                      }`}
                     >
-                      <option value="zh-CN">🇨🇳 Tiếng Trung (zh-CN)</option>
-                      <option value="en">🇬🇧 Tiếng Anh (en)</option>
-                      <option value="vi-VN">🇻🇳 Tiếng Việt (vi-VN)</option>
-                    </select>
+                      Tất Cả (20)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('hsk1')}
+                      className={`px-2.5 py-1 rounded-lg transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === 'hsk1'
+                          ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-400 font-bold'
+                          : 'bg-[#162032] text-gray-400 hover:text-cyan-300'
+                      }`}
+                    >
+                      🇨🇳 HSK 1 (6 bài)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('hsk2')}
+                      className={`px-2.5 py-1 rounded-lg transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === 'hsk2'
+                          ? 'bg-blue-500/30 text-blue-300 border border-blue-400 font-bold'
+                          : 'bg-[#162032] text-gray-400 hover:text-blue-300'
+                      }`}
+                    >
+                      🇨🇳 HSK 2 (5 bài)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('hsk3')}
+                      className={`px-2.5 py-1 rounded-lg transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === 'hsk3'
+                          ? 'bg-purple-500/30 text-purple-300 border border-purple-400 font-bold'
+                          : 'bg-[#162032] text-gray-400 hover:text-purple-300'
+                      }`}
+                    >
+                      🇨🇳 HSK 3 (3 bài)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('english')}
+                      className={`px-2.5 py-1 rounded-lg transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === 'english'
+                          ? 'bg-amber-500/30 text-amber-300 border border-amber-400 font-bold'
+                          : 'bg-[#162032] text-gray-400 hover:text-amber-300'
+                      }`}
+                    >
+                      🇬🇧 Tiếng Anh (6 bài)
+                    </button>
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">Mô tả ngắn gọn:</label>
+
+                  <div className="relative min-w-[200px]">
+                    <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      value={newDesc}
-                      onChange={(e) => setNewDesc(e.target.value)}
-                      placeholder="Mô tả mục tiêu của bộ bài học này..."
-                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Tìm bài học hoặc từ vựng..."
+                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
                     />
                   </div>
                 </div>
 
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+                {/* Lesson Cards List */}
+                <div className="flex-1 overflow-y-auto pr-1 space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {filteredCurriculum.map((deck) => {
+                      const isCurrent = activeDeck.package_id === deck.package_id;
+                      const isAlreadyInList = decks.some((d) => d.package_id === deck.package_id);
+
+                      return (
+                        <div
+                          key={deck.package_id}
+                          className={`p-4 rounded-2xl border transition-all text-left flex flex-col justify-between gap-3 ${
+                            isCurrent
+                              ? 'bg-[#16263f] border-cyan-400 shadow-md shadow-cyan-500/15'
+                              : 'bg-[#131d2e] hover:bg-[#182438] border-gray-800 hover:border-gray-700'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="text-sm font-bold text-white leading-snug">
+                                {deck.title}
+                              </h4>
+                              <span className="px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 text-[10px] font-mono border border-cyan-500/30 shrink-0">
+                                {deck.vocabulary_deck.target_language}
+                              </span>
+                            </div>
+
+                            <p className="text-[11px] text-gray-400 mt-1 line-clamp-1">
+                              {deck.vocabulary_deck.description}
+                            </p>
+
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                {deck.vocabulary_deck.items.length} từ vựng
+                              </span>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                {deck.quiz_deck.items.length} câu quiz
+                              </span>
+                            </div>
+
+                            {/* Word Sample Preview */}
+                            <div className="mt-2.5 p-2 rounded-xl bg-[#090E17] border border-gray-800/80 text-[11px] text-gray-300 font-mono flex flex-wrap gap-1">
+                              {deck.vocabulary_deck.items.slice(0, 6).map((w) => (
+                                <span key={w.id} className="text-cyan-200">
+                                  {w.target_text}
+                                  <span className="text-gray-500"> ({w.meaning})</span>,
+                                </span>
+                              ))}
+                              <span className="text-gray-500">...</span>
+                            </div>
+                          </div>
+
+                          <div className="pt-2 border-t border-gray-800/60 flex items-center justify-between gap-2">
+                            {isCurrent ? (
+                              <span className="text-xs text-cyan-300 font-bold flex items-center gap-1">
+                                <Check className="w-3.5 h-3.5 text-cyan-400" />
+                                Đang chọn học bài này
+                              </span>
+                            ) : isAlreadyInList ? (
+                              <span className="text-[11px] text-emerald-400 font-medium">
+                                ✓ Đã có trong danh sách
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-gray-500">
+                                Bài học mẫu có sẵn
+                              </span>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => handleSelectCurriculumDeck(deck)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                                isCurrent
+                                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400'
+                                  : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold shadow-sm'
+                              }`}
+                            >
+                              <span>{isCurrent ? 'Học Ngay' : '+ Nạp Bài Này'}</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {filteredCurriculum.length === 0 && (
+                    <div className="py-12 text-center text-gray-400 text-xs">
+                      Không tìm thấy bài học phù hợp với từ khóa "{searchQuery}".
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: TỰ TẠO BỘ TỪ THỦ CÔNG */}
+            {activeModalTab === 'manual' && (
+              <form onSubmit={handleCreateManualDeck} className="space-y-4 py-2 overflow-y-auto">
+                <div className="p-4 rounded-2xl bg-[#131d2e] border border-gray-800 space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Tên bộ từ vựng (*):</label>
+                    <input
+                      type="text"
+                      required
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      placeholder="Vd: Tiếng Trung HSK 2 Căn Bản, IELTS Speaking, Từ Vựng Lập Trình..."
+                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">Ngôn ngữ mục tiêu:</label>
+                      <select
+                        value={newLang}
+                        onChange={(e) => setNewLang(e.target.value)}
+                        className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none transition"
+                      >
+                        <option value="zh-CN">🇨🇳 Tiếng Trung (zh-CN)</option>
+                        <option value="en">🇬🇧 Tiếng Anh (en)</option>
+                        <option value="vi-VN">🇻🇳 Tiếng Việt (vi-VN)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">Mô tả bài học:</label>
+                      <input
+                        type="text"
+                        value={newDesc}
+                        onChange={(e) => setNewDesc(e.target.value)}
+                        placeholder="Mô tả mục tiêu của bộ bài học này..."
+                        className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => {
                       setIsAddDeckModalOpen(false);
                       onNavigateTab('upload');
                     }}
-                    className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5"
+                    className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Wand2 className="w-3.5 h-3.5" />
-                    Hoặc tải tài liệu PDF/Scan/Word để AI tự tạo &rarr;
+                    Hoặc tải tài liệu PDF/Scan/Word để AI tự động trích xuất &rarr;
                   </button>
 
                   <button
@@ -593,8 +795,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     Tạo & Chỉnh Sửa Ngay
                   </button>
                 </div>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
         </div>
       )}
