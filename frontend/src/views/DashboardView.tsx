@@ -369,7 +369,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   TRỐN THOÁT RỪNG MA 3D
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Đồ họa 3D FPS chân thực 4K. Bật đèn pin, né tránh ma quỷ Granny rình rập và nhặt cổ tự chữ Hán để mở khóa cổng!
+                  Đồ họa 3D 3 tầng rừng rậm. Bật đèn pin, né tránh ma quỷ Granny rình rập và nhặt cổ tự chữ Hán để mở khóa cổng!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-red-400 min-h-[36px]">

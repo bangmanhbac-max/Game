@@ -83,6 +83,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   const [score, setScore] = useState(0);
   const [heartbeatLevel, setHeartbeatLevel] = useState(0);
   const [flashlightOn, setFlashlightOn] = useState(true);
+  const [battery] = useState(100);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameState, setGameState] = useState<'playing' | 'escaped' | 'caught'>('playing');
   const [isPointerLocked, setIsPointerLocked] = useState(false);
@@ -98,9 +99,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   const [currentFloorName, setCurrentFloorName] = useState<string>('TẦNG 2: PHÒNG NGỦ HỒI SINH');
   const [grannyOnSameFloor, setGrannyOnSameFloor] = useState(false);
   const [isMinimapExpanded, setIsMinimapExpanded] = useState(false);
-  const [isCrouching, setIsCrouching] = useState(false);
-  const [isSprinting, setIsSprinting] = useState(false);
-  const [stamina, setStamina] = useState(100);
 
   // Active word and characters
   const activeVocab = activeItems[currentWordIndex] || activeItems[0] || {
@@ -124,8 +122,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   const nearbyWardrobeRef = useRef<HideWardrobe | null>(null);
   const isHidingRef = useRef<boolean>(false);
   const isJumpscareRef = useRef<boolean>(false);
-  const isCrouchingRef = useRef<boolean>(false);
-  const isSprintingRef = useRef<boolean>(false);
   const collectedPapersRef = useRef<PaperTalismanItem[]>([]);
   const placedLocksRef = useRef<string[]>([]);
   const flashlightOnRef = useRef<boolean>(true);
@@ -144,8 +140,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   useEffect(() => { flashlightOnRef.current = flashlightOn; }, [flashlightOn]);
   useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
   useEffect(() => { isHidingRef.current = isHiding; }, [isHiding]);
-  useEffect(() => { isCrouchingRef.current = isCrouching; }, [isCrouching]);
-  useEffect(() => { isSprintingRef.current = isSprinting; }, [isSprinting]);
   useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
   useEffect(() => { collectedPapersRef.current = collectedPapers; }, [collectedPapers]);
   useEffect(() => { placedLocksRef.current = placedLocks; }, [placedLocks]);
@@ -158,7 +152,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   };
 
   // Sound Engine
-  const playSfx = (type: 'creak' | 'pickup' | 'lock' | 'heartbeat' | 'alert' | 'footstep' | 'jump' | 'land' | 'flashlight') => {
+  const playSfx = (type: 'creak' | 'pickup' | 'lock' | 'heartbeat' | 'alert') => {
     if (!soundEnabledRef.current) return;
     try {
       const ctx = getAudioContext();
@@ -214,46 +208,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + 0.3);
-      } else if (type === 'footstep') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(85, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.07, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.08);
-      } else if (type === 'jump') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(140, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.14);
-        gain.gain.setValueAtTime(0.12, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.14);
-      } else if (type === 'land') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(120, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.18, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.12);
-      } else if (type === 'flashlight') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(1600, ctx.currentTime);
-        osc.frequency.setValueAtTime(900, ctx.currentTime + 0.02);
-        gain.gain.setValueAtTime(0.09, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.04);
       }
     } catch {}
   };
@@ -1218,33 +1172,20 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     let lastHowlTime = Date.now() + 15000;
 
     // =========================================================================
-    // 8. INPUT CONTROLS, POINTER LOCK & SMOOTH LOOK (TRUY KÍCH / CS:GO / GTA 5)
+    // 8. INPUT CONTROLS, POINTER LOCK & SMOOTH LOOK
     // =========================================================================
     let isMouseDown = false;
     let yaw = Math.PI;
     let pitch = 0;
-    let roll = 0;
-    const velocity = new THREE.Vector3();
-    let currentBaseY = 5.8;
-    let verticalVelocity = 0;
-    let isGrounded = true;
-    let crouchOffset = 0;
-    let bobTimer = 0;
-    let idleTimer = 0;
-    let lastFootstepTime = 0;
-    let staminaVal = 100;
-    const clock = new THREE.Clock();
+    let bobbingTimer = 0;
 
     const onKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       keysRef.current[key] = true;
 
       if (key === 'f') {
-        setFlashlightOn((prev) => {
-          const next = !prev;
-          playSfx('flashlight');
-          return next;
-        });
+        setFlashlightOn((prev) => !prev);
+        playSfx('creak');
       }
 
       if (key === 'r') {
@@ -1257,10 +1198,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         } else if (nearbyDoorRef.current) {
           handleDoorAction();
         }
-      }
-
-      if (key === 'c' || key === 'control') {
-        setIsCrouching((prev) => !prev);
       }
     };
 
@@ -1283,10 +1220,9 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     const onMouseUp = () => { isMouseDown = false; };
     const onMouseMove = (e: MouseEvent) => {
       if (document.pointerLockElement === container || isMouseDown) {
-        const SENSITIVITY = 0.0020;
-        yaw -= e.movementX * SENSITIVITY;
-        pitch -= e.movementY * SENSITIVITY;
-        pitch = Math.max(-1.48, Math.min(1.48, pitch));
+        yaw -= e.movementX * 0.0022;
+        pitch -= e.movementY * 0.0022;
+        pitch = Math.max(-Math.PI / 2.6, Math.min(Math.PI / 2.6, pitch));
         playerYawRef.current = yaw;
       }
     };
@@ -1346,106 +1282,65 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     const raycaster = new THREE.Raycaster();
 
     const animate = () => {
-      const delta = Math.min(clock.getDelta(), 0.08);
-      const now = performance.now();
-
       // Periodic Horror Howl Sound Effect (Thi thoảng có tiếng hú rợn người)
-      if (Date.now() - lastHowlTime > 32000) {
-        lastHowlTime = Date.now() + (Math.random() * 14000); // 32 - 46 seconds interval
+      const now = Date.now();
+      if (now - lastHowlTime > 32000) {
+        lastHowlTime = now + (Math.random() * 14000); // 32 - 46 seconds interval
         playHorrorHowl();
         setGrannyAlertMsg('Tiếng hú ma quái rợn người vọng qua các hành lang lạnh buốt...');
         setTimeout(() => setGrannyAlertMsg(null), 4000);
       }
 
-      // Camera Look Rotation with Euler YXZ & Strafe Roll
+      // Camera Look Rotation
       if (!isJumpscareRef.current) {
-        camera.rotation.order = 'YXZ';
         camera.rotation.set(0, 0, 0);
-        camera.rotation.y = yaw;
-        camera.rotation.x = pitch;
-        camera.rotation.z = roll;
+        camera.rotateY(yaw);
+        camera.rotateX(pitch);
       }
 
-      // Realistic Flashlight Follow with hand-offset & subtle lag
-      const rightVec = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-      const forwardVec = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-      const upVec = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-
-      const flashPos = camera.position.clone()
-        .add(rightVec.clone().multiplyScalar(0.24))
-        .add(upVec.clone().multiplyScalar(-0.16));
-      flashlight.position.copy(flashPos);
+      // Flashlight Follow
+      flashlight.position.copy(camera.position);
       flashlight.visible = flashlightOnRef.current;
       cameraFlood.visible = flashlightOnRef.current;
-      flashlight.target.position.copy(camera.position).add(forwardVec.clone().multiplyScalar(15));
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      flashlight.target.position.copy(camera.position).add(forward.clone().multiplyScalar(10));
 
       if (Math.random() < 0.02) {
         livingBulb.intensity = 0.5 + Math.random() * 1.5;
       }
 
-      // =========================================================================
-      // TRUE FPS SHOOTER MOVEMENT & ACCELERATION PHYSICS (CS:GO / TRUY KÍCH / GTA 5)
-      // =========================================================================
+      // Player Movement & Solid Wall Collisions
       if (gameStateRef.current === 'playing' && !isHidingRef.current && !isJumpscareRef.current) {
-        const isCrouch = isCrouchingRef.current;
-        const wantSprint = Boolean(keysRef.current['shift'] && !isCrouch && staminaVal > 5);
+        const isSprinting = keysRef.current['shift'];
+        const moveSpeed = isSprinting ? 0.072 : 0.042;
+        const dir = new THREE.Vector3();
 
-        // Standard FPS Movement relative to Camera Yaw:
-        // In Three.js: (0, 0, -1) is camera forward.
-        const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
-        const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+        if (keysRef.current['w']) dir.z -= 1;
+        if (keysRef.current['s']) dir.z += 1;
+        if (keysRef.current['a']) dir.x -= 1;
+        if (keysRef.current['d']) dir.x += 1;
 
-        const wishDir = new THREE.Vector3();
-        if (keysRef.current['w']) wishDir.add(forward);
-        if (keysRef.current['s']) wishDir.sub(forward);
-        if (keysRef.current['d']) wishDir.add(right);
-        if (keysRef.current['a']) wishDir.sub(right);
+        if (dir.lengthSq() > 0) {
+          dir.normalize();
+          dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
 
-        const isMoving = wishDir.lengthSq() > 0.0001;
-        if (isMoving) {
-          wishDir.normalize();
+          camera.position.x += dir.x * moveSpeed;
+          camera.position.z += dir.z * moveSpeed;
+
+          // FIRM WALL & PROP COLLISION RESOLUTION (NEVER GO THROUGH WALLS!)
+          resolveCollisions(camera.position);
+
+          bobbingTimer += isSprinting ? 0.22 : 0.14;
+          camera.position.y += Math.sin(bobbingTimer) * 0.015;
+
+          if (isSprinting && Math.random() < 0.035) {
+            setGrannyAlertMsg('Granny nghe thấy tiếng bước chân chạy dồn dập!');
+            playSfx('alert');
+            setTimeout(() => setGrannyAlertMsg(null), 3000);
+          }
         }
 
-        const isMovingForward = Boolean(keysRef.current['w'] && !keysRef.current['s']);
-        const isActuallySprinting = wantSprint && isMovingForward;
-
-        // Stamina System
-        if (isActuallySprinting) {
-          staminaVal = Math.max(0, staminaVal - delta * 24);
-        } else {
-          staminaVal = Math.min(100, staminaVal + delta * (isCrouch ? 12 : 18));
-        }
-        setStamina(Math.round(staminaVal));
-        setIsSprinting(isActuallySprinting);
-
-        // Target Velocity Calculation
-        const maxSpeed = isCrouch ? 2.2 : (isActuallySprinting ? 6.8 : 3.8);
-        const targetVelX = wishDir.x * maxSpeed;
-        const targetVelZ = wishDir.z * maxSpeed;
-
-        // Smooth Acceleration & Friction (Responsive momentum)
-        const accelRate = isMoving ? 14.0 : 12.0;
-        velocity.x += (targetVelX - velocity.x) * Math.min(accelRate * delta, 1.0);
-        velocity.z += (targetVelZ - velocity.z) * Math.min(accelRate * delta, 1.0);
-
-        // Subtle Strafe Camera Tilt (Roll)
-        const strafeInput = (keysRef.current['d'] ? 1 : 0) - (keysRef.current['a'] ? 1 : 0);
-        const targetRoll = -strafeInput * (isActuallySprinting ? 0.024 : 0.015);
-        roll += (targetRoll - roll) * Math.min(10.0 * delta, 1.0);
-
-        // Dynamic Speed FOV Effect (CS:GO / GTA 5)
-        const targetFov = isActuallySprinting ? 75 : (isCrouch ? 58 : 65);
-        camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, Math.min(8.0 * delta, 1.0));
-        camera.updateProjectionMatrix();
-
-        // Apply Position
-        camera.position.x += velocity.x * delta;
-        camera.position.z += velocity.z * delta;
-
-        // FIRM WALL & PROP COLLISION RESOLUTION (NEVER GO THROUGH WALLS!)
-        resolveCollisions(camera.position);
-
-        // Outer Perimeter Clamping
+        // Clamp camera inside outer walls
         camera.position.x = THREE.MathUtils.clamp(camera.position.x, -11.0, 11.0);
         camera.position.z = THREE.MathUtils.clamp(camera.position.z, -11.0, 11.2);
 
@@ -1453,81 +1348,30 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         const inUpperStairs = (camera.position.x >= 6.2 && camera.position.x <= 10.5 && camera.position.z <= -1.8 && camera.position.z >= -10.2);
         const inBasementStairs = (camera.position.x >= -10.5 && camera.position.x <= -6.2 && camera.position.z >= -2.2 && camera.position.z <= 6.5);
 
-        let floorElevation = 1.6;
+        let targetY = 5.8;
 
         if (inUpperStairs) {
           const stairT = THREE.MathUtils.clamp((-2.0 - camera.position.z) / 7.8, 0, 1);
-          floorElevation = 1.6 + stairT * 4.2;
-          if (stairT > 0.82) playerFloorLevelRef.current = 2;
-          else if (stairT < 0.18) playerFloorLevelRef.current = 1;
+          targetY = 1.6 + stairT * 4.2;
+          camera.position.y += (targetY - camera.position.y) * 0.25;
+
+          if (stairT > 0.8) playerFloorLevelRef.current = 2;
+          else if (stairT < 0.2) playerFloorLevelRef.current = 1;
         } else if (inBasementStairs) {
           const stairT = THREE.MathUtils.clamp((camera.position.z - (-2.0)) / 8.0, 0, 1);
-          floorElevation = 1.6 - stairT * 4.2;
-          if (stairT > 0.82) playerFloorLevelRef.current = 0;
-          else if (stairT < 0.18) playerFloorLevelRef.current = 1;
+          targetY = 1.6 - stairT * 4.2;
+          camera.position.y += (targetY - camera.position.y) * 0.25;
+
+          if (stairT > 0.8) playerFloorLevelRef.current = 0;
+          else if (stairT < 0.2) playerFloorLevelRef.current = 1;
         } else {
-          if (playerFloorLevelRef.current === 2) floorElevation = 5.8;
-          else if (playerFloorLevelRef.current === 0) floorElevation = -2.6;
-          else floorElevation = 1.6;
+          if (playerFloorLevelRef.current === 2) targetY = 5.8;
+          else if (playerFloorLevelRef.current === 0) targetY = -2.6;
+          else targetY = 1.6;
+
+          camera.position.y += (targetY - camera.position.y) * 0.2;
         }
 
-        // Jump & Gravity Physics
-        if (keysRef.current[' '] && isGrounded && !isCrouch) {
-          verticalVelocity = 4.8;
-          isGrounded = false;
-          playSfx('jump');
-        }
-
-        if (!isGrounded) {
-          verticalVelocity -= 14.0 * delta; // Gravity
-          currentBaseY += verticalVelocity * delta;
-
-          if (currentBaseY <= floorElevation) {
-            currentBaseY = floorElevation;
-            if (verticalVelocity < -2.5) {
-              playSfx('land');
-            }
-            verticalVelocity = 0;
-            isGrounded = true;
-          }
-        } else {
-          // Smooth stair following
-          currentBaseY += (floorElevation - currentBaseY) * Math.min(16.0 * delta, 1.0);
-        }
-
-        // Smooth Crouch Transition
-        crouchOffset = THREE.MathUtils.lerp(crouchOffset, isCrouch ? -0.7 : 0.0, Math.min(12.0 * delta, 1.0));
-
-        // Decoupled Head Bobbing & Footsteps
-        const horizSpeed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-        let bobY = 0;
-
-        if (horizSpeed > 0.35 && isGrounded) {
-          const bobFreq = isActuallySprinting ? 14.0 : (isCrouch ? 7.0 : 9.5);
-          bobTimer += bobFreq * delta;
-          bobY = Math.sin(bobTimer * 2) * (isActuallySprinting ? 0.045 : (isCrouch ? 0.012 : 0.024));
-
-          // Footstep Audio Trigger
-          const stepInterval = isActuallySprinting ? 270 : (isCrouch ? 560 : 390);
-          if (now - lastFootstepTime > stepInterval) {
-            lastFootstepTime = now;
-            if (!isCrouch) {
-              playSfx('footstep');
-            }
-          }
-
-          if (isActuallySprinting && Math.random() < 0.035) {
-            setGrannyAlertMsg('Granny nghe thấy tiếng bước chân chạy dồn dập!');
-            playSfx('alert');
-            setTimeout(() => setGrannyAlertMsg(null), 3000);
-          }
-        } else {
-          // Subtle Idle Breathing
-          idleTimer += 2.0 * delta;
-          bobY = Math.sin(idleTimer) * 0.006;
-        }
-
-        camera.position.y = currentBaseY + crouchOffset + bobY;
         playerPosRef.current.copy(camera.position);
 
         if (playerFloorLevelRef.current === 2) setCurrentFloorName('TẦNG 2: PHÒNG NGỦ HỒI SINH');
@@ -1759,15 +1603,14 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           mCtx.font = 'bold 8px sans-serif';
           mCtx.fillText('💀', gx, gy + 3);
 
-          // Player Marker & Vision Cone
+          // Player Marker
           const px = toMapX(camera.position.x);
           const py = toMapY(camera.position.z);
-          const fwd = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
-          const angle = Math.atan2(fwd.z, fwd.x);
 
           mCtx.fillStyle = 'rgba(6, 182, 212, 0.28)';
           mCtx.beginPath();
           mCtx.moveTo(px, py);
+          const angle = yaw + Math.PI / 2;
           mCtx.arc(px, py, 22, angle - 0.45, angle + 0.45);
           mCtx.closePath();
           mCtx.fill();
@@ -1812,50 +1655,13 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         className="w-full h-full cursor-crosshair"
       />
 
-      {/* Tactical Center Screen FPS Crosshair (Truy Kích / GTA 5 Style) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-15 flex flex-col items-center justify-center">
-        <div className="relative flex items-center justify-center">
-          {/* Target Interactive Lock-on Ring */}
-          {(nearbyPaper || nearbyDoor || nearbyWardrobe) && (
-            <div className="absolute -inset-2 border-2 border-amber-400 bg-amber-400/20 rounded-full animate-ping shadow-lg shadow-amber-400/50" />
-          )}
-
-          {/* Crosshair Dynamic Reticle */}
-          <div className={`relative flex items-center justify-center transition-all duration-150 ${
-            isSprinting ? 'w-8 h-8' : (isCrouching ? 'w-4 h-4' : 'w-6 h-6')
-          }`}>
-            {/* Center Dot */}
-            <div className={`w-1.5 h-1.5 rounded-full transition-colors ${
-              (nearbyPaper || nearbyDoor || nearbyWardrobe) ? 'bg-amber-300 ring-2 ring-amber-500' : 'bg-white/90 ring-1 ring-black/50'
-            }`} />
-            
-            {/* Top tick */}
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0.5 h-1.5 bg-white/70 shadow-sm" />
-            {/* Bottom tick */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0.5 h-1.5 bg-white/70 shadow-sm" />
-            {/* Left tick */}
-            <div className="absolute top-1/2 -left-2 -translate-y-1/2 h-0.5 w-1.5 bg-white/70 shadow-sm" />
-            {/* Right tick */}
-            <div className="absolute top-1/2 -right-2 -translate-y-1/2 h-0.5 w-1.5 bg-white/70 shadow-sm" />
-          </div>
-        </div>
-
-        {/* Hover Context Prompt below crosshair */}
-        {nearbyPaper && (
-          <div className="mt-3 px-2.5 py-0.5 rounded-md bg-amber-500/90 text-slate-950 text-[10px] font-black tracking-wider uppercase backdrop-blur-md shadow-lg animate-bounce">
-            [E] NHẶT BÙA: {nearbyPaper.char}
-          </div>
-        )}
-        {nearbyDoor && (
-          <div className="mt-3 px-2.5 py-0.5 rounded-md bg-cyan-500/90 text-slate-950 text-[10px] font-black tracking-wider uppercase backdrop-blur-md shadow-lg animate-bounce">
-            [E] MỞ CỔNG CHÍNH
-          </div>
-        )}
-        {nearbyWardrobe && !isHiding && (
-          <div className="mt-3 px-2.5 py-0.5 rounded-md bg-purple-500/90 text-white text-[10px] font-black tracking-wider uppercase backdrop-blur-md shadow-lg animate-bounce">
-            [R] TRỐN VÀO TỦ
-          </div>
-        )}
+      {/* Center Screen Crosshair */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-15 flex items-center justify-center">
+        <div className={`transition-all duration-200 ${
+          nearbyPaper || nearbyDoor || nearbyWardrobe 
+            ? 'w-7 h-7 border-2 border-amber-400 bg-amber-400/20 rounded-full scale-110 shadow-lg shadow-amber-400/50' 
+            : 'w-3 h-3 border border-white/60 bg-white/20 rounded-full'
+        }`} />
       </div>
 
       {/* Pointer Lock Status Hint */}
@@ -1994,31 +1800,14 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           </div>
         </div>
 
-        {/* Fear gauge, Battery & Stamina HUD */}
+        {/* Fear gauge & Battery */}
         <div className="flex items-center gap-2">
-          {/* Flashlight status */}
           <div className="flex items-center gap-1.5 bg-[#0b0f19]/85 border border-gray-700 rounded-2xl px-3 py-1.5 text-xs text-amber-300 backdrop-blur-md">
             <Flashlight className={`w-4 h-4 ${flashlightOn ? 'text-amber-400' : 'text-gray-600'}`} />
-            <span>F: {flashlightOn ? `BẬT` : 'TẮT'}</span>
+            <span>F: {flashlightOn ? `SIÊU SÁNG (${battery}%)` : 'TẮT'}</span>
           </div>
 
-          {/* Stamina & Sneak Mode */}
-          <div className="flex items-center gap-2 bg-[#0b0f19]/85 border border-cyan-500/40 rounded-2xl px-3 py-1.5 backdrop-blur-md">
-            <span className="text-[10px] font-black text-cyan-300">
-              {isCrouching ? '🥷 RÓN RÉN' : (isSprinting ? '⚡ CHẠY' : '🏃 ĐI')}
-            </span>
-            <div className="w-14 h-2 rounded-full bg-gray-800 overflow-hidden" title={`Thể lực: ${stamina}%`}>
-              <div 
-                className={`h-full transition-all duration-100 ${
-                  stamina > 30 ? 'bg-gradient-to-r from-cyan-400 to-blue-500' : 'bg-red-500 animate-pulse'
-                }`}
-                style={{ width: `${stamina}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Granny Proximity Fear Level */}
-          <div className="flex items-center gap-2 bg-[#0b0f19]/85 border border-red-500/40 rounded-2xl px-3 py-1.5 backdrop-blur-md" title="Mức độ sợ hãi / Khoảng cách tới Granny">
+          <div className="flex items-center gap-2 bg-[#0b0f19]/85 border border-red-500/40 rounded-2xl px-3 py-1.5 backdrop-blur-md">
             <ShieldAlert className={`w-4 h-4 ${heartbeatLevel > 50 ? 'text-red-500 animate-pulse' : 'text-gray-400'}`} />
             <div className="w-14 h-2 rounded-full bg-gray-800 overflow-hidden">
               <div 
@@ -2158,20 +1947,10 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         </div>
       )}
 
-      {/* MOVEMENT GUIDES (FPS SHOOTER AAA TRUY KÍCH / CS:GO / GTA 5) */}
-      <div className="absolute bottom-4 left-4 z-20 bg-[#0b0f19]/90 border border-gray-700/80 rounded-2xl px-4 py-2.5 text-xs text-gray-300 backdrop-blur-md shadow-xl pointer-events-none space-y-1">
-        <div className="flex items-center gap-2 font-mono text-[11px]">
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-cyan-300 font-bold">W A S D</span> Di chuyển FPS
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-cyan-300 font-bold">Shift</span> Chạy nhanh
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-amber-300 font-bold">Space</span> Nhảy
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-purple-300 font-bold">C / Ctrl</span> Ngồi rón rén (Stealth)
-        </div>
-        <div className="flex items-center gap-2 font-mono text-[11px] text-gray-400">
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-yellow-300 font-bold">Chuột</span> Xoay góc nhìn 3D
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-white font-bold">F</span> Đèn pin
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-emerald-300 font-bold">E</span> Nhặt bùa / Mở cổng
-          <span className="px-1.5 py-0.5 bg-gray-800 border border-gray-600 rounded text-pink-300 font-bold">R</span> Trốn vào tủ
-        </div>
+      {/* MOVEMENT GUIDES */}
+      <div className="absolute bottom-4 left-4 z-20 bg-[#0b0f19]/80 border border-gray-800 rounded-xl px-3 py-2 text-[11px] text-gray-400 backdrop-blur-md pointer-events-none">
+        <div><strong>W, A, S, D</strong>: Đi chậm • <strong>Shift</strong>: Chạy (gây tiếng động!)</div>
+        <div><strong>Chuột</strong>: Nhìn • <strong>F</strong>: Đèn pin • <strong>E</strong>: Nhặt/Mở khóa • <strong>R</strong>: Trốn vào tủ</div>
       </div>
 
       {/* SUCCESS OVERLAY */}
