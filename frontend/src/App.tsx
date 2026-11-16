@@ -206,7 +206,10 @@ const AppContent: React.FC = () => {
         onToggleSound={handleToggleSound}
         isDolphinActive={isDolphinActive}
         onToggleDolphin={handleToggleDolphin}
-        onStartTour={() => setIsTourOpen(true)}
+        onStartTour={() => {
+          setActiveTab('dashboard');
+          setIsTourOpen(true);
+        }}
       />
 
       {/* Main Container with Full Wide-Screen & 4K Scaling */}

@@ -215,6 +215,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             <button
+              id="tour-hero-btn-upload"
               onClick={() => onNavigateTab('upload')}
               className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm 3xl:text-base transition shadow-xl shadow-cyan-500/30 cursor-pointer hover:scale-105 min-h-[48px]"
             >

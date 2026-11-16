@@ -17,7 +17,7 @@
 
 > **EduPlay** là nền tảng giáo dục tương tác thế hệ mới, ứng dụng **Trí tuệ Nhân tạo Đa phương thức (Multimodal VLM)** và **Đồ họa 3D thời gian thực**. Hệ thống tự động phân tích mọi loại tài liệu học tập thô (sách giáo trình PDF, file Word DOCX, văn bản dính chữ, hình ảnh chụp bài giảng) để biến thành các **đấu trường trò chơi sinh động**, giúp nâng cao 300% khả năng ghi nhớ và tạo cảm hứng học tập bất tận.
 
-[🌐 Trải Nghiệm Web Trực Tiếp](#-triển-khai-lên-web-deployment) • [✨ 5 Chế Độ Game 4K](#-5-chế-độ-trò-chơi-độc-quyền-chuẩn-4k) • [🌟 Hướng Dẫn Spotlight](#-tính-năng-hướng-dẫn-ánh-sáng-hội-tụ-spotlight-tour) • [🏗️ Kiến Trúc Hệ Thống](#-kiến-trúc-và-thiết-kế-hệ-thống) • [🚀 Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy-nhanh) • [📚 Tài Liệu API](#-tài-liệu-api-endpoints)
+[🌐 Trải Nghiệm Web Trực Tiếp](#-triển-khai-lên-web-deployment) • [✨ 5 Chế Độ Game 4K](#-5-chế-độ-trò-chơi-độc-quyền-chuẩn-4k) • [🧠 Lõi Xử Lý AI](#-lõi-xử-lý-ai-đa-phương-thức-vlm-engine) • [🏗️ Kiến Trúc Hệ Thống](#-kiến-trúc-và-thiết-kế-hệ-thống) • [🚀 Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy-nhanh) • [📚 Tài Liệu API](#-tài-liệu-api-endpoints)
 
 ---
 
@@ -25,21 +25,20 @@
 
 ## 📑 MỤC LỤC
 1. [Giới thiệu Dự án](#-giới-thiệu-dự-án)
-2. [Tính Năng Hướng Dẫn Ánh Sáng Hội Tụ (Spotlight Tour)](#-tính-năng-hướng-dẫn-ánh-sáng-hội-tụ-spotlight-tour)
-3. [5 Chế độ Trò chơi Độc quyền Chuẩn 4K](#-5-chế-độ-trò-chơi-độc-quyền-chuẩn-4k)
-4. [Lõi Xử lý AI Đa Phương Thức (VLM Engine & Demo 1-Chạm)](#-lõi-xử-lý-ai-đa-phương-thức-vlm-engine)
-5. [Hệ Thống Quản Lý Giáo Trình & 20 Bộ Bài Học Có Sẵn](#-hệ-thống-quản-lý-giáo-trình--20-bộ-bài-học-mẫu)
-6. [Kiến Trúc và Thiết Kế Hệ Thống (System Architecture)](#-kiến-trúc-và-thiết-kế-hệ-thống)
-   - 6.1. [Mô hình Kiến trúc Phân tầng: 3-Tier Decoupled Architecture](#61-mô-hình-kiến-trúc-tổng-thể-3-tier-decoupled-architecture)
-   - 6.2. [Đặc tả Toàn diện Tầng Giao diện (Frontend Component Architecture)](#62-đặc-tả-toàn-diện-tầng-giao-diện-frontend-component-architecture)
-   - 6.3. [Đặc tả Tầng Dịch vụ Xử lý Nghiệp vụ Backend (Backend Service Architecture)](#63-đặc-tả-tầng-dịch-vụ-xử-lý-nghiệp-vụ-backend-backend-service-architecture)
-   - 6.4. [Bảng Ma trận Đối chiếu Kỹ thuật: Layered vs Microservices](#64-bảng-ma-trận-đối-chiếu-kỹ-thuật-layered-components-vs-distributed-microservices)
-7. [Công Nghệ Sử Dụng (Tech Stack)](#-công-nghệ-sử-dụng-tech-stack)
-8. [Cấu Trúc Thư Mục Chuẩn Hóa](#-cấu-trúc-thư-mục-chuẩn-hóa)
-9. [Cài Đặt & Khởi Chạy Nhanh](#-cài-đặt--khởi-chạy-nhanh)
-10. [Triển Khai Lên Web (Deployment)](#-triển-khai-lên-web-deployment)
-11. [Tài Liệu API Endpoints](#-tài-liệu-api-endpoints)
-12. [Bản Quyền & Tác Giả](#-bản-quyền--tác-giả)
+2. [5 Chế độ Trò chơi Độc quyền Chuẩn 4K](#-5-chế-độ-trò-chơi-độc-quyền-chuẩn-4k)
+3. [Lõi Xử lý AI Đa Phương Thức (VLM Engine & Demo 1-Chạm)](#-lõi-xử-lý-ai-đa-phương-thức-vlm-engine)
+4. [Hệ Thống Quản Lý Giáo Trình & 20 Bộ Bài Học Có Sẵn](#-hệ-thống-quản-lý-giáo-trình--20-bộ-bài-học-mẫu)
+5. [Kiến Trúc và Thiết Kế Hệ Thống (System Architecture)](#-kiến-trúc-và-thiết-kế-hệ-thống)
+   - 5.1. [Mô hình Kiến trúc Phân tầng: 3-Tier Decoupled Architecture](#51-mô-hình-kiến-trúc-tổng-thể-3-tier-decoupled-architecture)
+   - 5.2. [Đặc tả Toàn diện Tầng Giao diện (Frontend Component Architecture)](#52-đặc-tả-toàn-diện-tầng-giao-diện-frontend-component-architecture)
+   - 5.3. [Đặc tả Tầng Dịch vụ Xử lý Nghiệp vụ Backend (Backend Service Architecture)](#53-đặc-tả-tầng-dịch-vụ-xử-lý-nghiệp-vụ-backend-backend-service-architecture)
+   - 5.4. [Bảng Ma trận Đối chiếu Kỹ thuật: Layered vs Microservices](#54-bảng-ma-trận-đối-chiếu-kỹ-thuật-layered-components-vs-distributed-microservices)
+6. [Công Nghệ Sử Dụng (Tech Stack)](#-công-nghệ-sử-dụng-tech-stack)
+7. [Cấu Trúc Thư Mục Chuẩn Hóa](#-cấu-trúc-thư-mục-chuẩn-hóa)
+8. [Cài Đặt & Khởi Chạy Nhanh](#-cài-đặt--khởi-chạy-nhanh)
+9. [Triển Khai Lên Web (Deployment)](#-triển-khai-lên-web-deployment)
+10. [Tài Liệu API Endpoints](#-tài-liệu-api-endpoints)
+11. [Bản Quyền & Tác Giả](#-bản-quyền--tác-giả)
 
 ---
 
@@ -49,34 +48,6 @@ Hầu hết các nền tảng học tập trực tuyến hiện nay chỉ dừng
 - **Gamification (Trò chơi hóa)**: Đưa kiến thức vào các thử thách phản xạ bàn phím, vẽ nét phép thuật cử chỉ, đấu trường trí tuệ và game sinh tồn 3D trốn thoát.
 - **Multimodal AI Pipeline**: Đọc hiểu cấu trúc văn bản học thuật, tự động phát hiện từ vựng trọng tâm, sinh câu hỏi trắc nghiệm kèm giải thích logic bằng mô hình ngôn ngữ lớn **Google Gemini Flash 2.0**.
 - **Cinematic Experience**: Giao diện chuẩn **4K Ultra-HD phong cách Siêu Anh Hùng Avengers**, hiệu ứng âm thanh số sống động (Web Audio API), trợ lý ảo AI Copilot đồng hành 24/7.
-
----
-
-## 💡 TÍNH NĂNG HƯỚNG DẪN ÁNH SÁNG HỘI TỤ (SPOTLIGHT TOUR)
-
-Hệ thống tích hợp **Onboarding Tour chuẩn Game AAA** với công nghệ ánh sáng hội tụ (Spotlight Mask):
-
-```
-+--------------------------------------------------------------+
-| [MÀN HÌNH TỐI MỜ (CINEMATIC BACKDROP)]                      |
-|                                                              |
-|            /==============================\                  |
-|            |  VÙNG ÁNH SÁNG BO TRÒN SÁNG  |  <--- HỘI TỤ VÀO |
-|            |   (PULSING GLOW RING + HUD)  |       TÍNH NĂNG  |
-|            \==============================/                  |
-|                           |                                  |
-|               +-----------v---------------------+            |
-|               | 💬 TOOLTIP DIALOG: BƯỚC 1/6     |            |
-|               |  Giải thích chức năng chi tiết   |            |
-|               |  [← Quay lại]  [Tiếp theo →]   |            |
-|               +---------------------------------+            |
-+--------------------------------------------------------------+
-```
-
-- **Màn hình tối mờ & Khối cắt bo tròn (SVG Mask)**: Làm tối toàn bộ màn hình xung quanh và mở một vòng ánh sáng tròn bo mềm mại chính xác tại thành phần đang được giới thiệu.
-- **Vòng hào quang & Radar Ping 4K**: Viền ánh sáng Neon Cyan / Vàng phát quang với 4 góc định vị Sci-Fi HUD chuẩn game hành động.
-- **Tự động cuộn & Chuyển Tab thông minh**: Hệ thống tự động cuộn màn hình đến vị trí tính năng và đổi Tab nếu cần thiết.
-- **Bật/Tắt chủ động**: Người dùng có thể nhấn nút **"Hướng Dẫn"** (biểu tượng La bàn 🧭) trên thanh điều hướng Navbar bất kỳ lúc nào để xem lại hướng dẫn!
 
 ---
 

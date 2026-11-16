@@ -8,7 +8,8 @@ import {
   BookOpen, 
   Gamepad2, 
   Cpu, 
-  Trophy
+  Trophy,
+  Target
 } from 'lucide-react';
 import { ActiveTab } from '../Navbar';
 
@@ -101,33 +102,46 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
 
+  // Always reset to step 0 when reopened
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentStepIndex(0);
+    }
+  }, [isOpen]);
+
   const step = TOUR_STEPS[currentStepIndex];
 
-  // Play subtle UI click sound
+  // Play subtle game-style audio chime
   const playTourSound = () => {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(580, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+      osc.frequency.setValueAtTime(620, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(940, ctx.currentTime + 0.14);
       gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.12);
+      osc.stop(ctx.currentTime + 0.14);
     } catch {}
   };
 
-  // Find and measure target element
+  // Find and measure target element with mobile fallback
   const updateTargetRect = useCallback(() => {
     if (!isOpen || !step) return;
 
-    const el = document.getElementById(step.targetId);
+    let targetId = step.targetId;
+    let el = document.getElementById(targetId);
+
+    // Fallback if desktop nav upload button is hidden on small screens
+    if ((!el || el.offsetParent === null) && targetId === 'tour-nav-upload') {
+      el = document.getElementById('tour-hero-btn-upload');
+    }
+
     if (el) {
-      // Scroll into view smoothly if not visible
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       const rect = el.getBoundingClientRect();
       setTargetRect({
@@ -137,15 +151,16 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
         height: rect.height
       });
     } else {
-      // If target element is not on current tab, auto switch to dashboard
       if (step.tabRequirement && onNavigateTab) {
         onNavigateTab(step.tabRequirement);
       } else if (onNavigateTab) {
         onNavigateTab('dashboard');
       }
-      // Retry in 300ms after tab switch
       setTimeout(() => {
-        const retryEl = document.getElementById(step.targetId);
+        let retryEl = document.getElementById(step.targetId);
+        if ((!retryEl || retryEl.offsetParent === null) && step.targetId === 'tour-nav-upload') {
+          retryEl = document.getElementById('tour-hero-btn-upload');
+        }
         if (retryEl) {
           retryEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
           const rect = retryEl.getBoundingClientRect();
@@ -172,7 +187,11 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
     if (!isOpen) return;
 
     const handleResize = () => {
-      const el = document.getElementById(step.targetId);
+      let targetId = step.targetId;
+      let el = document.getElementById(targetId);
+      if ((!el || el.offsetParent === null) && targetId === 'tour-nav-upload') {
+        el = document.getElementById('tour-hero-btn-upload');
+      }
       if (el) {
         const rect = el.getBoundingClientRect();
         setTargetRect({
@@ -232,78 +251,104 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
   const spotY = targetRect ? Math.max(0, targetRect.y - pad) : 0;
   const spotW = targetRect ? targetRect.width + pad * 2 : 0;
   const spotH = targetRect ? targetRect.height + pad * 2 : 0;
+  const centerX = spotX + spotW / 2;
+  const centerY = spotY + spotH / 2;
+  const borderRadius = Math.min(28, Math.max(16, spotH / 3));
 
   // Compute Card Tooltip Position
   const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
   const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
 
-  let tooltipTop = spotY + spotH + 20;
-  let tooltipLeft = Math.max(20, Math.min(windowWidth - 440, spotX + (spotW / 2) - 210));
+  let tooltipTop = spotY + spotH + 24;
+  let tooltipLeft = Math.max(16, Math.min(windowWidth - 436, centerX - 210));
 
   // If tooltip goes off-screen at bottom, flip to above the target
-  if (tooltipTop + 240 > windowHeight && spotY > 260) {
-    tooltipTop = Math.max(20, spotY - 250);
+  if (tooltipTop + 260 > windowHeight && spotY > 260) {
+    tooltipTop = Math.max(16, spotY - 260);
   }
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden select-none pointer-events-auto">
-      {/* SVG Mask Cutout with Converging Radial Darkness */}
+      
+      {/* 1. SVG Cutout Mask: Cinematic Darkened Screen with Rounded Spotlight Hole */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           <mask id="spotlight-mask">
-            {/* White covers entire screen */}
+            {/* White covers entire viewport */}
             <rect width="100%" height="100%" fill="white" />
-            {/* Black cuts out the spotlight hole */}
+            {/* Black cuts out the rounded spotlight window */}
             {targetRect && (
               <rect
                 x={spotX}
                 y={spotY}
                 width={spotW}
                 height={spotH}
-                rx="24"
-                ry="24"
+                rx={borderRadius}
+                ry={borderRadius}
                 fill="black"
               />
             )}
           </mask>
         </defs>
 
-        {/* Cinematic Darkened Screen Overlay */}
+        {/* Ambient Darkened Backdrop with SVG Mask */}
         <rect
           width="100%"
           height="100%"
-          fill="rgba(4, 7, 14, 0.82)"
+          fill="rgba(5, 8, 15, 0.84)"
           mask="url(#spotlight-mask)"
         />
       </svg>
 
-      {/* Target Focus Ring & Sci-Fi Converging Light Accents */}
+      {/* 2. Converging Volumetric Light Cone: Radial Gradient Beaming Into the Target */}
+      {targetRect && (
+        <div 
+          className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
+          style={{
+            background: `radial-gradient(ellipse at ${centerX}px ${centerY}px, rgba(6, 182, 212, 0.22) 0%, rgba(6, 182, 212, 0.06) ${Math.max(spotW, spotH) * 0.8}px, transparent ${Math.max(spotW, spotH) * 1.5}px)`
+          }}
+        />
+      )}
+
+      {/* 3. Glowing Converging Focus Rings & Sci-Fi HUD Reticle */}
       {targetRect && (
         <div
-          className="absolute pointer-events-none rounded-3xl border-2 border-cyan-400 transition-all duration-400 ease-out"
+          className="absolute pointer-events-none transition-all duration-400 ease-out"
           style={{
             left: `${spotX}px`,
             top: `${spotY}px`,
             width: `${spotW}px`,
             height: `${spotH}px`,
-            boxShadow: '0 0 35px rgba(6, 182, 212, 0.75), inset 0 0 15px rgba(6, 182, 212, 0.35)'
+            borderRadius: `${borderRadius}px`,
+            border: '2px solid rgba(6, 182, 212, 0.85)',
+            boxShadow: '0 0 35px rgba(6, 182, 212, 0.75), 0 0 70px rgba(6, 182, 212, 0.25), inset 0 0 20px rgba(6, 182, 212, 0.35)'
           }}
         >
-          {/* Animated Expanding Ripple Ping */}
-          <div className="absolute -inset-2 rounded-3xl border border-cyan-300 animate-ping opacity-40 pointer-events-none" />
+          {/* Animated Inward Converging Pulse Rings */}
+          <div 
+            className="absolute -inset-3 rounded-[32px] border border-cyan-400/40 animate-pulse pointer-events-none" 
+            style={{ borderRadius: `${borderRadius + 8}px` }}
+          />
+          <div 
+            className="absolute -inset-6 rounded-[36px] border border-cyan-400/25 animate-ping opacity-30 pointer-events-none duration-1000" 
+            style={{ borderRadius: `${borderRadius + 14}px` }}
+          />
 
           {/* 4 Corner Targeting HUD Brackets (Truy Kích / GTA 5 Style) */}
-          <div className="absolute -top-2.5 -left-2.5 w-5 h-5 border-t-2 border-l-2 border-amber-400 rounded-tl-sm pointer-events-none" />
-          <div className="absolute -top-2.5 -right-2.5 w-5 h-5 border-t-2 border-r-2 border-amber-400 rounded-tr-sm pointer-events-none" />
-          <div className="absolute -bottom-2.5 -left-2.5 w-5 h-5 border-b-2 border-l-2 border-amber-400 rounded-bl-sm pointer-events-none" />
-          <div className="absolute -bottom-2.5 -right-2.5 w-5 h-5 border-b-2 border-r-2 border-amber-400 rounded-br-sm pointer-events-none" />
+          <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-amber-400 rounded-tl-sm pointer-events-none drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+          <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-amber-400 rounded-tr-sm pointer-events-none drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+          <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-amber-400 rounded-bl-sm pointer-events-none drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+          <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-amber-400 rounded-br-sm pointer-events-none drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
 
-          {/* Converging Center Light Beacon */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-cyan-400/20 blur-md animate-pulse pointer-events-none" />
+          {/* Converging Target Reticle Badge */}
+          <div className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#070A12]/95 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-black uppercase tracking-wider shadow-lg shadow-cyan-500/40 flex items-center gap-1.5 whitespace-nowrap animate-bounce pointer-events-none">
+            <Target className="w-3 h-3 text-cyan-400 animate-spin" />
+            <span>MỤC TIÊU: {step.badge}</span>
+          </div>
         </div>
       )}
 
-      {/* Interactive Floating Tooltip Dialog Card */}
+      {/* 4. Interactive Floating Tooltip Dialog Card */}
       <div
         className="absolute z-55 w-[92vw] max-w-[420px] transition-all duration-300 ease-out animate-in fade-in zoom-in-95"
         style={{
