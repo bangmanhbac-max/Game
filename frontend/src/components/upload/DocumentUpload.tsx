@@ -291,105 +291,10 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
           </span>
         </div>
 
-        {/* Quick Sample Presets */}
+        {/* HÀNG NÚT MẪU DEMO TỰ ĐỘNG TẠO ĐẦY ĐỦ (KHÔNG CẦN API) */}
         <div 
           onClick={(e) => e.stopPropagation()} 
           className="pt-3 border-t border-gray-800/80 flex flex-wrap items-center justify-center gap-2"
-        >
-          <span className="text-xs text-gray-400 font-semibold flex items-center gap-1">
-            <Wand2 className="w-3.5 h-3.5 text-cyan-400" /> Thử nhanh mẫu:
-          </span>
-
-          {/* PRESET THỬ DÍNH CHỮ LỘN XỘN ĐẶC BIỆT */}
-          <button
-            type="button"
-            onClick={() => {
-              const messy = `=== TÀI LIỆU SCAN DÍNH CHÙM LỘN XỘN (TEST VLM) ===
-1.你好(nǐhǎo):Xinchào-Lờichàohỏicơbảnhàngngày.
-2.谢谢(xièxie):Cảmơn-Biếtơnkhiđượcngườikhácgiúpđỡ.
-3.不客气(búkèqi):Đừngkháchsáo-Khôngcóchi-Đápnhẹnhàng.
-4.对不起(duìbuqǐ):Xinlỗi-Thànhthậtkhibảnthânmắclỗi.
-5.没关系(méiguānxi):Khôngsaocả-Đápkhingườikhácxinlỗi.
-6.再见(zàijiàn):Tạmbiệt-Hẹngặplạilầnsau.
-7.老师(lǎoshī):Thầycôgiáo-Ngườitruyềnthụtrivàkiếnthức.
-8.电脑(diànnǎo):Máyvitính-Thiếtbịcôngnghệthôngminh.
-9.手机(shǒujī):Điệnthoạidiđộng-Phươngtiệnliênlạctiệndụng.
-10.开心(kāixīn):Vuivẻ-Tâmtrạnghạnhphúcyêuđời.
-Algorithm(/ˈæl.ɡə.rɪ.ðəm/):Thuậttoángiảiquyếtbàitoán
-Database(/ˈdeɪ.tə.beɪs/):Cơsởdữliệulưutrữhệthống`;
-              setCustomText(messy);
-              setExtractedDoc({
-                filename: 'file_dinh_chu_lon_xon_mau.txt',
-                file_type: 'txt',
-                char_count: messy.length,
-                raw_text: messy,
-                preview_snippet: '1.你好(nǐhǎo):Xinchào-Lờichàohỏicơbảnhàngngày...'
-              });
-              setVlmPackage(null);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500/20 to-purple-500/20 hover:from-pink-500/30 hover:to-purple-500/30 border border-pink-400/40 text-pink-300 text-xs font-bold transition shadow-sm flex items-center gap-1.5"
-          >
-            <Zap className="w-3.5 h-3.5 text-pink-400" />
-            🧪 Test File Dính Chữ / Lộn Xộn
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => {
-              const hsk = `1. 你好 (nǐ hǎo) : Xin chào - Lời chào hỏi cơ bản nhất hàng ngày.
-2. 谢谢 (xièxie) : Cảm ơn - Thể hiện sự biết ơn khi nhận được sự giúp đỡ.
-3. 不客气 (bú kèqi) : Đừng khách sáo / Không có chi - Đáp lại lời cảm ơn.
-4. 对不起 (duìbuqǐ) : Xin lỗi - Dùng khi mắc lỗi hoặc cần làm phiền ai đó.
-5. 没关系 (méi guānxi) : Không sao đâu - Lời đáp khi người khác xin lỗi mình.
-6. 再见 (zàijiàn) : Tạm biệt - Hẹn gặp lại.
-7. 老师 (lǎoshī) : Thầy cô giáo - Người giảng dạy và truyền đạt kiến thức.
-8. 朋友 (péngyou) : Bạn bè - Những người bạn thân thiết.
-9. 学习 (xuéxí) : Học tập - Trau dồi kiến thức mới mỗi ngày.
-10. 开心 (kāixīn) : Vui vẻ - Cảm giác hạnh phúc, yêu đời.`;
-              setCustomText(hsk);
-              setExtractedDoc({
-                filename: 'tu_vung_tieng_trung_mau.txt',
-                file_type: 'txt',
-                char_count: hsk.length,
-                raw_text: hsk,
-                preview_snippet: '你好 (nǐ hǎo) : Xin chào...'
-              });
-              setVlmPackage(null);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-bold transition shadow-sm"
-          >
-            🇨🇳 Tiếng Trung HSK
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              const eng = `1. Algorithm (/ˈæl.ɡə.rɪ.ðəm/) : Thuật toán - Tập hợp chỉ dẫn giải quyết bài toán.
-2. Database (/ˈdeɪ.tə.beɪs/) : Cơ sở dữ liệu - Hệ thống lưu trữ và quản lý dữ liệu.
-3. Neural (/ˈnjʊə.rəl/) : Thuộc về nơ-ron - Mạng nơ-ron nhân tạo AI.
-4. Framework (/ˈfreɪm.wɜːk/) : Khung phần mềm - Nền tảng xây dựng ứng dụng.
-5. Compiler (/kəmˈpaɪ.lər/) : Trình biên dịch - Chương trình dịch mã nguồn.
-6. Vector (/ˈvek.tər/) : Véc-tơ toán học - Mảng số nhiều chiều dùng trong Machine Learning.`;
-              setCustomText(eng);
-              setExtractedDoc({
-                filename: 'tu_vung_tieng_anh_ai.txt',
-                file_type: 'txt',
-                char_count: eng.length,
-                raw_text: eng,
-                preview_snippet: 'Algorithm (/ˈæl.ɡə.rɪ.ðəm/) : Thuật toán...'
-              });
-              setVlmPackage(null);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/40 text-purple-300 text-xs font-bold transition shadow-sm"
-          >
-            🇬🇧 Tiếng Anh AI & Tech
-          </button>
-        </div>
-
-        {/* HÀNG NÚT BỔ SUNG: MẪU DEMO TƯƠNG ỨNG TỰ ĐỘNG TẠO ĐẦY ĐỦ (KHÔNG CẦN API) */}
-        <div 
-          onClick={(e) => e.stopPropagation()} 
-          className="pt-2.5 flex flex-wrap items-center justify-center gap-2"
         >
           <span className="text-xs text-amber-300 font-bold flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Mẫu demo tự tạo (Không cần API):
