@@ -245,6 +245,107 @@ export async function updateProfile(data: { full_name?: string; avatar?: string 
 
 // ================= DOCUMENT & AI GENERATOR APIS =================
 
+const GESTURE_TYPES: Array<'horizontal' | 'vertical' | 'slash' | 'backslash' | 'v_shape' | 'caret' | 'circle' | 'lightning'> = [
+  'horizontal', 'vertical', 'slash', 'backslash', 'v_shape', 'caret', 'circle', 'lightning'
+];
+
+function generateClientFallbackPackage(rawText: string, filename?: string): LearningPackage {
+  const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const items = [];
+  const quizItems = [];
+
+  let idx = 0;
+  for (const line of lines.slice(0, 30)) {
+    let word = '';
+    let meaning = '';
+    if (line.includes(':')) {
+      const parts = line.split(':');
+      word = parts[0].trim();
+      meaning = parts.slice(1).join(':').trim();
+    } else if (line.includes('-')) {
+      const parts = line.split('-');
+      word = parts[0].trim();
+      meaning = parts.slice(1).join('-').trim();
+    } else {
+      const words = line.split(/\s+/);
+      word = words[0] || 'Từ vựng';
+      meaning = words.slice(1).join(' ') || 'Kiến thức cốt lõi';
+    }
+
+    if (!word) continue;
+    const cleanType = word.toLowerCase().replace(/[^a-z0-9]/g, '') || 'word' + (idx + 1);
+    const gesture = GESTURE_TYPES[idx % GESTURE_TYPES.length];
+
+    items.push({
+      id: `vocab_${Date.now()}_${idx}`,
+      target_text: word,
+      phonetic: word,
+      type_target: cleanType,
+      meaning: meaning || 'Ý nghĩa trọng tâm',
+      difficulty: (idx % 3) + 1,
+      stroke_gesture: gesture,
+    });
+
+    quizItems.push({
+      id: `quiz_${Date.now()}_${idx}`,
+      question: `Ý nghĩa chính xác của "${word}" trong bài học là gì?`,
+      options: [
+        `A. ${meaning || 'Kiến thức cơ bản'}`,
+        'B. Khái niệm mở rộng ngoài phạm vi bài',
+        'C. Định nghĩa phản đề chưa chính xác',
+        'D. Thuật ngữ bổ trợ ngữ cảnh phụ'
+      ],
+      correct_index: 0,
+      explanation: `"${word}" mang ý nghĩa: ${meaning || 'Kiến thức bài học đã được phân tích.'}`,
+      points: 100
+    });
+
+    idx++;
+    if (idx >= 15) break;
+  }
+
+  // Nếu không tách được dòng nào hợp lệ, sinh bài học mẫu chất lượng cao
+  if (items.length === 0) {
+    items.push(
+      { id: 'v1', target_text: 'Artificial Intelligence', phonetic: 'AI', type_target: 'ai', meaning: 'Trí tuệ nhân tạo', difficulty: 1, stroke_gesture: 'circle' as const },
+      { id: 'v2', target_text: 'Machine Learning', phonetic: 'ML', type_target: 'ml', meaning: 'Học máy', difficulty: 2, stroke_gesture: 'lightning' as const },
+      { id: 'v3', target_text: 'Neural Network', phonetic: 'Mạng nơ-ron', type_target: 'neural', meaning: 'Mô hình phỏng sinh học', difficulty: 2, stroke_gesture: 'v_shape' as const }
+    );
+    quizItems.push(
+      { id: 'q1', question: 'Mô hình học máy phổ biến trong AI là gì?', options: ['A. Neural Network', 'B. Loop While', 'C. CSS Box', 'D. HTML Tag'], correct_index: 0, explanation: 'Neural Network là kiến trúc học sâu cơ bản.', points: 100 }
+    );
+  }
+
+  const pkgTitle = filename ? `Bài Học: ${filename.replace(/\.[^/.]+$/, '')}` : 'Bộ Thẻ Kiến Thức Tùy Biến';
+  const pkg: LearningPackage = {
+    package_id: `pkg_local_${Date.now()}`,
+    title: pkgTitle,
+    source_filename: filename || 'custom_document.txt',
+    created_at: new Date().toISOString(),
+    vocabulary_deck: {
+      id: `deck_v_${Date.now()}`,
+      title: `${pkgTitle} (Từ Vựng)`,
+      description: 'Được tạo tự động và tối ưu hóa cho các chế độ trò chơi',
+      target_language: 'vi-VN',
+      items,
+    },
+    quiz_deck: {
+      id: `deck_q_${Date.now()}`,
+      title: `${pkgTitle} (Quiz Đấu Trường)`,
+      description: 'Bộ câu hỏi trắc nghiệm phản xạ nhanh',
+      items: quizItems,
+    }
+  };
+
+  try {
+    const localDecks: LearningPackage[] = JSON.parse(localStorage.getItem('eduplay_saved_decks') || '[]');
+    localDecks.unshift(pkg);
+    localStorage.setItem('eduplay_saved_decks', JSON.stringify(localDecks));
+  } catch {}
+
+  return pkg;
+}
+
 export async function uploadDocument(file: File, geminiApiKey?: string, customPrompt?: string): Promise<DocumentExtractResult> {
   const formData = new FormData();
   formData.append('file', file);
@@ -262,38 +363,77 @@ export async function uploadDocument(file: File, geminiApiKey?: string, customPr
     headers['X-Gemini-Key'] = key;
   }
 
-  const res = await fetch(`${API_BASE}/upload`, {
-    method: 'POST',
-    headers,
-    body: formData,
-  });
+  try {
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ detail: 'Lỗi tải file lên máy chủ' }));
-    throw new Error(errorData.detail || 'Lỗi tải file');
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ detail: 'Lỗi tải file lên máy chủ' }));
+        throw new Error(errorData.detail || 'Lỗi tải file');
+      }
+      return await res.json();
+    }
+  } catch (err: any) {
+    if (err.message && !err.message.includes('fetch') && !err.message.includes('JSON')) {
+      throw err;
+    }
+    console.warn('Backend upload unreachable, attempting client-side text extractor fallback');
   }
 
-  return res.json();
+  // Client-side text extraction fallback when on Vercel/Static without backend
+  const ext = file.name.split('.').pop()?.toLowerCase() || '';
+  if (['txt', 'md', 'json', 'csv', 'log', 'text'].includes(ext) || file.type.includes('text')) {
+    const rawText = await file.text();
+    const pkg = generateClientFallbackPackage(rawText, file.name);
+    return {
+      filename: file.name,
+      file_type: ext,
+      char_count: rawText.length,
+      raw_text: rawText,
+      preview_snippet: rawText.slice(0, 300) + (rawText.length > 300 ? '...' : ''),
+      learning_package: pkg,
+      vlm_status: 'Client-side Extractor & Generator Active'
+    };
+  }
+
+  throw new Error('Máy chủ Backend Python hiện chưa bật để xử lý file nhị phân (' + ext.toUpperCase() + '). Vui lòng bật start_all.bat trên máy tính, hoặc tải file văn bản (.txt, .md) để tạo bài học ngay!');
 }
 
 export async function generateLearningContent(rawText: string, filename?: string, apiKey?: string, customPrompt?: string): Promise<LearningPackage> {
-  const res = await fetch(`${API_BASE}/generate`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      raw_text: rawText,
-      filename,
-      api_key: apiKey || undefined,
-      custom_prompt: customPrompt || undefined,
-    }),
-  });
+  try {
+    const res = await fetch(`${API_BASE}/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        raw_text: rawText,
+        filename,
+        api_key: apiKey || undefined,
+        custom_prompt: customPrompt || undefined,
+      }),
+    });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ detail: 'Lỗi khi AI tạo sinh nội dung' }));
-    throw new Error(errorData.detail || 'Lỗi AI');
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ detail: 'Lỗi khi AI tạo sinh nội dung' }));
+        throw new Error(errorData.detail || 'Lỗi AI');
+      }
+      return await res.json();
+    }
+  } catch (err: any) {
+    if (err.message && !err.message.includes('fetch') && !err.message.includes('JSON')) {
+      throw err;
+    }
+    console.warn('Backend generate unreachable, generating client-side package');
   }
 
-  return res.json();
+  // Client fallback generation
+  return generateClientFallbackPackage(rawText, filename);
 }
 
 // ================= DECKS APIS =================
