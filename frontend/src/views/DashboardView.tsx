@@ -1,13 +1,35 @@
-import React from 'react';
-import { Sparkles, Gamepad2, ArrowRight, BookOpen, Zap, Trophy, Play, Shield, Flame, Compass } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  Sparkles, 
+  Gamepad2, 
+  ArrowRight, 
+  BookOpen, 
+  Zap, 
+  Trophy, 
+  Play, 
+  Shield, 
+  Flame, 
+  Compass, 
+  Plus, 
+  Trash2, 
+  Edit3, 
+  X, 
+  Check, 
+  AlertTriangle, 
+  FolderPlus, 
+  Wand2 
+} from 'lucide-react';
 import { LearningPackage } from '../types/learning_content';
 import { ActiveTab } from '../components/Navbar';
+import { DEMO_CHINESE_DATA, DEMO_ENGLISH_DATA, DEMO_MESSY_DATA } from '../lib/demoPackages';
 
 interface DashboardViewProps {
   decks: LearningPackage[];
   activeDeck: LearningPackage;
   onSelectDeck: (deck: LearningPackage) => void;
   onNavigateTab: (tab: ActiveTab) => void;
+  onDeleteDeck?: (packageId: string) => void;
+  onAddDeck?: (deck: LearningPackage) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -15,7 +37,110 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   activeDeck,
   onSelectDeck,
   onNavigateTab,
+  onDeleteDeck,
+  onAddDeck,
 }) => {
+  const [isAddDeckModalOpen, setIsAddDeckModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newLang, setNewLang] = useState('zh-CN');
+  const [newDesc, setNewDesc] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleAddPreset = (type: 'chinese' | 'english' | 'messy') => {
+    let baseData;
+    if (type === 'chinese') baseData = DEMO_CHINESE_DATA;
+    else if (type === 'english') baseData = DEMO_ENGLISH_DATA;
+    else baseData = DEMO_MESSY_DATA;
+
+    const uniqueId = `pkg_${type}_${Date.now()}`;
+    const newPkg: LearningPackage = {
+      ...baseData.package,
+      package_id: uniqueId,
+      created_at: new Date().toISOString(),
+    };
+
+    if (onAddDeck) {
+      onAddDeck(newPkg);
+    }
+    onSelectDeck(newPkg);
+    setIsAddDeckModalOpen(false);
+    showToast(`Đã thêm bộ từ "${newPkg.title}" thành công!`);
+  };
+
+  const handleCreateManualDeck = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTitle.trim()) return;
+
+    const title = newTitle.trim();
+    const uniqueId = `pkg_custom_${Date.now()}`;
+    const sampleWord = newLang === 'zh-CN' ? '你好' : (newLang === 'en' ? 'Hello' : 'Xin chào');
+    const samplePhonetic = newLang === 'zh-CN' ? 'nǐ hǎo' : (newLang === 'en' ? '/həˈloʊ/' : 'xin chao');
+    const sampleType = newLang === 'zh-CN' ? 'nihao' : (newLang === 'en' ? 'hello' : 'xinchao');
+
+    const newPkg: LearningPackage = {
+      package_id: uniqueId,
+      title,
+      created_at: new Date().toISOString(),
+      source_filename: 'manual_created.txt',
+      vocabulary_deck: {
+        id: `deck_v_${Date.now()}`,
+        title,
+        description: newDesc.trim() || 'Bộ từ vựng tạo thủ công',
+        target_language: newLang,
+        items: [
+          {
+            id: `v_${Date.now()}_1`,
+            target_text: sampleWord,
+            phonetic: samplePhonetic,
+            type_target: sampleType,
+            meaning: 'Xin chào',
+            difficulty: 1,
+            stroke_gesture: 'horizontal',
+            characters: newLang === 'zh-CN' ? ['你', '好'] : undefined
+          }
+        ]
+      },
+      quiz_deck: {
+        id: `deck_q_${Date.now()}`,
+        title: `Quiz: ${title}`,
+        description: 'Bộ câu hỏi trắc nghiệm kiểm tra phản xạ',
+        items: [
+          {
+            id: `q_${Date.now()}_1`,
+            question: `Ý nghĩa chính xác của "${sampleWord}" là gì?`,
+            options: ['A. Xin chào', 'B. Tạm biệt', 'C. Cảm ơn', 'D. Xin lỗi'],
+            correct_index: 0,
+            explanation: 'Từ chào hỏi căn bản nhất.',
+            points: 100
+          }
+        ]
+      }
+    };
+
+    if (onAddDeck) {
+      onAddDeck(newPkg);
+    }
+    onSelectDeck(newPkg);
+    setIsAddDeckModalOpen(false);
+    setNewTitle('');
+    setNewDesc('');
+    showToast(`Đã tạo bộ từ "${title}"! Đang mở trình biên tập...`);
+    onNavigateTab('upload');
+  };
+
+  const handleConfirmDelete = () => {
+    if (onDeleteDeck) {
+      onDeleteDeck(activeDeck.package_id);
+    }
+    setIsConfirmDeleteOpen(false);
+    showToast(`Đã xóa bộ bài học thành công!`);
+  };
   return (
     <div className="space-y-6 sm:space-y-10 py-2 w-full mx-auto">
       {/* 4K Cinematic Avengers Hero Banner (Responsive on Mobile, Tablet & 4K) */}
@@ -272,42 +397,68 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   Gói Bài Học Đang Chọn
                 </span>
-                <span className="text-[11px] sm:text-xs text-gray-500">
-                  {activeDeck.vocabulary_deck.items.length} từ vựng • {activeDeck.quiz_deck.items.length} câu quiz
+                <span className="text-[11px] sm:text-xs text-gray-400">
+                  {activeDeck.vocabulary_deck?.items?.length || 0} từ vựng • {activeDeck.quiz_deck?.items?.length || 0} câu quiz
                 </span>
               </div>
               <h3 className="text-lg sm:text-xl 3xl:text-2xl font-bold text-white mt-1.5">{activeDeck.title}</h3>
-              <p className="text-xs 3xl:text-sm text-gray-400 mt-0.5">{activeDeck.vocabulary_deck.description}</p>
+              <p className="text-xs 3xl:text-sm text-gray-400 mt-0.5">{activeDeck.vocabulary_deck?.description}</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
-            {decks.length > 1 && (
+            {/* Bộ chọn danh sách các bộ bài học */}
+            <div className="relative min-w-[200px] flex-1 sm:flex-initial">
               <select
                 value={activeDeck.package_id}
                 onChange={(e) => {
                   const found = decks.find((d) => d.package_id === e.target.value);
                   if (found) onSelectDeck(found);
                 }}
-                className="w-full sm:w-auto bg-[#0B0F19] text-xs 3xl:text-sm text-cyan-300 font-semibold px-3 py-2.5 rounded-xl border border-gray-700 hover:border-cyan-500/40 focus:outline-none min-h-[44px]"
+                className="w-full bg-[#0B0F19] text-xs 3xl:text-sm text-cyan-300 font-bold px-3.5 py-2.5 rounded-xl border border-cyan-500/40 hover:border-cyan-400 focus:outline-none min-h-[44px] cursor-pointer shadow-inner"
               >
                 {decks.map((d) => (
-                  <option key={d.package_id} value={d.package_id}>
-                    {d.title}
+                  <option key={d.package_id} value={d.package_id} className="bg-[#0B0F19] text-white">
+                    📚 {d.title} ({d.vocabulary_deck?.items?.length || 0} từ)
                   </option>
                 ))}
               </select>
-            )}
+            </div>
 
+            {/* Nút Thêm Bộ Từ Mới */}
+            <button
+              onClick={() => setIsAddDeckModalOpen(true)}
+              className="flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/25 to-teal-500/25 hover:from-emerald-500/35 hover:to-teal-500/35 border border-emerald-400/60 text-emerald-300 hover:text-emerald-100 text-xs 3xl:text-sm font-bold transition min-h-[44px] shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              title="Thêm hoặc tạo một bộ từ vựng mới"
+            >
+              <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Thêm Bộ Từ</span>
+            </button>
+
+            {/* Nút Chỉnh Sửa Bộ Từ */}
             <button
               onClick={() => onNavigateTab('upload')}
-              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-gray-700 hover:border-gray-500 text-xs 3xl:text-sm font-semibold text-gray-300 hover:text-white transition text-center min-h-[44px] flex items-center justify-center cursor-pointer"
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-gray-700 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-xs 3xl:text-sm font-semibold text-gray-300 hover:text-cyan-300 transition min-h-[44px] cursor-pointer"
+              title="Chỉnh sửa nội dung, thêm/xóa từ vựng trong bộ này"
             >
-              Chỉnh Sửa Bộ Từ
+              <Edit3 className="w-4 h-4 text-cyan-400 shrink-0" />
+              <span>Chỉnh Sửa Bộ Từ</span>
             </button>
+
+            {/* Nút Xóa Bộ Từ */}
+            <button
+              onClick={() => setIsConfirmDeleteOpen(true)}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-red-500/40 hover:border-red-400 bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-red-100 text-xs 3xl:text-sm font-bold transition min-h-[44px] cursor-pointer hover:scale-105 active:scale-95"
+              title="Xóa bộ từ vựng đang chọn"
+            >
+              <Trash2 className="w-4 h-4 text-red-400 shrink-0" />
+              <span>Xóa Bộ Từ</span>
+            </button>
+
+            {/* Nút Chơi Ngay */}
             <button
               onClick={() => onNavigateTab('chicken-shooter')}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs 3xl:text-sm font-bold transition shadow-lg shadow-cyan-500/20 min-h-[44px] cursor-pointer"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black text-xs 3xl:text-sm font-black transition shadow-lg shadow-cyan-500/25 min-h-[44px] cursor-pointer hover:scale-105 active:scale-95"
             >
               <Zap className="w-4 h-4 fill-black shrink-0" />
               <span>Chơi Ngay</span>
@@ -315,6 +466,190 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Modal Thêm Bộ Từ Vựng Mới */}
+      {isAddDeckModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-[#0f172a] border border-cyan-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 flex items-center justify-center">
+                  <FolderPlus className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white">Thêm Bộ Từ Vựng Mới</h3>
+                  <p className="text-xs text-gray-400">Chọn mẫu có sẵn hoặc tạo thủ công bộ từ mới</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddDeckModalOpen(false)}
+                className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Section 1: Thêm nhanh từ các mẫu chuẩn */}
+            <div className="space-y-3">
+              <h4 className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                Cách 1: Thêm Nhanh Bộ Mẫu Có Sẵn (Không Cần API)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleAddPreset('chinese')}
+                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-cyan-500/30 hover:border-cyan-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
+                >
+                  <span className="text-2xl block mb-2">🇨🇳</span>
+                  <div className="font-bold text-white text-xs group-hover:text-cyan-300">Tiếng Trung HSK 1</div>
+                  <p className="text-[11px] text-gray-400 mt-1">12 từ vựng, Pinyin & 5 câu Quiz</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleAddPreset('english')}
+                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-purple-500/30 hover:border-purple-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
+                >
+                  <span className="text-2xl block mb-2">🇬🇧</span>
+                  <div className="font-bold text-white text-xs group-hover:text-purple-300">Tiếng Anh AI & Tech</div>
+                  <p className="text-[11px] text-gray-400 mt-1">10 thuật ngữ công nghệ & 3 câu Quiz</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleAddPreset('messy')}
+                  className="p-4 rounded-2xl bg-[#162032] hover:bg-[#1c2a42] border border-pink-500/30 hover:border-pink-400 text-left transition group cursor-pointer shadow-sm hover:scale-[1.02]"
+                >
+                  <span className="text-2xl block mb-2">🧪</span>
+                  <div className="font-bold text-white text-xs group-hover:text-pink-300">File Khử Nhiễu</div>
+                  <p className="text-[11px] text-gray-400 mt-1">10 từ bóc tách dính chữ & 2 câu Quiz</p>
+                </button>
+              </div>
+            </div>
+
+            {/* Section 2: Tạo bộ từ thủ công */}
+            <form onSubmit={handleCreateManualDeck} className="space-y-4 pt-4 border-t border-gray-800">
+              <h4 className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
+                <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
+                Cách 2: Tạo Bộ Từ Thủ Công Mới
+              </h4>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">Tên bộ từ vựng (*):</label>
+                  <input
+                    type="text"
+                    required
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="Vd: Tiếng Trung HSK 2 Căn Bản, IELTS Speaking, Từ Vựng Lập Trình..."
+                    className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Ngôn ngữ mục tiêu:</label>
+                    <select
+                      value={newLang}
+                      onChange={(e) => setNewLang(e.target.value)}
+                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none transition"
+                    >
+                      <option value="zh-CN">🇨🇳 Tiếng Trung (zh-CN)</option>
+                      <option value="en">🇬🇧 Tiếng Anh (en)</option>
+                      <option value="vi-VN">🇻🇳 Tiếng Việt (vi-VN)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Mô tả ngắn gọn:</label>
+                    <input
+                      type="text"
+                      value={newDesc}
+                      onChange={(e) => setNewDesc(e.target.value)}
+                      placeholder="Mô tả mục tiêu của bộ bài học này..."
+                      className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAddDeckModalOpen(false);
+                      onNavigateTab('upload');
+                    }}
+                    className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5"
+                  >
+                    <Wand2 className="w-3.5 h-3.5" />
+                    Hoặc tải tài liệu PDF/Scan/Word để AI tự tạo &rarr;
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!newTitle.trim()}
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  >
+                    Tạo & Chỉnh Sửa Ngay
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Xác Nhận Xóa Bộ Bài Học */}
+      {isConfirmDeleteOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-[#121826] border border-red-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div className="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 border border-red-500/30 flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-black text-white">Xác Nhận Xóa Bộ Từ Vựng?</h3>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                Bạn có chắc chắn muốn xóa bộ từ vựng <span className="font-bold text-red-400">"{activeDeck.title}"</span>?
+              </p>
+              <div className="p-3 rounded-xl bg-[#0B0F19] border border-gray-800 text-left text-xs text-gray-400 space-y-1">
+                <div>• Số từ vựng: <span className="text-white font-bold">{activeDeck.vocabulary_deck?.items?.length || 0} từ</span></div>
+                <div>• Số câu hỏi quiz: <span className="text-white font-bold">{activeDeck.quiz_deck?.items?.length || 0} câu</span></div>
+                <div>• Ngôn ngữ: <span className="text-cyan-300 font-mono">{activeDeck.vocabulary_deck?.target_language || 'Chưa định nghĩa'}</span></div>
+              </div>
+              <p className="text-[11px] text-gray-500">
+                Lưu ý: Dữ liệu bộ từ này sẽ bị gỡ khỏi danh sách và bộ nhớ máy.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsConfirmDeleteOpen(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-700 hover:border-gray-500 text-xs font-bold text-gray-300 hover:text-white transition cursor-pointer"
+              >
+                Hủy Bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-lg shadow-red-600/30 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Xác Nhận Xóa</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#162032] border border-cyan-400 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom duration-300">
+          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span className="text-xs font-bold">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 };

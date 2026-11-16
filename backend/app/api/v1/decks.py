@@ -149,3 +149,16 @@ async def save_deck(
     db.commit()
     db.refresh(existing)
     return entity_to_pydantic(existing)
+
+@router.delete("/decks/{deck_id}")
+async def delete_deck(deck_id: str, db: Session = Depends(get_db)):
+    """Xóa một bộ bài học khỏi Database"""
+    existing = db.query(PackageEntity).filter(PackageEntity.package_id == deck_id).first()
+    if not existing:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bộ từ vựng")
+    
+    db.query(VocabularyItemEntity).filter(VocabularyItemEntity.package_id == deck_id).delete()
+    db.query(QuizItemEntity).filter(QuizItemEntity.package_id == deck_id).delete()
+    db.delete(existing)
+    db.commit()
+    return {"message": f"Đã xóa bộ bài học {deck_id} thành công"}

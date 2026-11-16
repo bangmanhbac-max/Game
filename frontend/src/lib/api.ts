@@ -481,6 +481,26 @@ export async function saveCustomDeck(pkg: LearningPackage): Promise<LearningPack
   return pkg;
 }
 
+export async function deleteCustomDeck(packageId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/decks/${packageId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    if (res.ok) return true;
+  } catch (e) {
+    console.warn('Backend delete deck unreachable, removing from localStorage');
+  }
+
+  try {
+    const localDecks: LearningPackage[] = JSON.parse(localStorage.getItem('eduplay_saved_decks') || '[]');
+    const next = localDecks.filter(d => d.package_id !== packageId);
+    localStorage.setItem('eduplay_saved_decks', JSON.stringify(next));
+    return true;
+  } catch {}
+  return false;
+}
+
 // ================= DOCUMENTS MANAGEMENT APIS =================
 
 export interface UploadedDocRecord {

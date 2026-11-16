@@ -20,7 +20,7 @@ import { WorldCommunityModal } from './components/community/WorldCommunityModal'
 import { ContactModal } from './components/contact/ContactModal';
 import { WebDatabaseAdminModal } from './components/admin/WebDatabaseAdminModal';
 import { LearningPackage } from './types/learning_content';
-import { fetchDecks } from './lib/api';
+import { fetchDecks, saveCustomDeck, deleteCustomDeck } from './lib/api';
 import { soundManager } from './games/common/SoundSynthesizer';
 
 const DEFAULT_CHINESE_DECK: LearningPackage = {
@@ -124,6 +124,28 @@ const AppContent: React.FC = () => {
       return [pkg, ...prev];
     });
     setActiveDeck(pkg);
+    saveCustomDeck(pkg).catch(() => {});
+  };
+
+  const handleDeleteDeck = (packageId: string) => {
+    deleteCustomDeck(packageId).catch(() => {});
+    const remaining = decks.filter((d) => d.package_id !== packageId);
+
+    try {
+      const saved: LearningPackage[] = JSON.parse(localStorage.getItem('eduplay_saved_decks') || '[]');
+      const filtered = saved.filter((d) => d.package_id !== packageId);
+      localStorage.setItem('eduplay_saved_decks', JSON.stringify(filtered));
+    } catch {}
+
+    if (remaining.length === 0) {
+      setDecks([DEFAULT_CHINESE_DECK]);
+      setActiveDeck(DEFAULT_CHINESE_DECK);
+    } else {
+      setDecks(remaining);
+      if (activeDeck.package_id === packageId) {
+        setActiveDeck(remaining[0]);
+      }
+    }
   };
 
   const handleSelectDeck = (deck: LearningPackage) => {
@@ -166,6 +188,8 @@ const AppContent: React.FC = () => {
             activeDeck={activeDeck}
             onSelectDeck={handleSelectDeck}
             onNavigateTab={setActiveTab}
+            onDeleteDeck={handleDeleteDeck}
+            onAddDeck={handleSavePackage}
           />
         )}
 
