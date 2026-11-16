@@ -18,7 +18,9 @@ import {
   AlertTriangle, 
   Wand2,
   Search,
-  Library
+  Library,
+  Ghost,
+  Layers
 } from 'lucide-react';
 import { LearningPackage } from '../types/learning_content';
 import { ActiveTab } from '../components/Navbar';
@@ -343,20 +345,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
 
-          {/* Game 4: Granny Escape 3D (3-Tier Dark Forest) */}
+          {/* Game 4: Granny Escape 3D (Scarlet Witch Dark Multiverse) */}
           <div
             onClick={() => onNavigateTab('granny-forest')}
             className="group relative overflow-hidden bg-[#161F30] border border-red-500/40 hover:border-red-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-red-500/30 flex flex-col justify-between"
           >
-            {/* Card Thumbnail */}
-            <div className="relative h-36 sm:h-40 3xl:h-48 w-full overflow-hidden bg-gradient-to-br from-red-950/80 via-black to-[#0d131f]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-5xl sm:text-6xl filter drop-shadow-[0_0_15px_rgba(239,68,68,0.7)] animate-pulse">🌲</span>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#161F30] via-transparent to-transparent" />
+            {/* Card 4K Poster Thumbnail */}
+            <div className="relative h-36 sm:h-40 3xl:h-48 w-full overflow-hidden">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                style={{ backgroundImage: "url('/assets/scarlet_witch_4k.jpg')" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#161F30] via-[#161F30]/40 to-transparent" />
               <div className="absolute top-3 left-3 bg-red-500/30 border border-red-400/60 backdrop-blur-md px-2.5 py-0.5 rounded-xl text-[11px] font-bold text-red-300 flex items-center gap-1.5">
-                <span>👻</span>
-                <span>GRANNY 3D ESCAPE</span>
+                <Ghost className="w-3 h-3 text-red-300" />
+                <span>SCARLET DARKHOLD</span>
               </div>
             </div>
 
@@ -366,7 +369,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   TRỐN THOÁT RỪNG MA 3D
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Đồ họa 3D 3 tầng rừng rậm. Bật đèn pin, né tránh ma quỷ Granny rình rập và nhặt cổ tự chữ Hán để mở khóa cổng!
+                  Đồ họa 3D FPS chân thực 4K. Bật đèn pin, né tránh ma quỷ Granny rình rập và nhặt cổ tự chữ Hán để mở khóa cổng!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-red-400 min-h-[36px]">
@@ -376,20 +379,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
 
-          {/* Game 5: Flashcard 3D Arena */}
+          {/* Game 5: Flashcard 3D Arena (Captain America Quantum Realm) */}
           <div
             onClick={() => onNavigateTab('flashcard')}
             className="group relative overflow-hidden bg-[#161F30] border border-blue-500/40 hover:border-blue-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-blue-500/30 flex flex-col justify-between"
           >
-            {/* Card Thumbnail */}
-            <div className="relative h-36 sm:h-40 3xl:h-48 w-full overflow-hidden bg-gradient-to-br from-blue-950/80 via-slate-900 to-[#0d131f]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-5xl sm:text-6xl filter drop-shadow-[0_0_15px_rgba(59,130,246,0.7)] group-hover:rotate-12 transition-transform duration-500">🎴</span>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#161F30] via-transparent to-transparent" />
+            {/* Card 4K Poster Thumbnail */}
+            <div className="relative h-36 sm:h-40 3xl:h-48 w-full overflow-hidden">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                style={{ backgroundImage: "url('/assets/captain_america_4k.jpg')" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#161F30] via-[#161F30]/40 to-transparent" />
               <div className="absolute top-3 left-3 bg-blue-500/30 border border-blue-400/60 backdrop-blur-md px-2.5 py-0.5 rounded-xl text-[11px] font-bold text-blue-300 flex items-center gap-1.5">
-                <span>⚡</span>
-                <span>SPATIAL MEMORY</span>
+                <Layers className="w-3 h-3 text-blue-300" />
+                <span>QUANTUM REALM</span>
               </div>
             </div>
 
