@@ -1390,18 +1390,26 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         const isCrouch = isCrouchingRef.current;
         const wantSprint = Boolean(keysRef.current['shift'] && !isCrouch && staminaVal > 5);
 
-        // Input 2D Vector
-        const inputVec = new THREE.Vector2(0, 0);
-        if (keysRef.current['w']) inputVec.y += 1;
-        if (keysRef.current['s']) inputVec.y -= 1;
-        if (keysRef.current['d']) inputVec.x += 1;
-        if (keysRef.current['a']) inputVec.x -= 1;
+        // Standard FPS Movement relative to Camera Yaw:
+        // In Three.js: (0, 0, -1) is camera forward.
+        const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+        const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
 
-        const isMoving = inputVec.lengthSq() > 0;
-        if (isMoving) inputVec.normalize();
+        const wishDir = new THREE.Vector3();
+        if (keysRef.current['w']) wishDir.add(forward);
+        if (keysRef.current['s']) wishDir.sub(forward);
+        if (keysRef.current['d']) wishDir.add(right);
+        if (keysRef.current['a']) wishDir.sub(right);
+
+        const isMoving = wishDir.lengthSq() > 0.0001;
+        if (isMoving) {
+          wishDir.normalize();
+        }
+
+        const isMovingForward = Boolean(keysRef.current['w'] && !keysRef.current['s']);
+        const isActuallySprinting = wantSprint && isMovingForward;
 
         // Stamina System
-        const isActuallySprinting = wantSprint && isMoving && inputVec.y > 0;
         if (isActuallySprinting) {
           staminaVal = Math.max(0, staminaVal - delta * 24);
         } else {
@@ -1412,14 +1420,6 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
 
         // Target Velocity Calculation
         const maxSpeed = isCrouch ? 2.2 : (isActuallySprinting ? 6.8 : 3.8);
-        const sinY = Math.sin(yaw);
-        const cosY = Math.cos(yaw);
-        const wishDir = new THREE.Vector3(
-          inputVec.x * cosY - inputVec.y * sinY,
-          0,
-          inputVec.x * sinY + inputVec.y * cosY
-        );
-
         const targetVelX = wishDir.x * maxSpeed;
         const targetVelZ = wishDir.z * maxSpeed;
 
@@ -1429,7 +1429,8 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         velocity.z += (targetVelZ - velocity.z) * Math.min(accelRate * delta, 1.0);
 
         // Subtle Strafe Camera Tilt (Roll)
-        const targetRoll = -inputVec.x * (isActuallySprinting ? 0.024 : 0.015);
+        const strafeInput = (keysRef.current['d'] ? 1 : 0) - (keysRef.current['a'] ? 1 : 0);
+        const targetRoll = -strafeInput * (isActuallySprinting ? 0.024 : 0.015);
         roll += (targetRoll - roll) * Math.min(10.0 * delta, 1.0);
 
         // Dynamic Speed FOV Effect (CS:GO / GTA 5)
@@ -1758,14 +1759,15 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           mCtx.font = 'bold 8px sans-serif';
           mCtx.fillText('💀', gx, gy + 3);
 
-          // Player Marker
+          // Player Marker & Vision Cone
           const px = toMapX(camera.position.x);
           const py = toMapY(camera.position.z);
+          const fwd = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+          const angle = Math.atan2(fwd.z, fwd.x);
 
           mCtx.fillStyle = 'rgba(6, 182, 212, 0.28)';
           mCtx.beginPath();
           mCtx.moveTo(px, py);
-          const angle = yaw + Math.PI / 2;
           mCtx.arc(px, py, 22, angle - 0.45, angle + 0.45);
           mCtx.closePath();
           mCtx.fill();
