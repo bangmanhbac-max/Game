@@ -13,10 +13,12 @@ import {
   Play,
   Wand2,
   CheckCircle2,
-  Zap
+  Zap,
+  FolderOpen
 } from 'lucide-react';
 import { uploadDocument, generateLearningContent, DocumentExtractResult } from '../../lib/api';
 import { LearningPackage } from '../../types/learning_content';
+import { DEMO_CHINESE_DATA, DEMO_MESSY_DATA, DEMO_ENGLISH_DATA } from '../../lib/demoPackages';
 
 interface DocumentUploadProps {
   onPackageGenerated: (pkg: LearningPackage) => void;
@@ -107,6 +109,39 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
     }
   };
 
+  const handleLoadPredefinedDemo = (type: 'chinese' | 'messy' | 'english') => {
+    setError(null);
+    let demoData;
+    if (type === 'chinese') {
+      demoData = DEMO_CHINESE_DATA;
+    } else if (type === 'messy') {
+      demoData = DEMO_MESSY_DATA;
+    } else {
+      demoData = DEMO_ENGLISH_DATA;
+    }
+
+    setCustomText(demoData.rawText);
+    setExtractedDoc({
+      filename: demoData.filename,
+      file_type: 'txt',
+      char_count: demoData.rawText.length,
+      raw_text: demoData.rawText,
+      preview_snippet: demoData.rawText.slice(0, 300) + '...',
+      learning_package: demoData.package,
+      vlm_status: 'Mẫu Demo Chuẩn Hóa Cố Định (Tự Tạo Không Cần API)'
+    });
+    setVlmPackage(demoData.package);
+    setVlmStatus('Mẫu Demo Chuẩn Hóa Cố Định (Tự Tạo Không Cần API)');
+
+    try {
+      const localDecks: LearningPackage[] = JSON.parse(localStorage.getItem('eduplay_saved_decks') || '[]');
+      const filtered = localDecks.filter(d => d.package_id !== demoData.package.package_id);
+      filtered.unshift(demoData.package);
+      localStorage.setItem('eduplay_saved_decks', JSON.stringify(filtered));
+    } catch (e) {
+      console.warn('Lưu demo deck vào localStorage:', e);
+    }
+  };
 
   const formatGesture = (gesture: string) => {
     switch (gesture) {
@@ -185,12 +220,28 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all duration-300 ${
+        className={`relative border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all duration-300 ${
           isDragging
             ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
             : 'border-gray-700 hover:border-cyan-500/50 bg-[#161F30]/60 hover:bg-[#161F30]'
         }`}
       >
+        {/* Nút File Demo ở góc trên bên phải theo yêu cầu */}
+        <div 
+          className="absolute top-4 right-4 z-20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => handleLoadPredefinedDemo('chinese')}
+            className="group flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/25 to-amber-500/25 hover:from-amber-500/40 hover:to-orange-500/40 border border-amber-400/60 text-amber-300 hover:text-amber-100 text-xs font-black transition-all shadow-lg shadow-amber-500/15 hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+            title="Nhấn để hệ thống tự động nạp & tạo ngay bài học Tiếng Trung HSK mẫu mà không cần kết nối API"
+          >
+            <FolderOpen className="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" />
+            <span>📁 File Demo (Không Cần API)</span>
+          </button>
+        </div>
+
         <input
           ref={fileInputRef}
           type="file"
@@ -332,6 +383,46 @@ Database(/ˈdeɪ.tə.beɪs/):Cơsởdữliệulưutrữhệthống`;
             className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/40 text-purple-300 text-xs font-bold transition shadow-sm"
           >
             🇬🇧 Tiếng Anh AI & Tech
+          </button>
+        </div>
+
+        {/* HÀNG NÚT BỔ SUNG: MẪU DEMO TƯƠNG ỨNG TỰ ĐỘNG TẠO ĐẦY ĐỦ (KHÔNG CẦN API) */}
+        <div 
+          onClick={(e) => e.stopPropagation()} 
+          className="pt-2.5 flex flex-wrap items-center justify-center gap-2"
+        >
+          <span className="text-xs text-amber-300 font-bold flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Mẫu demo tự tạo (Không cần API):
+          </span>
+
+          <button
+            type="button"
+            onClick={() => handleLoadPredefinedDemo('messy')}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500/25 to-purple-500/25 hover:from-pink-500/40 hover:to-purple-500/40 border border-pink-400/60 text-pink-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            title="Tự động bóc tách & tạo trọn bộ từ vựng + quiz từ file dính chữ mà không cần API"
+          >
+            <Zap className="w-3.5 h-3.5 text-pink-300" />
+            ⚡ Mẫu Demo Dính Chữ (Tự Tạo Ngay)
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleLoadPredefinedDemo('chinese')}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/25 to-blue-500/25 hover:from-cyan-500/40 hover:to-blue-500/40 border border-cyan-400/60 text-cyan-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            title="Tự động tạo trọn bộ từ vựng Tiếng Trung HSK 1 + câu hỏi Quiz mà không cần API"
+          >
+            <span>🇨🇳</span>
+            ⚡ Mẫu Demo Tiếng Trung HSK (Tự Tạo Ngay)
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleLoadPredefinedDemo('english')}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/25 to-indigo-500/25 hover:from-purple-500/40 hover:to-indigo-500/40 border border-purple-400/60 text-purple-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            title="Tự động tạo trọn bộ từ vựng Tiếng Anh AI & Công Nghệ + câu hỏi Quiz mà không cần API"
+          >
+            <span>🇬🇧</span>
+            ⚡ Mẫu Demo Tiếng Anh AI & Tech (Tự Tạo Ngay)
           </button>
         </div>
       </div>

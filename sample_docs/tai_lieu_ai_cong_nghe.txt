@@ -1,0 +1,19 @@
+TRÍ TUỆ NHÂN TẠO VÀ CÔNG NGHỆ TƯƠNG LAI
+
+Trí tuệ nhân tạo (Artificial Intelligence) đang định hình lại toàn bộ thế giới công nghệ hiện đại. Trọng tâm của AI là Học máy (Machine Learning), nơi các mô hình học hỏi từ lượng lớn dữ liệu để đưa ra dự đoán. Đi sâu hơn, Mạng nơ-ron (Neural Network) mô phỏng cấu trúc não bộ sinh học để giải quyết các bài toán phức tạp như Thị giác máy tính (Computer Vision) và Xử lý ngôn ngữ tự nhiên. 
+
+Mọi hệ thống phần mềm quy mô lớn đều cần Cơ sở dữ liệu (Database) để lưu trữ thông tin và cơ chế Mã hóa (Encryption) để bảo vệ quyền riêng tư. Điện toán đám mây (Cloud Computing) cung cấp hạ tầng máy chủ linh hoạt, trong khi Bộ nhớ đệm (Cache) giúp giảm thiểu Độ trễ (Latency) khi truy xuất mạng. Để xây dựng ứng dụng web hiện đại, các kỹ sư sử dụng Khung phần mềm (Framework) và thiết kế Giao diện tương thích (Responsive) bằng cách chia nhỏ thành các Thành phần (Component) độc lập.
+
+TỪ VỰNG VÀ KHÁI NIỆM TRỌNG TÂM:
+Algorithm : Thuật toán giải quyết bài toán từng bước
+Machine Learning : Học máy tự động học hỏi từ dữ liệu
+Neural Network : Mạng nơ-ron mô phỏng não bộ sinh học
+Computer Vision : Thị giác máy tính nhận diện hình ảnh
+Database : Cơ sở dữ liệu lưu trữ thông tin có cấu trúc
+Encryption : Mã hóa bảo mật dữ liệu an toàn
+Cloud Computing : Điện toán đám mây cung cấp máy chủ qua Internet
+Latency : Độ trễ thời gian truyền tải gói tin
+Cache : Bộ nhớ đệm tốc độ cao lưu trữ dữ liệu tạm
+Framework : Khung phần mềm dựng sẵn để phát triển ứng dụng
+Responsive : Giao diện co giãn tối ưu trên mọi màn hình
+Component : Thành phần giao diện độc lập tái sử dụng
