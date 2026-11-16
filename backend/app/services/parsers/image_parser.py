@@ -14,14 +14,20 @@ class ImageParser(BaseParser):
 
             genai.configure(api_key=api_key)
             model = None
-            for m_name in ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-flash-latest']:
+            for m_name in [
+                'gemini-3.1-flash-lite',
+                'gemini-3.8-flash',
+                'gemini-3.5-flash',
+                'gemini-3-flash-preview',
+                'gemini-flash-latest'
+            ]:
                 try:
                     model = genai.GenerativeModel(m_name)
                     break
                 except Exception:
                     continue
             if not model:
-                model = genai.GenerativeModel('gemini-3.8-flash')
+                model = genai.GenerativeModel('gemini-3.1-flash-lite')
             
             img = Image.open(file_path)
             prompt = (

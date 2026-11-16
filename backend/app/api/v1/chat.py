@@ -93,7 +93,13 @@ def post_chat_message(
 
         if api_key:
             # Phương án A: Thử dùng Google Generative AI SDK với các model đời mới nhất
-            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-flash-latest", "gemini-2.5-flash"]
+            candidate_models = [
+                "gemini-3.1-flash-lite",
+                "gemini-3.8-flash",
+                "gemini-3.5-flash",
+                "gemini-3-flash-preview",
+                "gemini-flash-latest",
+            ]
             for model_name in candidate_models:
                 try:
                     import google.generativeai as genai
@@ -115,9 +121,9 @@ def post_chat_message(
                     api_error_detail = str(e)
                     print(f"[AI Copilot] Model {model_name} failed: {e}")
 
-            # Phương án B: Nếu SDK lỗi, thử gọi trực tiếp REST API qua urllib với gemini-3.8-flash
+            # Phương án B: Nếu SDK lỗi, thử gọi trực tiếp REST API qua urllib
             if not reply_text:
-                for rest_model in ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]:
+                for rest_model in ["gemini-3.1-flash-lite", "gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-flash-latest"]:
                     try:
                         import json
                         import urllib.request

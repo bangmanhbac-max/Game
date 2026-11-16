@@ -81,11 +81,7 @@ const DEFAULT_CHINESE_DECK: LearningPackage = {
 
 const INITIAL_DEFAULT_DECKS: LearningPackage[] = [
   DEFAULT_CHINESE_DECK,
-  ALL_CURRICULUM_DECKS[0],  // HSK 1 - Bài 1: Chào Hỏi
-  ALL_CURRICULUM_DECKS[3],  // HSK 1 - Bài 4: Ẩm Thực & Ăn Uống
-  ALL_CURRICULUM_DECKS[6],  // HSK 2 - Bài 7: Mua Sắm & Tiền Tệ
-  ALL_CURRICULUM_DECKS[11], // HSK 3 - Bài 12: Đời Sống Công Sở
-  ALL_CURRICULUM_DECKS[14], // English - Bài 15: CNTT & Lập Trình
+  ...ALL_CURRICULUM_DECKS,
 ];
 
 const AppContent: React.FC = () => {

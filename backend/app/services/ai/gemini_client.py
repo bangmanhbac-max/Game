@@ -17,26 +17,62 @@ class GeminiClient:
                 print(f"[GeminiClient] Configuration warning: {e}")
 
     def generate_json(self, prompt: str, system_instruction: Optional[str] = None) -> Dict[str, Any]:
-        if not self._configured:
+        if not self._configured and not self.api_key:
             raise ValueError("GEMINI_API_KEY chưa được thiết lập!")
 
         import google.generativeai as genai
-        response = None
-        for m_name in ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"]:
-            try:
-                model = genai.GenerativeModel(
-                    model_name=m_name,
-                    generation_config={"response_mime_type": "application/json"}
-                )
-                response = model.generate_content(prompt)
-                if response and response.text:
-                    break
-            except Exception:
-                continue
+        import urllib.request
 
-        if not response or not response.text:
+        models_list = [
+            "gemini-3.1-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-3.5-flash",
+            "gemini-3-flash-preview",
+            "gemini-flash-latest"
+        ]
+
+        text = None
+
+        # 1. Thử qua SDK
+        if self._configured:
+            for m_name in models_list:
+                try:
+                    model = genai.GenerativeModel(
+                        model_name=m_name,
+                        generation_config={"response_mime_type": "application/json"}
+                    )
+                    res = model.generate_content(prompt)
+                    if res and res.text:
+                        text = res.text.strip()
+                        break
+                except Exception:
+                    continue
+
+        # 2. Nếu SDK không thành công (hoặc model mới chưa hỗ trợ SDK cũ), gọi trực tiếp REST API
+        if not text and self.api_key:
+            for m_name in models_list:
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={self.api_key}"
+                    body = {
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {"responseMimeType": "application/json"}
+                    }
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(body).encode("utf-8"),
+                        headers={"Content-Type": "application/json"}
+                    )
+                    with urllib.request.urlopen(req, timeout=20) as resp:
+                        data = json.loads(resp.read().decode())
+                        candidate_text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text")
+                        if candidate_text:
+                            text = candidate_text.strip()
+                            break
+                except Exception:
+                    continue
+
+        if not text:
             raise ValueError("Không thể sinh nội dung từ Gemini API với các model hiện hành")
-        text = response.text.strip()
         
         # Clean potential markdown wrapping if returned
         if text.startswith("```json"):

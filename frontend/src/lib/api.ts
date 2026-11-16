@@ -346,6 +346,151 @@ function generateClientFallbackPackage(rawText: string, filename?: string): Lear
   return pkg;
 }
 
+export const sanitizeGeminiApiKey = (key?: string | null): string => {
+  if (!key) return '';
+  return key.trim().replace(/^["'`]|["'`]$/g, '').trim();
+};
+
+export const GEMINI_WORKING_MODELS = [
+  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
+  'gemini-3.5-flash',
+  'gemini-3-flash-preview',
+  'gemini-flash-latest',
+];
+
+export async function testGeminiApiKey(apiKey: string): Promise<{ success: boolean; model?: string; error?: string }> {
+  const cleanKey = sanitizeGeminiApiKey(apiKey);
+  if (!cleanKey) {
+    return { success: false, error: 'API Key không được để trống' };
+  }
+
+  let lastError = '';
+  for (const model of GEMINI_WORKING_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cleanKey)}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: 'Hello' }] }],
+          generationConfig: { maxOutputTokens: 5 }
+        })
+      });
+
+      if (res.ok) {
+        return { success: true, model };
+      }
+
+      const errJson = await res.json().catch(() => null);
+      const msg = errJson?.error?.message || `HTTP ${res.status}`;
+      lastError = msg;
+
+      // If invalid key or permission denied, fail immediately
+      if (res.status === 400 && (msg.includes('API_KEY_INVALID') || msg.includes('API key not valid'))) {
+        return { success: false, error: 'Mã API Key không hợp lệ. Vui lòng kiểm tra lại trên Google AI Studio.' };
+      }
+    } catch (e: any) {
+      lastError = e?.message || 'Lỗi mạng khi kết nối tới Google Gemini';
+    }
+  }
+
+  return { success: false, error: lastError || 'Không thể kết nối tới các mô hình Gemini khả dụng.' };
+}
+
+export async function generateWithClientGemini(rawText: string, apiKey: string, filename?: string, customPrompt?: string): Promise<LearningPackage> {
+  const cleanKey = sanitizeGeminiApiKey(apiKey);
+  const systemPrompt = `Bạn là Siêu AI Giáo Dục EduPlay. Nhiệm vụ của bạn là phân tích tài liệu học tập sau và tạo ra gói bài học JSON chuẩn gồm từ vựng và câu hỏi trắc nghiệm theo schema sau:
+{
+  "title": "Tên bài học phù hợp",
+  "description": "Mô tả ngắn gọn nội dung bài học",
+  "vocabulary_deck": {
+    "title": "Bộ Từ Vựng",
+    "description": "Danh sách các từ vựng trọng tâm",
+    "target_language": "zh-CN",
+    "items": [
+      {
+        "id": "vocab_1",
+        "target_text": "từ vựng (chữ Hán hoặc từ tiếng Anh)",
+        "phonetic": "phiên âm pinyin hoặc IPA",
+        "type_target": "ký tự không dấu hoặc pinyin không dấu để gõ phím trong game",
+        "meaning": "nghĩa tiếng Việt",
+        "difficulty": 1,
+        "stroke_gesture": "horizontal",
+        "characters": ["mảng", "từng", "ký", "tự"]
+      }
+    ]
+  },
+  "quiz_deck": {
+    "title": "Bộ Câu Hỏi Quiz",
+    "description": "Trắc nghiệm kiến thức phản xạ",
+    "items": [
+      {
+        "id": "quiz_1",
+        "question": "Nội dung câu hỏi trắc nghiệm?",
+        "options": ["A. Đáp án 1", "B. Đáp án 2", "C. Đáp án 3", "D. Đáp án 4"],
+        "correct_index": 0,
+        "explanation": "Giải thích chi tiết",
+        "points": 100
+      }
+    ]
+  }
+}
+Lưu ý quan trọng:
+- Giá trị stroke_gesture cho mỗi từ vựng PHẢI là một trong các giá trị: "horizontal", "vertical", "slash", "backslash", "v_shape", "caret", "circle", "lightning".
+- Hãy trích xuất từ 6 đến 12 từ vựng trọng tâm và từ 3 đến 6 câu hỏi quiz phản xạ.
+${customPrompt ? `Yêu cầu bổ sung: ${customPrompt}` : ''}
+Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
+
+  for (const model of GEMINI_WORKING_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cleanKey)}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.3
+          }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const jsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (jsonText) {
+          const parsed = JSON.parse(jsonText);
+          const pkgId = `pkg_gemini_${Date.now()}`;
+          return {
+            package_id: pkgId,
+            title: parsed.title || filename || 'Bài Học Gemini AI',
+            description: parsed.description || `Được tạo tự động bởi Google Gemini (${model})`,
+            vocabulary_deck: {
+              id: `vocab_deck_${pkgId}`,
+              title: parsed.vocabulary_deck?.title || 'Bộ từ vựng',
+              description: parsed.vocabulary_deck?.description || '',
+              target_language: parsed.vocabulary_deck?.target_language || 'zh-CN',
+              items: parsed.vocabulary_deck?.items || []
+            },
+            quiz_deck: {
+              id: `quiz_deck_${pkgId}`,
+              title: parsed.quiz_deck?.title || 'Bộ trắc nghiệm',
+              description: parsed.quiz_deck?.description || '',
+              items: parsed.quiz_deck?.items || []
+            }
+          };
+        }
+      }
+    } catch (e) {
+      console.warn(`Direct Gemini call with model ${model} failed`, e);
+    }
+  }
+
+  throw new Error('Không thể tạo bài học qua Gemini API trực tiếp.');
+}
+
 export async function uploadDocument(file: File, geminiApiKey?: string, customPrompt?: string): Promise<DocumentExtractResult> {
   const formData = new FormData();
   formData.append('file', file);
@@ -389,7 +534,27 @@ export async function uploadDocument(file: File, geminiApiKey?: string, customPr
   const ext = file.name.split('.').pop()?.toLowerCase() || '';
   if (['txt', 'md', 'json', 'csv', 'log', 'text'].includes(ext) || file.type.includes('text')) {
     const rawText = await file.text();
-    const pkg = generateClientFallbackPackage(rawText, file.name);
+    let pkg: LearningPackage;
+
+    // Nếu người dùng có Gemini API Key, ưu tiên sinh nội dung trực tiếp bằng Gemini từ trình duyệt
+    if (key) {
+      try {
+        pkg = await generateWithClientGemini(rawText, key, file.name, customPrompt);
+        return {
+          filename: file.name,
+          file_type: ext,
+          char_count: rawText.length,
+          raw_text: rawText,
+          preview_snippet: rawText.slice(0, 300) + (rawText.length > 300 ? '...' : ''),
+          learning_package: pkg,
+          vlm_status: 'Google Gemini Direct Client Active'
+        };
+      } catch (geminiErr) {
+        console.warn('Gemini direct generation error, fallback to regex', geminiErr);
+      }
+    }
+
+    pkg = generateClientFallbackPackage(rawText, file.name);
     return {
       filename: file.name,
       file_type: ext,
@@ -405,6 +570,9 @@ export async function uploadDocument(file: File, geminiApiKey?: string, customPr
 }
 
 export async function generateLearningContent(rawText: string, filename?: string, apiKey?: string, customPrompt?: string): Promise<LearningPackage> {
+  const activeKey = apiKey || localStorage.getItem('gemini_api_key') || undefined;
+
+  // 1. Thử gọi backend FastAPI trước
   try {
     const res = await fetch(`${API_BASE}/generate`, {
       method: 'POST',
@@ -412,7 +580,7 @@ export async function generateLearningContent(rawText: string, filename?: string
       body: JSON.stringify({
         raw_text: rawText,
         filename,
-        api_key: apiKey || undefined,
+        api_key: activeKey,
         custom_prompt: customPrompt || undefined,
       }),
     });
@@ -429,10 +597,20 @@ export async function generateLearningContent(rawText: string, filename?: string
     if (err.message && !err.message.includes('fetch') && !err.message.includes('JSON')) {
       throw err;
     }
-    console.warn('Backend generate unreachable, generating client-side package');
+    console.warn('Backend generate unreachable, checking client-side Gemini or regex fallback');
   }
 
-  // Client fallback generation
+  // 2. Nếu backend không phản hồi (ví dụ khi chạy trên Vercel), và người dùng CÓ Gemini API Key:
+  // Gọi trực tiếp Google Gemini REST API từ trình duyệt
+  if (activeKey) {
+    try {
+      return await generateWithClientGemini(rawText, activeKey, filename, customPrompt);
+    } catch (clientGeminiErr) {
+      console.warn('Client-side direct Gemini generation failed, falling back to local extractor', clientGeminiErr);
+    }
+  }
+
+  // 3. Fallback phân tích nhanh tại client nếu không có API key hoặc Gemini bị lỗi
   return generateClientFallbackPackage(rawText, filename);
 }
 
@@ -567,9 +745,10 @@ export async function sendChatMessage(
   const headers: Record<string, string> = {
     ...getAuthHeaders(),
   };
-  const key = geminiKey || localStorage.getItem('gemini_api_key');
-  if (key) {
-    headers['X-Gemini-Key'] = key;
+  const rawKey = geminiKey || localStorage.getItem('gemini_api_key');
+  const cleanKey = sanitizeGeminiApiKey(rawKey);
+  if (cleanKey) {
+    headers['X-Gemini-Key'] = cleanKey;
   }
 
   const res = await fetch(`${API_BASE}/chat/messages`, {
@@ -582,6 +761,11 @@ export async function sendChatMessage(
       sender_avatar: senderAvatar,
     }),
   });
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error('Máy chủ phản hồi định dạng không hợp lệ (offline/static mode)');
+  }
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ detail: 'Lỗi gửi tin nhắn' }));
