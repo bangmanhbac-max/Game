@@ -172,7 +172,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="space-y-6 sm:space-y-10 py-2 w-full mx-auto">
       {/* 4K Cinematic Avengers Hero Banner (Responsive on Mobile, Tablet & 4K) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-cyan-500/40 shadow-2xl shadow-cyan-950/50 group min-h-[380px] sm:min-h-[460px] 2xl:min-h-[520px] 3xl:min-h-[580px] flex items-center">
+      <div 
+        id="tour-hero-banner"
+        className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-cyan-500/40 shadow-2xl shadow-cyan-950/50 group min-h-[380px] sm:min-h-[460px] 2xl:min-h-[520px] 3xl:min-h-[580px] flex items-center"
+      >
         {/* 4K Avengers Wallpaper Background */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
@@ -242,7 +245,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 3xl:gap-6">
+        <div 
+          id="tour-games-grid"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 3xl:gap-6"
+        >
           {/* Game 1: Chicken Shooter (Iron Man Space Invaders) */}
           <div
             onClick={() => onNavigateTab('chicken-shooter')}
@@ -416,7 +422,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* Active Learning Deck Card */}
-      <div className="bg-[#161F30]/90 border border-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 3xl:p-10 shadow-xl backdrop-blur-md">
+      <div 
+        id="tour-deck-selector"
+        className="bg-[#161F30]/90 border border-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 3xl:p-10 shadow-xl backdrop-blur-md"
+      >
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
           <div className="flex items-start gap-3 sm:gap-4">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0">

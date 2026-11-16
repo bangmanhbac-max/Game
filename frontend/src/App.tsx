@@ -15,6 +15,7 @@ import { GrannyEscapeGame } from './components/games/GrannyEscapeGame';
 import { FlashcardArena } from './components/games/FlashcardArena';
 import { AtmosphereController } from './components/atmosphere/AtmosphereController';
 import { AICopilotChatWidget } from './components/chat/AICopilotChatWidget';
+import { SpotlightTour } from './components/effects/SpotlightTour';
 import { DocumentsManagerModal } from './components/documents/DocumentsManagerModal';
 import { WorldCommunityModal } from './components/community/WorldCommunityModal';
 import { ContactModal } from './components/contact/ContactModal';
@@ -100,6 +101,17 @@ const AppContent: React.FC = () => {
   const [isDbAdminOpen, setIsDbAdminOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isDolphinActive, setIsDolphinActive] = useState(true);
+  const [isTourOpen, setIsTourOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem('eduplay_tour_completed');
+    if (!hasSeenTour) {
+      const timer = setTimeout(() => {
+        setIsTourOpen(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   useEffect(() => {
     fetchDecks()
@@ -194,6 +206,7 @@ const AppContent: React.FC = () => {
         onToggleSound={handleToggleSound}
         isDolphinActive={isDolphinActive}
         onToggleDolphin={handleToggleDolphin}
+        onStartTour={() => setIsTourOpen(true)}
       />
 
       {/* Main Container with Full Wide-Screen & 4K Scaling */}
@@ -306,6 +319,13 @@ const AppContent: React.FC = () => {
       <WebDatabaseAdminModal
         isOpen={isDbAdminOpen}
         onClose={() => setIsDbAdminOpen(false)}
+      />
+
+      {/* Cinematic Game-Style Spotlight Feature Tour */}
+      <SpotlightTour
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+        onNavigateTab={setActiveTab}
       />
     </div>
   );

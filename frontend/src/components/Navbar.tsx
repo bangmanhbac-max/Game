@@ -17,7 +17,8 @@ import {
   Ghost, 
   Layers,
   Menu,
-  X
+  X,
+  Compass
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { UserProfileMenu } from './auth/UserProfileMenu';
@@ -38,6 +39,7 @@ interface NavbarProps {
   onToggleSound: () => void;
   isDolphinActive: boolean;
   onToggleDolphin: () => void;
+  onStartTour?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -54,6 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleSound,
   isDolphinActive,
   onToggleDolphin,
+  onStartTour,
 }) => {
   const { isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -110,6 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            id="tour-nav-upload"
             onClick={() => onSelectTab('upload')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs 2xl:text-sm font-semibold transition min-h-[38px] ${
               activeTab === 'upload'
@@ -232,8 +236,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
+          {/* Interactive Spotlight Tour Button */}
+          {onStartTour && (
+            <button
+              id="tour-guide-btn"
+              onClick={onStartTour}
+              title="Khởi động Hướng Dẫn Ánh Sáng Hội Tụ (Spotlight Tour)"
+              className="flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-cyan-400/50 hover:border-cyan-300 text-cyan-300 text-xs font-bold transition hover:bg-cyan-500/30 shadow-md shadow-cyan-500/10 cursor-pointer min-h-[40px] sm:min-h-[42px] group"
+            >
+              <Compass className="w-4 h-4 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />
+              <span className="hidden sm:inline">Hướng Dẫn</span>
+            </button>
+          )}
+
           {/* Quick Leaderboard Button (Always Accessible with 44px touch target) */}
           <button
+            id="tour-leaderboard"
             onClick={onOpenLeaderboard}
             title="Bảng Vinh Danh Top Điểm Số 4K"
             className="flex items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#161F30] border border-amber-500/30 hover:border-amber-400 text-amber-300 text-xs font-bold transition hover:bg-amber-500/10 shadow-md cursor-pointer min-h-[40px] sm:min-h-[42px]"
@@ -398,6 +416,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Section 2: Management Tools & Modals */}
           <div className="pt-2 border-t border-gray-800">
+            {onStartTour && (
+              <button
+                onClick={() => {
+                  onStartTour();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 p-3 mb-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold min-h-[44px]"
+              >
+                <Compass className="w-4 h-4 text-cyan-400" />
+                <span>Khám Phá Hướng Dẫn Ánh Sáng Hội Tụ (Tour)</span>
+              </button>
+            )}
             <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">
               Quản Trị & Kết Nối
             </div>
