@@ -71,6 +71,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
       setCustomText(result.raw_text);
       if (result.learning_package) {
         setVlmPackage(result.learning_package);
+        onPackageGenerated(result.learning_package);
       }
       if (result.vlm_status) {
         setVlmStatus(result.vlm_status);
@@ -101,6 +102,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
         customPrompt.trim() || undefined
       );
       setVlmPackage(pkg);
+      onPackageGenerated(pkg);
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : 'Lỗi khi AI xử lý nội dung';
       setError(errorMsg);
@@ -132,6 +134,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
     });
     setVlmPackage(demoData.package);
     setVlmStatus('Mẫu Demo Chuẩn Hóa Cố Định (Tự Tạo Không Cần API)');
+    onPackageGenerated(demoData.package);
 
     try {
       const localDecks: LearningPackage[] = JSON.parse(localStorage.getItem('eduplay_saved_decks') || '[]');

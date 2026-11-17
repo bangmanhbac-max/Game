@@ -51,6 +51,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
     } else {
       localStorage.removeItem('gemini_api_key');
     }
+    window.dispatchEvent(new Event('eduplay:key_updated'));
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
@@ -62,6 +63,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
     localStorage.removeItem('gemini_api_key');
     setApiKey('');
     setTestResult(null);
+    window.dispatchEvent(new Event('eduplay:key_updated'));
   };
 
   return (

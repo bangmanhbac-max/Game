@@ -36,7 +36,20 @@ export const AICopilotChatWidget: React.FC = () => {
   const [keySavedMessage, setKeySavedMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Sync API Key from localStorage whenever drawer opens
+  // Sync API Key from localStorage whenever drawer opens or key updates
+  useEffect(() => {
+    const sync = () => {
+      const stored = sanitizeGeminiApiKey(localStorage.getItem('gemini_api_key'));
+      setApiKey(stored);
+    };
+    window.addEventListener('storage', sync);
+    window.addEventListener('eduplay:key_updated', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('eduplay:key_updated', sync);
+    };
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       const stored = sanitizeGeminiApiKey(localStorage.getItem('gemini_api_key'));
@@ -86,6 +99,7 @@ export const AICopilotChatWidget: React.FC = () => {
       if (res.success) {
         localStorage.setItem('gemini_api_key', candidate);
         setApiKey(candidate);
+        window.dispatchEvent(new Event('eduplay:key_updated'));
       }
     } catch (err: any) {
       setKeyTestStatus({ success: false, error: err?.message || 'Lỗi mạng khi kiểm tra' });
@@ -99,6 +113,7 @@ export const AICopilotChatWidget: React.FC = () => {
     if (!clean) return;
     localStorage.setItem('gemini_api_key', clean);
     setApiKey(clean);
+    window.dispatchEvent(new Event('eduplay:key_updated'));
     setKeyDraft('');
     setKeySavedMessage(true);
     setShowKeyInput(false);
@@ -178,6 +193,7 @@ export const AICopilotChatWidget: React.FC = () => {
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              signal: AbortSignal.timeout(15000),
               body: JSON.stringify({
                 contents: [
                   {

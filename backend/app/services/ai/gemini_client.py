@@ -25,10 +25,8 @@ class GeminiClient:
 
         models_list = [
             "gemini-3.1-flash-lite",
-            "gemini-3.8-flash",
             "gemini-3.5-flash",
             "gemini-3-flash-preview",
-            "gemini-flash-latest"
         ]
 
         text = None
@@ -50,9 +48,12 @@ class GeminiClient:
 
         # 2. Nếu SDK không thành công (hoặc model mới chưa hỗ trợ SDK cũ), gọi trực tiếp REST API
         if not text and self.api_key:
+            import urllib.parse
+            clean_key = self.api_key.strip('\'"').strip()
+            encoded_key = urllib.parse.quote(clean_key)
             for m_name in models_list:
                 try:
-                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={self.api_key}"
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={encoded_key}"
                     body = {
                         "contents": [{"parts": [{"text": prompt}]}],
                         "generationConfig": {"responseMimeType": "application/json"}
@@ -62,7 +63,7 @@ class GeminiClient:
                         data=json.dumps(body).encode("utf-8"),
                         headers={"Content-Type": "application/json"}
                     )
-                    with urllib.request.urlopen(req, timeout=20) as resp:
+                    with urllib.request.urlopen(req, timeout=15) as resp:
                         data = json.loads(resp.read().decode())
                         candidate_text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text")
                         if candidate_text:

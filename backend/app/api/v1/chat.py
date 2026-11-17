@@ -65,7 +65,8 @@ def post_chat_message(
     # 2. Nếu là kênh AI Copilot, tạo phản hồi từ AI
     ai_reply_item = None
     if req.channel == "ai_copilot":
-        api_key = (x_gemini_key or settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY", "")).strip()
+        raw_key = (x_gemini_key or settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY", "")).strip()
+        api_key = raw_key.strip('\'"').strip()
         reply_text = ""
         api_error_detail = ""
 
@@ -95,10 +96,8 @@ def post_chat_message(
             # Phương án A: Thử dùng Google Generative AI SDK với các model đời mới nhất
             candidate_models = [
                 "gemini-3.1-flash-lite",
-                "gemini-3.8-flash",
                 "gemini-3.5-flash",
                 "gemini-3-flash-preview",
-                "gemini-flash-latest",
             ]
             for model_name in candidate_models:
                 try:
@@ -123,11 +122,13 @@ def post_chat_message(
 
             # Phương án B: Nếu SDK lỗi, thử gọi trực tiếp REST API qua urllib
             if not reply_text:
-                for rest_model in ["gemini-3.1-flash-lite", "gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-flash-latest"]:
+                import urllib.parse
+                for rest_model in ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3-flash-preview"]:
                     try:
                         import json
                         import urllib.request
-                        url = f"https://generativelanguage.googleapis.com/v1beta/models/{rest_model}:generateContent?key={api_key}"
+                        encoded_key = urllib.parse.quote(api_key)
+                        url = f"https://generativelanguage.googleapis.com/v1beta/models/{rest_model}:generateContent?key={encoded_key}"
                         payload = {
                             "contents": [
                                 {

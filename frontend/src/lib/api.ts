@@ -353,10 +353,8 @@ export const sanitizeGeminiApiKey = (key?: string | null): string => {
 
 export const GEMINI_WORKING_MODELS = [
   'gemini-3.1-flash-lite',
-  'gemini-3.8-flash',
   'gemini-3.5-flash',
   'gemini-3-flash-preview',
-  'gemini-flash-latest',
 ];
 
 export async function testGeminiApiKey(apiKey: string): Promise<{ success: boolean; model?: string; error?: string }> {
@@ -372,6 +370,7 @@ export async function testGeminiApiKey(apiKey: string): Promise<{ success: boole
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(10000),
         body: JSON.stringify({
           contents: [{ parts: [{ text: 'Hello' }] }],
           generationConfig: { maxOutputTokens: 5 }
@@ -448,6 +447,7 @@ Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(20000),
         body: JSON.stringify({
           contents: [{ parts: [{ text: systemPrompt }] }],
           generationConfig: {
@@ -461,24 +461,54 @@ Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
         const data = await res.json();
         const jsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (jsonText) {
-          const parsed = JSON.parse(jsonText);
+          let cleanJson = jsonText.trim();
+          if (cleanJson.startsWith('```json')) {
+            cleanJson = cleanJson.slice(7);
+          } else if (cleanJson.startsWith('```')) {
+            cleanJson = cleanJson.slice(3);
+          }
+          if (cleanJson.endsWith('```')) {
+            cleanJson = cleanJson.slice(0, -3);
+          }
+          cleanJson = cleanJson.trim();
+
+          const parsed = JSON.parse(cleanJson);
           const pkgId = `pkg_gemini_${Date.now()}`;
           return {
             package_id: pkgId,
             title: parsed.title || filename || 'Bài Học Gemini AI',
-            description: parsed.description || `Được tạo tự động bởi Google Gemini (${model})`,
+            source_filename: filename,
+            created_at: new Date().toISOString(),
             vocabulary_deck: {
               id: `vocab_deck_${pkgId}`,
               title: parsed.vocabulary_deck?.title || 'Bộ từ vựng',
-              description: parsed.vocabulary_deck?.description || '',
+              description: parsed.vocabulary_deck?.description || `Được tạo tự động bởi Google Gemini (${model})`,
               target_language: parsed.vocabulary_deck?.target_language || 'zh-CN',
-              items: parsed.vocabulary_deck?.items || []
+              items: (parsed.vocabulary_deck?.items || []).map((it: any, idx: number) => ({
+                id: it.id || `voc_${pkgId}_${idx + 1}`,
+                target_text: it.target_text || '',
+                phonetic: it.phonetic || '',
+                type_target: it.type_target || (it.phonetic ? it.phonetic.replace(/[^a-zA-Z]/g, '').toLowerCase() : '') || it.target_text || '',
+                meaning: it.meaning || '',
+                example: it.example || '',
+                difficulty: Number(it.difficulty) || 1,
+                stroke_gesture: it.stroke_gesture || 'horizontal',
+                characters: it.characters || (it.target_text ? it.target_text.split('') : []),
+                stroke_count: it.stroke_count || 5
+              }))
             },
             quiz_deck: {
               id: `quiz_deck_${pkgId}`,
               title: parsed.quiz_deck?.title || 'Bộ trắc nghiệm',
               description: parsed.quiz_deck?.description || '',
-              items: parsed.quiz_deck?.items || []
+              items: (parsed.quiz_deck?.items || []).map((q: any, idx: number) => ({
+                id: q.id || `quiz_${pkgId}_${idx + 1}`,
+                question: q.question || '',
+                options: Array.isArray(q.options) ? q.options : ['A', 'B', 'C', 'D'],
+                correct_index: typeof q.correct_index === 'number' ? q.correct_index : 0,
+                explanation: q.explanation || '',
+                points: Number(q.points) || 10
+              }))
             }
           };
         }

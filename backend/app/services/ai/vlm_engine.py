@@ -80,7 +80,7 @@ class VLMEngine:
         self.api_key = api_key or settings.GEMINI_API_KEY or os.environ.get("GEMINI_API_KEY", "")
 
     def _create_gemini_model(self, genai, generation_config=None):
-        for m_name in ["gemini-3.1-flash-lite", "gemini-3.8-flash", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-flash-latest"]:
+        for m_name in ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3-flash-preview"]:
             try:
                 kwargs = {}
                 if generation_config:
@@ -141,9 +141,11 @@ class VLMEngine:
         Khử dính chữ, phân rã và chuẩn hóa văn bản bất kỳ bằng VLM Decoder.
         Hỗ trợ custom_prompt của người dùng để điều hướng mô hình bóc tách chữ cứng, nghĩa, ngữ cảnh.
         """
-        active_key = user_api_key or self.api_key
+        raw_key = user_api_key or self.api_key
+        active_key = raw_key.strip('\'"').strip() if raw_key else ""
         
         if active_key:
+            # 1. Thử qua SDK
             try:
                 import google.generativeai as genai
                 genai.configure(api_key=active_key)
@@ -157,10 +159,43 @@ class VLMEngine:
                     f"TÀI LIỆU CẦN XỬ LÝ (TÊN FILE: {filename}):\n\"\"\"\n{raw_text[:15000]}\n\"\"\""
                 )
                 response = model.generate_content(prompt)
-                structured_data = self._clean_and_parse_json(response.text)
-                return self._build_learning_package(structured_data, filename)
+                if response and response.text:
+                    structured_data = self._clean_and_parse_json(response.text)
+                    return self._build_learning_package(structured_data, filename)
             except Exception as e:
-                print(f"[VLMEngine] Gemini VLM API call failed: {e}. Switching to Neural Heuristic Disentangler.")
+                print(f"[VLMEngine] Gemini VLM SDK call failed: {e}. Trying direct REST API fallback...")
+
+            # 2. Dự phòng: Thử trực tiếp REST API qua urllib
+            import urllib.request, urllib.parse, json
+            user_instruction = f"\nCHỈ THỊ ĐẶC BIỆT CỦA NGƯỜI DÙNG: {custom_prompt}\n" if custom_prompt else ""
+            prompt = (
+                f"{VLM_SYSTEM_PROMPT}\n{user_instruction}\n"
+                f"TÀI LIỆU CẦN XỬ LÝ (TÊN FILE: {filename}):\n\"\"\"\n{raw_text[:15000]}\n\"\"\""
+            )
+            encoded_key = urllib.parse.quote(active_key)
+            for m_name in ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3-flash-preview"]:
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={encoded_key}"
+                    body = {
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {
+                            "responseMimeType": "application/json",
+                            "temperature": 0.3
+                        }
+                    }
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(body).encode("utf-8"),
+                        headers={"Content-Type": "application/json"}
+                    )
+                    with urllib.request.urlopen(req, timeout=18) as resp:
+                        res_data = json.loads(resp.read().decode())
+                        candidate_text = res_data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text")
+                        if candidate_text:
+                            structured_data = self._clean_and_parse_json(candidate_text)
+                            return self._build_learning_package(structured_data, filename)
+                except Exception as rest_e:
+                    print(f"[VLMEngine] REST fallback with {m_name} failed: {rest_e}")
 
         # Fallback to local neural heuristic disentangler
         return self._heuristic_vlm_disentangler(raw_text, filename)
