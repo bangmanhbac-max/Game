@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Volume2, 
   VolumeX, 
-  Sparkles, 
   Upload, 
   Gamepad2, 
   Feather, 
@@ -78,12 +77,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Left: Brand Logo & Title */}
         <div 
           onClick={() => handleMobileTabSelect('dashboard')}
-          className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group select-none shrink-0"
+          className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none shrink-0"
+          title="EduPlay - Trò chơi hóa học tập đa chiều"
         >
-          <div className="w-8 h-8 sm:w-9 sm:h-9 2xl:w-10 2xl:h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition">
-            <div className="w-full h-full bg-[#0B0F19] rounded-[10px] flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-            </div>
+          <div className="w-9 h-9 sm:w-10 sm:h-10 2xl:w-11 2xl:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-purple-600 to-pink-500 p-0.5 shadow-lg shadow-cyan-500/30 group-hover:scale-105 group-hover:shadow-cyan-400/50 transition-all duration-300 shrink-0">
+            <img 
+              src="/assets/eduplay_avengers_logo.jpg" 
+              alt="EduPlay Avengers Logo" 
+              className="w-full h-full object-cover rounded-[10px]"
+            />
           </div>
           <div>
             <div className="flex items-center gap-1 sm:gap-1.5">
