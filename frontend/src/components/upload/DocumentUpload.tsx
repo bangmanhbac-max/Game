@@ -77,7 +77,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
         setVlmStatus(result.vlm_status);
       }
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'Không thể đọc file';
+      const errorMsg = err instanceof Error ? err.message : 'Cannot read file';
       setError(errorMsg);
     } finally {
       setIsExtracting(false);
@@ -87,7 +87,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
   const handleGenerateAI = async () => {
     const textToProcess = customText.trim();
     if (!textToProcess) {
-      setError('Vui lòng tải lên tài liệu hoặc dán nội dung văn bản');
+      setError('Please upload a document or paste text content');
       return;
     }
 
@@ -97,14 +97,14 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
       const userApiKey = localStorage.getItem('gemini_api_key') || undefined;
       const pkg = await generateLearningContent(
         textToProcess,
-        extractedDoc?.filename || 'Tài liệu tùy chỉnh',
+        extractedDoc?.filename || 'Custom Document',
         userApiKey,
         customPrompt.trim() || undefined
       );
       setVlmPackage(pkg);
       onPackageGenerated(pkg);
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'Lỗi khi AI xử lý nội dung';
+      const errorMsg = err instanceof Error ? err.message : 'Error processing content with AI';
       setError(errorMsg);
     } finally {
       setIsGenerating(false);
@@ -130,10 +130,10 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
       raw_text: demoData.rawText,
       preview_snippet: demoData.rawText.slice(0, 300) + '...',
       learning_package: demoData.package,
-      vlm_status: 'Mẫu Demo Chuẩn Hóa Cố Định (Tự Tạo Không Cần API)'
+      vlm_status: 'Predefined Offline Demo (No API Needed)'
     });
     setVlmPackage(demoData.package);
-    setVlmStatus('Mẫu Demo Chuẩn Hóa Cố Định (Tự Tạo Không Cần API)');
+    setVlmStatus('Predefined Offline Demo (No API Needed)');
     onPackageGenerated(demoData.package);
 
     try {
@@ -142,20 +142,20 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
       filtered.unshift(demoData.package);
       localStorage.setItem('eduplay_saved_decks', JSON.stringify(filtered));
     } catch (e) {
-      console.warn('Lưu demo deck vào localStorage:', e);
+      console.warn('Saved demo deck into localStorage:', e);
     }
   };
 
   const formatGesture = (gesture: string) => {
     switch (gesture) {
-      case 'horizontal': return '— Ngang';
-      case 'vertical': return '| Sổ dọc';
-      case 'slash': return '/ Phẩy';
-      case 'backslash': return '\\ Mác';
-      case 'v_shape': return 'V Chữ V';
-      case 'caret': return '^ Mũ';
-      case 'circle': return '◯ Tròn';
-      case 'lightning': return '⚡ Tia sét';
+      case 'horizontal': return '— Horizontal';
+      case 'vertical': return '| Vertical';
+      case 'slash': return '/ Slash';
+      case 'backslash': return '\\ Backslash';
+      case 'v_shape': return 'V Shape';
+      case 'caret': return '^ Caret';
+      case 'circle': return '◯ Circle';
+      case 'lightning': return '⚡ Lightning';
       default: return gesture;
     }
   };
@@ -172,19 +172,19 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/40 flex items-center gap-1.5">
                 <Cpu className="w-3.5 h-3.5" />
-                Cơ Chế VLM Đa Phương Thức (Vision-Language Model)
+                VLM Multimodal Architecture (Vision-Language Model)
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30 flex items-center gap-1">
                 <Zap className="w-3 h-3" /> Auto De-noise & Disentangle
               </span>
             </div>
             <h3 className="text-xl font-black text-white tracking-wide">
-              Xử Lý Bất Kỳ Tài Liệu Scan, Ảnh Chụp Hoặc Dính Chữ
+              Parse Any Scanned Document, Photos, or Dense Cursive Text
             </h3>
             <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-              Dù file của bạn chữ dính chùm không khoảng trắng, lộn xộn đa cột, hay ảnh chụp trang sách méo mó, 
-              bộ giải mã <span className="text-cyan-300 font-semibold">Vision Encoder</span> & <span className="text-purple-300 font-semibold">Language Decoder</span> sẽ tự động khử nhiễu và phân tách về 
-              <span className="text-amber-300 font-semibold"> 1 định dạng từ vựng cố định</span> để tạo game & câu hỏi ngay!
+              Whether your file has unspaced dense characters, multi-column messy formats, or skewed book photos, 
+              our <span className="text-cyan-300 font-semibold">Vision Encoder</span> & <span className="text-purple-300 font-semibold">Language Decoder</span> pipeline automatically denoises, extracts, and normalizes into a 
+              <span className="text-amber-300 font-semibold"> standardized interactive learning package</span> ready for all 5 games!
             </p>
           </div>
 
@@ -203,7 +203,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
                 <Layers className="w-4 h-4" />
               </div>
               <span className="text-[10px] text-gray-300 font-medium block">Context Decoder</span>
-              <span className="text-[9px] text-purple-400">Tách Dính Chữ</span>
+              <span className="text-[9px] text-purple-400">De-cluster Text</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 text-gray-500" />
             <div className="text-center px-2">
@@ -211,13 +211,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
                 <Sparkles className="w-4 h-4" />
               </div>
               <span className="text-[10px] text-gray-300 font-medium block">Fixed Schema</span>
-              <span className="text-[9px] text-amber-400">Tạo 3 Game & Quiz</span>
+              <span className="text-[9px] text-amber-400">5 Games & Quiz</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Upload Box (Cách 1: Tải file bất kỳ vào VLM) */}
+      {/* Upload Box (Method 1) */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -229,7 +229,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             : 'border-gray-700 hover:border-cyan-500/50 bg-[#161F30]/60 hover:bg-[#161F30]'
         }`}
       >
-        {/* Nút File Demo ở góc trên bên phải theo yêu cầu */}
+        {/* Predefined Demo Button */}
         <div 
           className="absolute top-4 right-4 z-20"
           onClick={(e) => e.stopPropagation()}
@@ -238,10 +238,10 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             type="button"
             onClick={() => handleLoadPredefinedDemo('chinese')}
             className="group flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/25 to-amber-500/25 hover:from-amber-500/40 hover:to-orange-500/40 border border-amber-400/60 text-amber-300 hover:text-amber-100 text-xs font-black transition-all shadow-lg shadow-amber-500/15 hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
-            title="Nhấn để hệ thống tự động nạp & tạo ngay bài học Tiếng Trung HSK mẫu mà không cần kết nối API"
+            title="Automatically load and generate a sample HSK Chinese lesson without needing an API key"
           >
             <FolderOpen className="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" />
-            <span>📁 File Demo (Không Cần API)</span>
+            <span>📁 Instant Demo (No API Needed)</span>
           </button>
         </div>
 
@@ -265,17 +265,17 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
           {isExtracting ? (
             <span className="text-cyan-300 flex items-center justify-center gap-2">
               <Loader2 className="w-5 h-5 animate-spin" />
-              VLM Đang Tokenize, Khử Nhiễu & Phân Tách Từ Vựng...
+              VLM Tokenizing, Denoising & Segmenting Vocabulary...
             </span>
           ) : (
-            'Cách 1: Kéo thả hoặc Nhấp để tải file bất kỳ vào VLM'
+            'Method 1: Drag & drop or click to upload any document into VLM'
           )}
         </h3>
         <p className="text-xs text-gray-400 max-w-lg mx-auto mb-4">
-          Hỗ trợ: <span className="text-cyan-300 font-semibold">Tài liệu PDF / Scan</span>,{' '}
+          Supports: <span className="text-cyan-300 font-semibold">PDF / Scanned Documents</span>,{' '}
           <span className="text-blue-300 font-semibold">Word DOCX</span>,{' '}
-          <span className="text-amber-300 font-semibold">Ảnh chụp trang sách (PNG/JPG)</span>, hoặc{' '}
-          <span className="text-emerald-300 font-semibold">File TXT dính chữ</span>.
+          <span className="text-amber-300 font-semibold">Photos / Textbook Scans (PNG/JPG)</span>, or{' '}
+          <span className="text-emerald-300 font-semibold">Dense TXT files</span>.
         </p>
 
         {/* Format Badges */}
@@ -287,50 +287,50 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             <FileText className="w-3.5 h-3.5" /> Word DOCX
           </span>
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">
-            <ImageIcon className="w-3.5 h-3.5" /> Ảnh / Chữ viết tay
+            <ImageIcon className="w-3.5 h-3.5" /> Photos / Handwriting
           </span>
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
-            <FileText className="w-3.5 h-3.5" /> TXT / MD Dính Chữ
+            <FileText className="w-3.5 h-3.5" /> Dense TXT / MD
           </span>
         </div>
 
-        {/* HÀNG NÚT MẪU DEMO TỰ ĐỘNG TẠO ĐẦY ĐỦ (KHÔNG CẦN API) */}
+        {/* Offline Demo Buttons */}
         <div 
           onClick={(e) => e.stopPropagation()} 
           className="pt-3 border-t border-gray-800/80 flex flex-wrap items-center justify-center gap-2"
         >
           <span className="text-xs text-amber-300 font-bold flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Mẫu demo tự tạo (Không cần API):
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> Offline Demos (No API Key Required):
           </span>
 
           <button
             type="button"
             onClick={() => handleLoadPredefinedDemo('messy')}
             className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500/25 to-purple-500/25 hover:from-pink-500/40 hover:to-purple-500/40 border border-pink-400/60 text-pink-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
-            title="Tự động bóc tách & tạo trọn bộ từ vựng + quiz từ file dính chữ mà không cần API"
+            title="Auto-extract and build complete vocabulary + quizzes from dense unspaced text without API key"
           >
             <Zap className="w-3.5 h-3.5 text-pink-300" />
-            ⚡ Mẫu Demo Dính Chữ (Tự Tạo Ngay)
+            ⚡ Dense Text Demo
           </button>
 
           <button
             type="button"
             onClick={() => handleLoadPredefinedDemo('chinese')}
             className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/25 to-blue-500/25 hover:from-cyan-500/40 hover:to-blue-500/40 border border-cyan-400/60 text-cyan-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
-            title="Tự động tạo trọn bộ từ vựng Tiếng Trung HSK 1 + câu hỏi Quiz mà không cần API"
+            title="Auto-generate complete Chinese HSK 1 vocabulary + quiz questions without API key"
           >
             <span>🇨🇳</span>
-            ⚡ Mẫu Demo Tiếng Trung HSK (Tự Tạo Ngay)
+            ⚡ Chinese HSK Demo
           </button>
 
           <button
             type="button"
             onClick={() => handleLoadPredefinedDemo('english')}
             className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/25 to-indigo-500/25 hover:from-purple-500/40 hover:to-indigo-500/40 border border-purple-400/60 text-purple-200 text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
-            title="Tự động tạo trọn bộ từ vựng Tiếng Anh AI & Công Nghệ + câu hỏi Quiz mà không cần API"
+            title="Auto-generate complete English AI & Technology vocabulary + quizzes without API key"
           >
             <span>🇬🇧</span>
-            ⚡ Mẫu Demo Tiếng Anh AI & Tech (Tự Tạo Ngay)
+            ⚡ English AI & Tech Demo
           </button>
         </div>
       </div>
@@ -343,7 +343,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
         </div>
       )}
 
-      {/* VLM STANDARDIZED VOCABULARY TABLE (Kết quả phân tách về 1 format cố định) */}
+      {/* VLM STANDARDIZED VOCABULARY TABLE */}
       {vlmPackage && (
         <div className="bg-[#121c2e] border-2 border-emerald-500/50 rounded-3xl p-6 shadow-2xl space-y-4 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-700/60 pb-4">
@@ -353,9 +353,9 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
               </div>
               <div>
                 <h4 className="text-lg font-black text-white flex flex-wrap items-center gap-2">
-                  <span>VLM Đã Chuẩn Hóa Cố Định Thành Công!</span>
+                  <span>VLM Successfully Standardized Package!</span>
                   <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-                    {vlmPackage.vocabulary_deck.items.length} từ vựng • {vlmPackage.quiz_deck.items.length} câu trắc nghiệm
+                    {vlmPackage.vocabulary_deck.items.length} vocabulary • {vlmPackage.quiz_deck.items.length} quiz questions
                   </span>
                   {vlmStatus && (
                     <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 text-[11px] font-mono border border-cyan-500/30">
@@ -364,7 +364,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
                   )}
                 </h4>
                 <p className="text-xs text-gray-400">
-                  {vlmPackage.title} • Sẵn sàng cho Game Bắn Gà, Magic Touch và Quiz Arena
+                  {vlmPackage.title} • Ready for Stark Galaxy Typist, Mystic Rune, and Speed Quiz
                 </p>
               </div>
             </div>
@@ -375,7 +375,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
               className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black px-6 py-3 rounded-2xl text-sm transition-all shadow-lg shadow-emerald-500/25 hover:scale-[1.02] cursor-pointer"
             >
               <Play className="w-4 h-4 fill-slate-950" />
-              <span>Chơi Game Ngay Với Bộ Từ Này</span>
+              <span>Play Games With This Deck Now</span>
             </button>
           </div>
 
@@ -385,12 +385,12 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
               <thead className="bg-[#161F30] text-gray-400 uppercase font-semibold text-[11px] border-b border-gray-800">
                 <tr>
                   <th className="py-3 px-4">#</th>
-                  <th className="py-3 px-4">Từ Vựng Gốc</th>
-                  <th className="py-3 px-4">Phiên Âm (Pinyin/IPA)</th>
-                  <th className="py-3 px-4">Chữ Cứng (Game Granny)</th>
-                  <th className="py-3 px-4">Gõ Phím (Game Bắn Gà)</th>
-                  <th className="py-3 px-4">Nghĩa Tiếng Việt</th>
-                  <th className="py-3 px-4">Cử Chỉ Nét Vẽ</th>
+                  <th className="py-3 px-4">Target Text</th>
+                  <th className="py-3 px-4">Phonetics (Pinyin/IPA)</th>
+                  <th className="py-3 px-4">Components (Granny 3D)</th>
+                  <th className="py-3 px-4">Type Target (Galaxy Shooter)</th>
+                  <th className="py-3 px-4">English Meaning</th>
+                  <th className="py-3 px-4">Stroke Gesture</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/60">
@@ -436,13 +436,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
       <div className="bg-[#121c2e] border border-cyan-500/30 rounded-2xl p-4 shadow-lg flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex items-center gap-2 text-cyan-300 text-xs font-bold shrink-0">
           <Wand2 className="w-4 h-4 text-yellow-300" />
-          <span>Chỉ thị AI (Tùy chọn):</span>
+          <span>AI Instructions (Optional):</span>
         </div>
         <input
           type="text"
           value={customPrompt}
           onChange={(e) => setCustomPrompt(e.target.value)}
-          placeholder="Nhập câu lệnh hướng dẫn AI (vd: 'Ưu tiên bóc tách từ vựng tiếng Trung HSK, nhận diện từng chữ cứng và Pinyin, bỏ qua tiếng Anh')..."
+          placeholder="Custom AI prompt (e.g.: 'Focus on advanced business terms, extract character components and Pinyin, ignore English noise')..."
           className="flex-1 bg-[#0b0f19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2 text-xs text-white placeholder-gray-500 focus:outline-none transition"
         />
         {customPrompt && (
@@ -451,7 +451,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             onClick={() => setCustomPrompt('')}
             className="text-gray-400 hover:text-white text-xs px-2 py-1"
           >
-            Xóa
+            Clear
           </button>
         )}
       </div>
@@ -462,11 +462,11 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <FileCheck className="w-5 h-5 text-cyan-400" />
-            <h4 className="font-bold text-white text-base">Văn Bản Nguồn Hoặc Dán Trực Tiếp Vào VLM</h4>
+            <h4 className="font-bold text-white text-base">Source Text or Direct Input into VLM</h4>
           </div>
           {extractedDoc && (
             <span className="text-xs text-gray-400 bg-[#0B0F19] px-3 py-1 rounded-lg border border-gray-800">
-              {extractedDoc.filename} ({extractedDoc.char_count} ký tự)
+              {extractedDoc.filename} ({extractedDoc.char_count} chars)
             </span>
           )}
         </div>
@@ -475,13 +475,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
           rows={6}
           value={customText}
           onChange={(e) => setCustomText(e.target.value)}
-          placeholder="Dán bất kỳ bài học nào tại đây, kể cả chữ dính chùm hoặc lộn xộn... VLM sẽ tự phân tách và chuẩn hóa!"
+          placeholder="Paste any study notes or lesson text here, even unspaced dense lines or messy paragraphs... VLM will automatically segment and standardize!"
           className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-2xl p-4 text-sm text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-400 resize-y transition font-mono leading-relaxed"
         />
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <p className="text-xs text-gray-400">
-            💡 VLM sẽ tự động phân tách chữ Hán/Anh, nhận diện phiên âm Pinyin/IPA, làm sạch nghĩa tiếng Việt và gán cử chỉ nét vẽ.
+            💡 VLM automatically tokenizes Hanzi/English words, resolves Pinyin/IPA phonetics, cleans translations, and assigns gesture strokes.
           </p>
 
           <button
@@ -492,12 +492,12 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({ onPackageGenerat
             {isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>VLM Đang Khử Nhiễu & Tạo Cấu Trúc...</span>
+                <span>VLM Denoising & Structuring Content...</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4 text-yellow-300" />
-                <span>Kích Hoạt VLM Phân Tách & Tạo Game</span>
+                <span>Activate VLM & Generate Game Decks</span>
               </>
             )}
           </button>

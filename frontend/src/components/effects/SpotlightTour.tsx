@@ -28,39 +28,39 @@ export interface TourStep {
 export const TOUR_STEPS: TourStep[] = [
   {
     targetId: 'tour-hero-banner',
-    title: 'Chào Mừng Đến Với EduPlay 4K',
-    subtitle: 'Nền tảng Học Tập Trò Chơi Hóa Thế Hệ Mới',
-    description: 'Ứng dụng Trí tuệ Nhân tạo Đa phương thức (VLM AI) và Đồ họa 3D Avengers 4K. Giúp bạn tiếp thu từ vựng tiếng Anh & tiếng Trung nhanh gấp 3 lần qua trải nghiệm gaming đỉnh cao!',
-    badge: 'TỔNG QUAN',
+    title: 'Welcome to EduPlay 4K',
+    subtitle: 'Next-Gen Gamified AI Learning Universe',
+    description: 'Powered by Multimodal Vision AI (VLM) and 4K Avengers 3D graphics. Accelerate your language acquisition 3x faster through an immersive gaming experience!',
+    badge: 'OVERVIEW',
     icon: <Sparkles className="w-5 h-5 text-amber-400 animate-pulse" />,
     preferredPosition: 'bottom',
     padding: 12
   },
   {
     targetId: 'tour-deck-selector',
-    title: 'Gói Bài Học & Bộ Từ Vựng',
-    subtitle: 'Quản lý Giáo trình Linh hoạt',
-    description: 'Dễ dàng lựa chọn hơn 20 bộ bài học mẫu có sẵn (HSK 1-3, Tiếng Anh AI, IT, Kinh Doanh, Du Lịch, Y Tế...). Bạn có thể bấm "+ Thêm Bộ Từ" hoặc "Xóa Bộ Từ" để tùy biến kho dữ liệu học tập!',
-    badge: 'GIÁO TRÌNH',
+    title: 'Learning Decks & Curriculum',
+    subtitle: 'Dynamic Course Management',
+    description: 'Easily select from 20+ curated master decks (HSK 1-3, AI Tech, Business, Travel, Medical...). Click "+ Add Deck" or "Delete Deck" to customize your personal study vault!',
+    badge: 'CURRICULUM',
     icon: <BookOpen className="w-5 h-5 text-cyan-400" />,
     preferredPosition: 'top',
     padding: 14
   },
   {
     targetId: 'tour-games-grid',
-    title: 'Kho 5 Đấu Trường Game Đồ Họa 3D',
-    subtitle: '5 Chế độ Gaming Tương Tác Chuyên Sâu',
-    description: 'Lựa chọn đấu trường yêu thích: Stark Reapers (Bắn gà luyện gõ phím), Mystic Sanctum (Vẽ cử chỉ phép thuật Doctor Strange), Speed Quiz Arena (Phản xạ trắc nghiệm), Rừng Ma Granny 3D (Sinh tồn giải đố chữ Hán) và Flashcard 3D Đa Chiều!',
-    badge: 'ĐẤU TRƯỜNG',
+    title: '5 High-Fidelity 3D Game Arenas',
+    subtitle: '5 Immersive Interactive Modes',
+    description: 'Choose your battle arena: Stark Galaxy Typist (keyboard space combat), Doctor Strange Mystic Rune (gesture spellcasting), Speed Quiz Arena (fast-reflex trivia), Scarlet Ghost Forest 3D (first-person Hanzi survival), and 3D Multi-Dimensional Flashcards!',
+    badge: 'ARENAS',
     icon: <Gamepad2 className="w-5 h-5 text-pink-400" />,
     preferredPosition: 'top',
     padding: 16
   },
   {
     targetId: 'tour-nav-upload',
-    title: 'AI Studio - Phân Tích VLM Tài Liệu',
-    subtitle: 'Biến Sách Học Thô Thành Đề Game',
-    description: 'Chỉ cần kéo thả file PDF, DOCX, Ảnh chụp sách hoặc bấm nút 1 chạm "Test File Dính Chữ", "Tiếng Trung HSK", "Tiếng Anh AI" để mô hình thị giác AI tự động phân tích và tạo bài học ngay lập tức!',
+    title: 'AI Studio - VLM Document Engine',
+    subtitle: 'Transform Raw Books Into Game Decks',
+    description: 'Simply drag and drop PDF, DOCX, textbook scans, or click 1-touch demo buttons ("OCR Dense Document", "HSK Mandarin", "AI Tech English") for instant neural extraction!',
     badge: 'VLM STUDIO',
     icon: <Cpu className="w-5 h-5 text-purple-400" />,
     preferredPosition: 'bottom',
@@ -68,20 +68,20 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     targetId: 'tour-leaderboard',
-    title: 'Bảng Vinh Danh Top Điểm Số',
-    subtitle: 'Đua Top BXH & Tích Lũy Điểm',
-    description: 'Mỗi ván game chiến thắng sẽ tích lũy điểm thưởng và tỷ lệ chính xác. Hãy so tài cùng bạn bè và ghi tên mình trên đỉnh Bảng Vinh Danh toàn cầu!',
-    badge: 'VINH DANH',
+    title: 'Global Hall of Fame',
+    subtitle: 'Competitive Leaderboards & XP',
+    description: 'Every victory yields battle points, combo multipliers, and accuracy stats. Compete with players worldwide and claim your place atop the Global Leaderboard!',
+    badge: 'LEADERBOARD',
     icon: <Trophy className="w-5 h-5 text-amber-400" />,
     preferredPosition: 'bottom',
     padding: 8
   },
   {
     targetId: 'tour-guide-btn',
-    title: 'Xem Lại Hướng Dẫn Bất Cứ Lúc Nào',
-    subtitle: 'Hệ Thống Ánh Sáng Hội Tụ Spotlight',
-    description: 'Nếu muốn khám phá lại các tính năng hoặc hướng dẫn bạn bè, bạn luôn có thể nhấn nút "Hướng Dẫn" này trên thanh điều hướng để khởi động lại chuỗi giới thiệu trực quan!',
-    badge: 'HƯỚNG DẪN',
+    title: 'Interactive Guided Tour',
+    subtitle: 'Converging Spotlight Focus System',
+    description: 'Whenever you want to review features or guide new players, click "Tour" in the top navigation bar to relaunch this visual walkthrough!',
+    badge: 'GUIDE',
     icon: <Compass className="w-5 h-5 text-emerald-400" />,
     preferredPosition: 'bottom',
     padding: 8
@@ -343,7 +343,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
           {/* Converging Target Reticle Badge */}
           <div className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#070A12]/95 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-black uppercase tracking-wider shadow-lg shadow-cyan-500/40 flex items-center gap-1.5 whitespace-nowrap animate-bounce pointer-events-none">
             <Target className="w-3 h-3 text-cyan-400 animate-spin" />
-            <span>MỤC TIÊU: {step.badge}</span>
+            <span>TARGET: {step.badge}</span>
           </div>
         </div>
       )}
@@ -365,7 +365,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
                 {step.badge}
               </span>
               <span className="text-xs font-mono font-bold text-gray-400">
-                Bước {currentStepIndex + 1}/{TOUR_STEPS.length}
+                Step {currentStepIndex + 1} of {TOUR_STEPS.length}
               </span>
             </div>
 
@@ -374,7 +374,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
                 localStorage.setItem('eduplay_tour_completed', 'true');
                 onClose();
               }}
-              title="Đóng hướng dẫn"
+              title="Close Tour"
               className="p-1 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -428,7 +428,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
               }}
               className="px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 transition cursor-pointer"
             >
-              Bỏ qua
+              Skip
             </button>
 
             <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
                   className="px-3 py-1.5 rounded-xl bg-[#161F30] hover:bg-gray-800 border border-gray-700 text-xs font-bold text-gray-200 flex items-center gap-1 transition cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Trước</span>
+                  <span>Back</span>
                 </button>
               )}
 
@@ -446,7 +446,7 @@ export const SpotlightTour: React.FC<SpotlightTourProps> = ({
                 onClick={handleNext}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/30 transition transform hover:scale-105 cursor-pointer"
               >
-                <span>{currentStepIndex === TOUR_STEPS.length - 1 ? 'Khám phá ngay! 🎉' : 'Tiếp theo'}</span>
+                <span>{currentStepIndex === TOUR_STEPS.length - 1 ? 'Start Exploring! 🎉' : 'Next'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

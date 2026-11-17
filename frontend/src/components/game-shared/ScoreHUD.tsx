@@ -14,7 +14,7 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ stats, wave, modeName }) => 
       {/* Mode / Wave */}
       <div className="flex items-center gap-2">
         <span className="text-xs font-game uppercase tracking-wider text-cyan-400 font-bold">
-          {modeName || 'BÀI TẬP'}
+          {modeName || 'ARENA'}
         </span>
         {wave !== undefined && (
           <span className="bg-cyan-500/20 text-cyan-300 text-[11px] font-bold px-2 py-0.5 rounded-md border border-cyan-500/30">
@@ -28,7 +28,7 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ stats, wave, modeName }) => 
         {/* Score */}
         <div className="flex items-center gap-1.5 text-amber-300">
           <Trophy className="w-4 h-4 text-amber-400" />
-          <span>ĐIỂM:</span>
+          <span>SCORE:</span>
           <span className="font-game font-bold text-sm text-white tracking-wider">
             {stats.score.toLocaleString()}
           </span>
@@ -46,7 +46,7 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ stats, wave, modeName }) => 
         {/* Accuracy */}
         <div className="hidden sm:flex items-center gap-1.5 text-emerald-400">
           <Target className="w-4 h-4 text-emerald-400" />
-          <span>CHÍNH XÁC:</span>
+          <span>ACCURACY:</span>
           <span className="font-bold text-white">
             {stats.accuracy}%
           </span>
@@ -55,7 +55,7 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ stats, wave, modeName }) => 
         {/* Words / Kills */}
         <div className="hidden md:flex items-center gap-1.5 text-blue-400">
           <CheckCircle2 className="w-4 h-4 text-blue-400" />
-          <span>HẠ GỤC:</span>
+          <span>CLEARED:</span>
           <span className="font-bold text-white">
             {stats.wordsDefeated}
           </span>

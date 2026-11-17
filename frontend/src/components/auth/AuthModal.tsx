@@ -61,13 +61,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         username_or_email: loginIdentifier,
         password: loginPassword,
       });
-      setSuccessMsg('Đăng nhập thành công! Chào mừng Siêu Anh Hùng.');
+      setSuccessMsg('Login successful! Welcome, Avenger.');
       setTimeout(() => {
         onClose();
         setSuccessMsg(null);
       }, 700);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Đăng nhập không thành công');
+      setErrorMsg(err.message || 'Login failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -86,13 +86,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         full_name: regFullName || regUsername,
         avatar: selectedAvatar,
       });
-      setSuccessMsg('Gia nhập biệt đội Avengers thành công!');
+      setSuccessMsg('Successfully joined the Avengers!');
       setTimeout(() => {
         onClose();
         setSuccessMsg(null);
       }, 700);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Đăng ký tài khoản thất bại');
+      setErrorMsg(err.message || 'Registration failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -115,13 +115,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           avatar: provider === 'Google' ? 'iron-man' : provider === 'GitHub' ? 'doctor-strange' : 'captain-america',
         });
       }
-      setSuccessMsg(`Đăng nhập qua ${provider} thành công! Chào mừng Siêu Anh Hùng.`);
+      setSuccessMsg(`Signed in with ${provider}! Welcome, Avenger.`);
       setTimeout(() => {
         onClose();
         setSuccessMsg(null);
       }, 700);
     } catch (err: any) {
-      setErrorMsg(err.message || `Lỗi đăng nhập ${provider}`);
+      setErrorMsg(err.message || `${provider} login error`);
     } finally {
       setIsSubmitting(false);
     }
@@ -150,10 +150,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <Shield className="w-7 h-7 text-cyan-400" />
           </div>
           <h2 className="font-game text-2xl 3xl:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-amber-300 to-pink-500 tracking-wider">
-            {mode === 'login' ? 'ĐĂNG NHẬP CHIẾN BINH' : 'GIA NHẬP BIỆT ĐỘI AVENGERS'}
+            {mode === 'login' ? 'WARRIOR SIGN IN' : 'JOIN THE AVENGERS'}
           </h2>
           <p className="text-xs 3xl:text-sm text-gray-400 mt-1">
-            Lưu trữ tiến trình học tập, bảng xếp hạng Top 4K và bộ từ vựng cá nhân
+            Save learning progress, climb 4K leaderboards, and sync personal decks
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            Đăng Nhập
+            Sign In
           </button>
           <button
             type="button"
@@ -179,7 +179,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            Đăng Ký Mới
+            Register
           </button>
         </div>
 
@@ -204,7 +204,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-                Tên đăng nhập hoặc Email
+                Username or Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -215,7 +215,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={loginIdentifier}
                   onChange={(e) => setLoginIdentifier(e.target.value)}
-                  placeholder="avenger_hero hoặc email..."
+                  placeholder="avenger_hero or email..."
                   className="w-full pl-10 pr-4 py-3 bg-[#161F30] border border-gray-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-sm text-white placeholder-gray-500 outline-none transition"
                 />
               </div>
@@ -223,7 +223,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-                Mật khẩu
+                Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -246,7 +246,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 onClick={handleFillDemo}
                 className="text-xs text-amber-300 hover:text-amber-200 underline font-semibold cursor-pointer"
               >
-                Điền tài khoản mẫu (Tony Stark)
+                Fill demo account (Tony Stark)
               </button>
             </div>
 
@@ -256,11 +256,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
-                <span>Đang xác thực...</span>
+                <span>Authenticating...</span>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  <span>ĐĂNG NHẬP VÀO HỆ THỐNG</span>
+                  <span>SIGN IN TO SYSTEM</span>
                 </>
               )}
             </button>
@@ -272,7 +272,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
               <div className="relative flex justify-center text-[10px] uppercase">
                 <span className="bg-[#0F172A] px-2 text-gray-500 font-semibold tracking-wider">
-                  Hoặc đăng nhập nhanh bằng
+                  Or quick sign in with
                 </span>
               </div>
             </div>
@@ -310,7 +310,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-1">
-                  Tên đăng nhập
+                  Username
                 </label>
                 <input
                   type="text"
@@ -325,7 +325,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-1">
-                  Họ và tên
+                  Full Name
                 </label>
                 <input
                   type="text"
@@ -339,7 +339,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1">
-                Địa chỉ Email
+                Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -358,7 +358,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1">
-                Mật khẩu (tối thiểu 6 ký tự)
+                Password (minimum 6 characters)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -379,7 +379,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Marvel Superhero Avatar Picker */}
             <div>
               <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-                Chọn Siêu Anh Hùng Đại Diện
+                Select Superhero Avatar
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {HERO_AVATARS.map((hero) => (
@@ -408,11 +408,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="w-full py-3.5 px-4 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-400 hover:to-indigo-500 text-white font-black text-sm rounded-xl shadow-lg shadow-pink-500/25 transition cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
             >
               {isSubmitting ? (
-                <span>Đang khởi tạo tài khoản...</span>
+                <span>Creating Account...</span>
               ) : (
                 <>
                   <Shield className="w-4 h-4" />
-                  <span>GIA NHẬP BIỆT ĐỘI NGAY</span>
+                  <span>JOIN THE AVENGERS NOW</span>
                 </>
               )}
             </button>
@@ -424,7 +424,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
               <div className="relative flex justify-center text-[10px] uppercase">
                 <span className="bg-[#0F172A] px-2 text-gray-500 font-semibold tracking-wider">
-                  Hoặc đăng ký nhanh bằng
+                  Or quick register with
                 </span>
               </div>
             </div>

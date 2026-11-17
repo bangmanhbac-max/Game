@@ -96,11 +96,11 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
           className="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2 rounded-xl bg-[#161F30] border border-gray-800 transition hover:border-cyan-500/40"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Thoát Game</span>
+          <span>Exit Game</span>
         </button>
 
         <div className="flex-1 max-w-2xl 2xl:max-w-4xl">
-          <ScoreHUD stats={stats} wave={wave} modeName="🚀 STARK SPACE DEFENSE (BẮN GÀ 4K)" />
+          <ScoreHUD stats={stats} wave={wave} modeName="🚀 STARK SPACE DEFENSE (4K TYPIST)" />
         </div>
 
         <HealthBar hp={hp} maxHp={maxHp} />
@@ -120,12 +120,12 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
               CHICKEN INVADERS TYPING
             </h2>
             <p className="text-sm 3xl:text-base text-gray-300 max-w-lg mb-6 leading-relaxed">
-              Nhập các ký tự Pinyin hoặc từ tương ứng với chữ Hán hiển thị trên đầu chú gà để tàu vũ trụ khóa mục tiêu và bắn hạ chúng!
+              Type the Pinyin or English letters corresponding to the target above each alien chicken to lock on and obliterate them!
             </p>
 
             <div className="flex items-center gap-2 mb-8 bg-[#161F30] px-5 py-2.5 rounded-2xl border border-gray-700 text-xs 3xl:text-sm text-gray-300 shadow-inner">
               <Keyboard className="w-4 h-4 text-cyan-400" />
-              <span>Gợi ý: Gõ chữ thường trên bàn phím không dấu (ví dụ: <b className="text-cyan-300">nihao</b>)</span>
+              <span>Tip: Type in standard lowercase characters without tone marks (e.g. <b className="text-cyan-300">nihao</b>)</span>
             </div>
 
             <button
@@ -133,7 +133,7 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
               className="flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-black text-base 3xl:text-lg px-9 py-4 3xl:py-5 rounded-2xl shadow-2xl shadow-amber-500/30 transition transform hover:scale-105 cursor-pointer"
             >
               <Play className="w-5 h-5 3xl:w-6 3xl:h-6 fill-black" />
-              <span>BẮT ĐẦU BẮN GÀ (4K ULTRA-HD)</span>
+              <span>START SPACE TYPING (4K ULTRA-HD)</span>
             </button>
           </div>
         )}
@@ -141,13 +141,13 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
         {/* Paused Overlay */}
         {gameState === 'PAUSED' && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-6 text-center animate-fade-in">
-            <h3 className="font-game text-2xl 3xl:text-3xl font-bold text-white mb-4">TẠM DỪNG GAME</h3>
+            <h3 className="font-game text-2xl 3xl:text-3xl font-bold text-white mb-4">GAME PAUSED</h3>
             <button
               onClick={handlePauseResume}
               className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-7 py-3.5 rounded-xl transition shadow-lg shadow-cyan-500/25"
             >
               <Play className="w-4 h-4 fill-black" />
-              <span>Tiếp Tục Chơi</span>
+              <span>Resume Game</span>
             </button>
           </div>
         )}
@@ -163,7 +163,7 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
 
       {/* Bottom Controls Bar */}
       <div className="flex items-center justify-between text-xs 3xl:text-sm text-gray-400 px-2">
-        <span>Bài học: <b className="text-white">{packageData.title}</b> ({packageData.vocabulary_deck.items.length} từ vựng)</span>
+        <span>Deck: <b className="text-white">{packageData.title}</b> ({packageData.vocabulary_deck.items.length} words)</span>
         <div className="flex items-center gap-3">
           {gameState === 'PLAYING' && (
             <button
@@ -171,7 +171,7 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#161F30] hover:bg-gray-800 text-white rounded-xl border border-gray-700 transition"
             >
               <Pause className="w-3.5 h-3.5" />
-              <span>Tạm Dừng</span>
+              <span>Pause</span>
             </button>
           )}
           <button
@@ -179,7 +179,7 @@ export const ChickenShooterView: React.FC<ChickenShooterViewProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#161F30] hover:bg-gray-800 text-white rounded-xl border border-gray-700 transition"
           >
             <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Chơi Lại</span>
+            <span>Restart</span>
           </button>
         </div>
       </div>

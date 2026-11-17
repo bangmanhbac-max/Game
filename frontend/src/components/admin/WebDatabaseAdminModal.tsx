@@ -69,13 +69,13 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
   };
 
   const handleDeleteRow = async (rowId: string) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa bản ghi '${rowId}' khỏi bảng '${selectedTable}'?`)) return;
+    if (!window.confirm(`Are you sure you want to delete row '${rowId}' from table '${selectedTable}'?`)) return;
     try {
       await deleteTableRow(selectedTable, rowId);
       loadTableRows(selectedTable, searchQuery);
       loadOverview();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Lỗi khi xóa');
+      alert(err instanceof Error ? err.message : 'Error deleting row');
     }
   };
 
@@ -84,7 +84,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
       const res = await executeSqlQuery(sqlQuery);
       setSqlResult(res);
     } catch (err: unknown) {
-      setSqlResult({ error: err instanceof Error ? err.message : 'Lỗi SQL' });
+      setSqlResult({ error: err instanceof Error ? err.message : 'SQL Error' });
     }
   };
 
@@ -101,12 +101,12 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
             </div>
             <div>
               <h3 className="text-base font-black text-white flex items-center gap-2">
-                <span>Trung Tâm Quản Trị Cơ Sở Dữ Liệu Web (SQLite 3)</span>
+                <span>Web Database Admin Console (SQLite 3)</span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono border border-emerald-500/30">
-                  {dbOverview?.total_tables || 10} Bảng Live
+                  {dbOverview?.total_tables || 10} Live Tables
                 </span>
               </h3>
-              <p className="text-xs text-gray-400">Xem trực tiếp, truy vấn SQL và quản lý dữ liệu toàn hệ thống</p>
+              <p className="text-xs text-gray-400">Live tables inspection, custom SQL queries, and full data management</p>
             </div>
           </div>
 
@@ -118,7 +118,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                   activeTab === 'tables' ? 'bg-cyan-500 text-slate-950' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <Table className="w-3.5 h-3.5 inline mr-1" /> Duyệt Bảng
+                <Table className="w-3.5 h-3.5 inline mr-1" /> Browse Tables
               </button>
               <button
                 onClick={() => setActiveTab('sql')}
@@ -134,7 +134,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                   activeTab === 'guide' ? 'bg-amber-500 text-slate-950' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5 inline mr-1" /> Hướng Dẫn Dùng
+                <BookOpen className="w-3.5 h-3.5 inline mr-1" /> Documentation
               </button>
             </div>
 
@@ -150,7 +150,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
             {/* Sidebar Tables List */}
             <div className="w-64 bg-[#080d17] border-r border-gray-800 p-3 overflow-y-auto space-y-1 shrink-0">
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-2 block mb-2">
-                Các Bảng Dữ Liệu
+                Database Tables
               </span>
               {dbOverview?.tables.map((t) => (
                 <button
@@ -175,11 +175,11 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
               {/* Search and Action Bar */}
               <div className="p-3 bg-[#10182b] border-b border-gray-800 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">Bảng:</span>
+                  <span className="text-xs text-gray-400">Table:</span>
                   <span className="text-sm font-mono font-bold text-cyan-300 bg-[#080d17] px-2.5 py-1 rounded-lg border border-cyan-500/30">
                     {selectedTable}
                   </span>
-                  <span className="text-xs text-gray-400">({tableData?.total_rows || 0} bản ghi)</span>
+                  <span className="text-xs text-gray-400">({tableData?.total_rows || 0} rows)</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -190,14 +190,14 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && loadTableRows(selectedTable, searchQuery)}
-                      placeholder="Tìm kiếm..."
+                      placeholder="Search rows..."
                       className="bg-[#080d17] border border-gray-700 rounded-lg pl-8 pr-3 py-1 text-xs text-white focus:outline-none focus:border-cyan-400"
                     />
                   </div>
                   <button
                     onClick={() => loadTableRows(selectedTable, searchQuery)}
                     className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 transition"
-                    title="Làm mới"
+                    title="Refresh"
                   >
                     <RefreshCw className="w-4 h-4" />
                   </button>
@@ -209,11 +209,11 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                 {isLoading ? (
                   <div className="h-full flex items-center justify-center text-cyan-400 gap-2">
                     <RefreshCw className="w-5 h-5 animate-spin" />
-                    <span>Đang tải dữ liệu bảng...</span>
+                    <span>Loading table rows...</span>
                   </div>
                 ) : !tableData || tableData.rows.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-gray-500">
-                    Bảng này hiện chưa có bản ghi nào.
+                    No records found in this table.
                   </div>
                 ) : (
                   <div className="border border-gray-800 rounded-2xl overflow-hidden bg-[#070b14]">
@@ -223,7 +223,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                           {tableData.columns.map((c) => (
                             <th key={c} className="py-2.5 px-3 whitespace-nowrap">{c}</th>
                           ))}
-                          <th className="py-2.5 px-3 text-right">Thao tác</th>
+                          <th className="py-2.5 px-3 text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-800/60">
@@ -243,7 +243,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                                 <button
                                   onClick={() => handleDeleteRow(pk)}
                                   className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-500/10 transition"
-                                  title="Xóa bản ghi này"
+                                  title="Delete row"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
@@ -265,26 +265,26 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
           <div className="flex-1 p-6 flex flex-col gap-4 overflow-hidden bg-[#090e1a]">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-gray-300 flex items-center gap-1.5">
-                <Terminal className="w-4 h-4 text-purple-400" /> Trình Soạn Thảo SQL (SELECT Read-Only)
+                <Terminal className="w-4 h-4 text-purple-400" /> SQL Editor (SELECT Read-Only)
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setSqlQuery('SELECT username, email, role FROM users;')}
                   className="px-2.5 py-1 rounded bg-white/5 text-[11px] text-cyan-300 hover:bg-white/10"
                 >
-                  Xem Users
+                  Select Users
                 </button>
                 <button
                   onClick={() => setSqlQuery('SELECT game_mode, score, accuracy FROM game_sessions ORDER BY score DESC;')}
                   className="px-2.5 py-1 rounded bg-white/5 text-[11px] text-purple-300 hover:bg-white/10"
                 >
-                  Xem Điểm Game
+                  Select Game Scores
                 </button>
                 <button
                   onClick={() => setSqlQuery('SELECT filename, file_type, char_count FROM uploaded_documents;')}
                   className="px-2.5 py-1 rounded bg-white/5 text-[11px] text-amber-300 hover:bg-white/10"
                 >
-                  Xem File Đã Tải
+                  Select Uploaded Docs
                 </button>
               </div>
             </div>
@@ -300,7 +300,7 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
                 onClick={handleRunSql}
                 className="px-6 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-2 transition cursor-pointer"
               >
-                <Play className="w-4 h-4 fill-white" /> Chạy
+                <Play className="w-4 h-4 fill-white" /> Execute
               </button>
             </div>
 
@@ -314,14 +314,14 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
               ) : sqlResult?.rows ? (
                 <div>
                   <span className="text-emerald-400 font-bold block mb-2">
-                    ✓ Thực thi thành công ({sqlResult.row_count} kết quả):
+                    ✓ Query executed successfully ({sqlResult.row_count} rows):
                   </span>
                   <pre className="text-gray-300 leading-relaxed overflow-x-auto">
                     {JSON.stringify(sqlResult.rows, null, 2)}
                   </pre>
                 </div>
               ) : (
-                <span className="text-gray-500">Nhập câu lệnh SELECT và nhấn Chạy để xem kết quả.</span>
+                <span className="text-gray-500">Enter a SELECT query and click Execute to see results.</span>
               )}
             </div>
           </div>
@@ -332,9 +332,9 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
           <div className="flex-1 p-6 overflow-y-auto space-y-6 text-xs text-gray-300 bg-[#090e1a]">
             <div className="bg-[#121c2e] p-5 rounded-2xl border border-cyan-500/30 space-y-2">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Vị Trí File Cơ Sở Dữ Liệu Trên Máy Bạn
+                <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Database File Location on Host
               </h4>
-              <p>File database SQLite của toàn bộ dự án nằm tại:</p>
+              <p>The primary SQLite database file is located at:</p>
               <code className="block bg-[#070b14] p-3 rounded-xl border border-gray-800 font-mono text-cyan-300 text-xs">
                 M:\Game\backend\eduplay.db
               </code>
@@ -345,40 +345,40 @@ export const WebDatabaseAdminModal: React.FC<WebDatabaseAdminModalProps> = ({ is
               <div className="bg-[#101828] p-4 rounded-2xl border border-gray-800 space-y-2">
                 <h5 className="font-bold text-cyan-300 text-xs flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold text-[10px]">1</span>
-                  Quản Trị Ngay Trên Web (Tiện Nhất)
+                  Direct Web Admin (Recommended)
                 </h5>
                 <p className="text-gray-400 leading-relaxed">
-                  Ngay tại modal này (Tab <strong>Duyệt Bảng</strong> và <strong>SQL Console</strong>), bạn có thể xem tất cả 10 bảng, tìm kiếm từ vựng, điểm số game, tài khoản và xóa bản ghi tức thì không cần cài thêm bất kỳ app nào!
+                  Manage all 10 tables directly within this modal (<strong>Browse Tables</strong> and <strong>SQL Console</strong> tabs). Inspect vocabulary, game scores, accounts, and delete rows without any extra software!
                 </p>
               </div>
 
               <div className="bg-[#101828] p-4 rounded-2xl border border-gray-800 space-y-2">
                 <h5 className="font-bold text-purple-300 text-xs flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold text-[10px]">2</span>
-                  Dùng Extension "SQLite Viewer" (VS Code)
+                  Using "SQLite Viewer" Extension (VS Code / Cursor)
                 </h5>
                 <p className="text-gray-400 leading-relaxed">
-                  Trong trình soạn thảo VS Code / Cursor: Vào mục Extensions cài đặt <strong>"SQLite Viewer"</strong> của Florian Klampfer. Sau đó chỉ cần nhấp đúp chuột vào file <code>eduplay.db</code> là xem bảng biểu cực đẹp!
+                  In VS Code or Cursor: Open Extensions, search for <strong>"SQLite Viewer"</strong> by Florian Klampfer. Simply click <code>eduplay.db</code> to view interactive tables visually!
                 </p>
               </div>
 
               <div className="bg-[#101828] p-4 rounded-2xl border border-gray-800 space-y-2">
                 <h5 className="font-bold text-amber-300 text-xs flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-[10px]">3</span>
-                  Dùng DB Browser for SQLite (Phần mềm máy tính)
+                  DB Browser for SQLite (Desktop GUI)
                 </h5>
                 <p className="text-gray-400 leading-relaxed">
-                  Tải miễn phí phần mềm chuyên dụng <strong>DB Browser for SQLite</strong> (sqlitebrowser.org). Mở file <code>eduplay.db</code> để chỉnh sửa, thêm cột, nhập/xuất file Excel CSV dễ dàng.
+                  Download free <strong>DB Browser for SQLite</strong> (sqlitebrowser.org). Open <code>eduplay.db</code> to easily edit schemas, add columns, and import/export CSV/Excel spreadsheets.
                 </p>
               </div>
 
               <div className="bg-[#101828] p-4 rounded-2xl border border-gray-800 space-y-2">
                 <h5 className="font-bold text-emerald-300 text-xs flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-[10px]">4</span>
-                  Dùng DBeaver hoặc Adminer Web UI
+                  DBeaver or Enterprise Database Tools
                 </h5>
                 <p className="text-gray-400 leading-relaxed">
-                  Dành cho lập trình viên quản lý nhiều database cùng lúc. Kết nối JDBC SQLite cực nhanh, hỗ trợ sinh biểu đồ quan hệ Entity Relationship Diagram (ERD).
+                  Ideal for developers managing multiple enterprise databases. Supports instant SQLite connection and automated Entity Relationship Diagram (ERD) generation.
                 </p>
               </div>
             </div>

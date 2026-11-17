@@ -49,9 +49,9 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ isOpen, onCl
             </div>
             <div>
               <h2 className="font-game text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-pink-500">
-                BẢNG VINH DANH AVENGERS (4K)
+                AVENGERS HALL OF FAME (4K)
               </h2>
-              <p className="text-xs text-gray-400">Top chiến binh có điểm số cao nhất toàn vũ trụ</p>
+              <p className="text-xs text-gray-400">Top scoring warriors across the universe</p>
             </div>
           </div>
 
@@ -66,8 +66,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ isOpen, onCl
         {/* Filter Pills */}
         <div className="flex items-center gap-2 py-4 overflow-x-auto">
           {[
-            { id: 'all', label: 'Tất Cả', icon: <Medal className="w-3.5 h-3.5" /> },
-            { id: 'chicken-shooter', label: 'Bắn Gà Stark', icon: <Flame className="w-3.5 h-3.5 text-amber-400" /> },
+            { id: 'all', label: 'All Arenas', icon: <Medal className="w-3.5 h-3.5" /> },
+            { id: 'chicken-shooter', label: 'Stark Typist', icon: <Flame className="w-3.5 h-3.5 text-amber-400" /> },
             { id: 'magic-touch', label: 'Doctor Strange', icon: <Compass className="w-3.5 h-3.5 text-pink-400" /> },
             { id: 'quiz-arena', label: 'Speed Quiz', icon: <Zap className="w-3.5 h-3.5 text-emerald-400" /> },
           ].map((tab) => (
@@ -87,7 +87,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ isOpen, onCl
 
           <button
             onClick={() => loadData(filterMode)}
-            title="Làm mới"
+            title="Refresh"
             className="ml-auto p-1.5 text-gray-400 hover:text-white bg-[#161F30] border border-gray-800 rounded-xl"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -98,7 +98,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ isOpen, onCl
         <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
           {items.length === 0 && !isLoading && (
             <div className="text-center py-12 text-gray-500 text-xs sm:text-sm">
-              Chưa có lượt chơi nào được ghi nhận cho chế độ này. Hãy là người đầu tiên lập kỷ lục!
+              No matches recorded for this mode yet. Be the first to set a record!
             </div>
           )}
 
@@ -145,7 +145,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ isOpen, onCl
                     {row.score.toLocaleString()} PTS
                   </span>
                   <span className="text-[10px] text-cyan-400 font-semibold">
-                    Độ chính xác: {row.accuracy}%
+                    Accuracy: {row.accuracy}%
                   </span>
                 </div>
               </div>

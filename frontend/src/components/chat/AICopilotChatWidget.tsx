@@ -76,7 +76,7 @@ export const AICopilotChatWidget: React.FC = () => {
         role: 'assistant',
         sender_name: 'JARVIS AI Copilot',
         sender_avatar: 'doctor-strange',
-        content: 'Xin chào chiến binh Avengers! Tôi là JARVIS AI Copilot. Tôi có thể giúp bạn giải nghĩa chữ Hán, phân tích số nét, cấu tạo bộ thủ, giải thích cơ chế VLM hoặc chia sẻ mẹo vượt qua rừng ma Granny!'
+        content: 'Greetings, Avengers warrior! I am JARVIS AI Copilot. I can help analyze Hanzi characters, stroke breakdowns, radicals, explain VLM OCR mechanisms, or share tips to survive Granny\'s Ghost Forest 3D!'
       }
     ]);
   };
@@ -88,7 +88,7 @@ export const AICopilotChatWidget: React.FC = () => {
   const handleTestKeyInsideChat = async () => {
     const candidate = sanitizeGeminiApiKey(keyDraft || apiKey);
     if (!candidate) {
-      setKeyTestStatus({ success: false, error: 'Vui lòng nhập mã API Key trước khi kiểm tra.' });
+      setKeyTestStatus({ success: false, error: 'Please enter an API Key before testing.' });
       return;
     }
     setIsTestingKey(true);
@@ -102,7 +102,7 @@ export const AICopilotChatWidget: React.FC = () => {
         window.dispatchEvent(new Event('eduplay:key_updated'));
       }
     } catch (err: any) {
-      setKeyTestStatus({ success: false, error: err?.message || 'Lỗi mạng khi kiểm tra' });
+      setKeyTestStatus({ success: false, error: err?.message || 'Network error during validation' });
     } finally {
       setIsTestingKey(false);
     }
@@ -127,7 +127,7 @@ export const AICopilotChatWidget: React.FC = () => {
         role: 'assistant',
         sender_name: 'JARVIS AI Copilot',
         sender_avatar: 'doctor-strange',
-        content: '🎉 **Kết nối Gemini API thành công!** Kể từ bây giờ, tôi đã kết nối trực tiếp với siêu trí tuệ nhân tạo Gemini để giải đáp mọi thắc mắc của bạn theo thời gian thực.'
+        content: '🎉 **Gemini API connected successfully!** I am now connected directly to Google Gemini intelligence to answer all your inquiries in real time.'
       }
     ]);
   };
@@ -138,7 +138,7 @@ export const AICopilotChatWidget: React.FC = () => {
 
     setInputText('');
 
-    // Tự động nhận diện nếu người dùng dán Gemini API Key trực tiếp vào khung chat
+    // Automatically detect if user pastes Gemini API Key directly into chat
     const keyCandidate = sanitizeGeminiApiKey(rawInput);
     if ((keyCandidate.startsWith('AIzaSy') || keyCandidate.startsWith('AQ.') || keyCandidate.startsWith('AQ')) && keyCandidate.length > 25) {
       localStorage.setItem('gemini_api_key', keyCandidate);
@@ -151,9 +151,9 @@ export const AICopilotChatWidget: React.FC = () => {
           id: `usr-${Date.now()}`,
           channel: 'ai_copilot',
           role: 'user',
-          sender_name: localStorage.getItem('eduplay_username') || 'Bạn',
+          sender_name: localStorage.getItem('eduplay_username') || 'You',
           sender_avatar: 'iron-man',
-          content: '🔑 [Đã gửi mã Gemini API Key]'
+          content: '🔑 [Submitted Gemini API Key]'
         },
         {
           id: `bot-${Date.now()}`,
@@ -161,7 +161,7 @@ export const AICopilotChatWidget: React.FC = () => {
           role: 'assistant',
           sender_name: 'JARVIS AI Copilot',
           sender_avatar: 'doctor-strange',
-          content: '🎉 **Tuyệt vời!** Tôi đã tự động nhận diện và lưu mã Gemini API Key của bạn vào trình duyệt. Trí tuệ nhân tạo trực tuyến đã được kích hoạt 100%!'
+          content: '🎉 **Awesome!** I detected and securely saved your Gemini API Key in browser storage. Online AI is 100% active!'
         }
       ]);
       return;
@@ -173,7 +173,7 @@ export const AICopilotChatWidget: React.FC = () => {
       id: `temp-${Date.now()}`,
       channel: 'ai_copilot',
       role: 'user',
-      sender_name: localStorage.getItem('eduplay_username') || 'Bạn',
+      sender_name: localStorage.getItem('eduplay_username') || 'You',
       sender_avatar: 'iron-man',
       content: rawInput
     };
@@ -184,7 +184,7 @@ export const AICopilotChatWidget: React.FC = () => {
     let usedModel = '';
     let detailedError = '';
 
-    // 1. Gọi trực tiếp Gemini REST API từ client nếu đã có key
+    // 1. Direct call to Gemini REST API from client if key available
     if (currentKey) {
       for (const model of GEMINI_WORKING_MODELS) {
         try {
@@ -200,7 +200,7 @@ export const AICopilotChatWidget: React.FC = () => {
                     role: 'user',
                     parts: [
                       {
-                        text: `Bạn là JARVIS AI Copilot - Trợ lý AI Giáo dục Gamification của hệ thống AI EduPlay (vũ trụ Avengers 4K). Hãy phân tích kỹ chữ Hán, số nét, Pinyin, nghĩa từ vựng hoặc hướng dẫn game theo câu hỏi sau một cách thông minh, chuẩn xác và sinh động:\n\n${rawInput}`
+                        text: `You are JARVIS AI Copilot - the Gamification AI Learning Assistant of the EduPlay platform (Avengers 4K Universe). Analyze vocabulary, stroke counts, Pinyin, translations, or provide gaming advice based on the user question below in an intelligent, accurate, and vivid style:\n\n${rawInput}`
                       }
                     ]
                   }
@@ -226,13 +226,13 @@ export const AICopilotChatWidget: React.FC = () => {
             }
           }
         } catch (modelErr: any) {
-          detailedError = modelErr?.message || 'Lỗi mạng khi kết nối Google Gemini';
+          detailedError = modelErr?.message || 'Network error connecting to Google Gemini';
           console.warn(`[JARVIS Chat] Model ${model} fetch exception:`, modelErr);
         }
       }
     }
 
-    // 2. Dự phòng: Thử gọi qua backend API endpoint nếu đang chạy local dev
+    // 2. Fallback: Try backend API endpoint if running local dev
     if (!replyText && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
       try {
         const res = await sendChatMessage(rawInput, 'ai_copilot', tempUserMsg.sender_name, 'iron-man', currentKey);
@@ -245,7 +245,7 @@ export const AICopilotChatWidget: React.FC = () => {
       }
     }
 
-    // 3. Nếu AI sinh nội dung thành công, hiển thị câu trả lời
+    // 3. If AI generation succeeded, display answer
     if (replyText) {
       setMessages((prev) => [
         ...prev,
@@ -262,30 +262,30 @@ export const AICopilotChatWidget: React.FC = () => {
       return;
     }
 
-    // 4. Tri thức chuyên gia nội tại thông minh cho các câu hỏi phổ biến
+    // 4. Intelligent built-in knowledge base for common queries
     const lower = rawInput.toLowerCase().trim();
     let smartFallback = '';
 
-    if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi') || lower === 'alo') {
-      smartFallback = '👋 **Xin chào bạn!** Tôi là **JARVIS AI Copilot** của nền tảng AI EduPlay (Avengers 4K). Tôi luôn sẵn sàng hỗ trợ bạn phân tích chữ Hán, số nét, phiên âm Pinyin, nghĩa từ vựng Tiếng Trung/Tiếng Anh và hướng dẫn các mini-game!';
-    } else if (lower.includes('nét') || lower.includes('bộ thủ') || lower.includes('chữ') || lower.includes('你') || lower.includes('好')) {
-      smartFallback = `🔍 **Phân tích chữ Hán căn bản:**\n\n- **Chữ 你 (nǐ - Bạn/Anh/Em):** Gồm bộ **Nhân đứng (亻)** chỉ con người ở bên trái, kết hợp chữ **Nhĩ (尔)** bên phải. Tổng cộng gồm **7 nét**.\n\n- **Chữ 好 (hǎo - Tốt/Đẹp/Ngon/Hảo):** Ghép từ bộ **Nữ (女)** (người phụ nữ) và bộ **Tử (子)** (đứa con trai). Người xưa quan niệm phụ nữ có con trai vẹn tròn là điều tốt lành mỹ hảo nhất! Tổng cộng **6 nét**.\n\n💡 *Mẹo ghi nhớ*: Bạn hãy vào chế độ **Flashcard 3D** để xoay 360° và bóc tách từng nét bút nhé!`;
-    } else if (lower.includes('granny') || lower.includes('rừng ma') || lower.includes('ma quỷ')) {
-      smartFallback = `🌲 **Bí kíp Trốn Thoát Rừng Ma Granny 3D:**\n\n1. **Phím di chuyển chuẩn FPS:** **W** (Tiến thẳng), **S** (Lùi), **A** (Bước trái), **D** (Bước phải).\n2. **Góc nhìn 360°:** Rê chuột để quay góc nhìn linh hoạt như các tựa game bắn súng FPS.\n3. **Đèn pin ma thuật:** Bấm **F** để soi sáng ban đêm.\n4. **Mục tiêu:** Thu thập đủ các Cổ Tự Chữ Hán rải rác trong khu rừng, né tránh tầm nhìn của quỷ Granny để mở cổng kết giới thành công!`;
-    } else if (lower.includes('bắn gà') || lower.includes('chicken') || lower.includes('gõ phím')) {
-      smartFallback = `🚀 **Hướng dẫn Bắn Gà Stark Tech:** Gõ chính xác từ vựng hoặc Pinyin hiển thị trên từng Drone để nạp năng lượng tia Plasma bắn hạ mục tiêu. Tốc độ gõ càng nhanh, điểm Combo càng cao!`;
-    } else if (lower.includes('vẽ phép') || lower.includes('magic')) {
-      smartFallback = `✨ **Hướng dẫn Vẽ Phép Magic Touch:** Dùng chuột hoặc ngón tay vẽ các nét cử chỉ ma thuật (—, |, /, \\, V, ^, O, ⚡) tương ứng với ký hiệu trên bóng bay để giải cứu từ vựng!`;
-    } else if (lower.includes('vlm') || lower.includes('thị giác') || lower.includes('chữ dính')) {
-      smartFallback = `🤖 **Cơ chế VLM (Vision-Language Model) xử lý chữ dính:**\n\nMô hình sử dụng mạng tích chập thị giác kết hợp Transformer để phân rã ảnh chữ viết tay, phát hiện bounding box từng nét kể cả khi chữ dính nhau, sau đó đối chiếu với cơ sở dữ liệu thư pháp để phục hồi từ vựng chuẩn xác!`;
+    if (lower.includes('hello') || lower.includes('hi') || lower.includes('chào') || lower === 'hey') {
+      smartFallback = '👋 **Hello warrior!** I am **JARVIS AI Copilot** of the EduPlay 4K Gamified Learning Universe. I am ready to help analyze Hanzi characters, stroke structures, Pinyin, English/Chinese vocabulary, and guide you through all mini-games!';
+    } else if (lower.includes('stroke') || lower.includes('radical') || lower.includes('nét') || lower.includes('你') || lower.includes('好')) {
+      smartFallback = `🔍 **Essential Hanzi Stroke Analysis:**\n\n- **Character 你 (nǐ - You):** Left radical **Person (亻)**, right component **尔 (ěr)**. Total **7 strokes**.\n\n- **Character 好 (hǎo - Good/Fine):** Formed from radical **Woman (女)** and radical **Child (子)**. Ancient wisdom viewed having a balance of family as true goodness! Total **6 strokes**.\n\n💡 *Tip*: Try **Flashcard 3D** mode to flip cards 360° and observe stroke order step by step!`;
+    } else if (lower.includes('granny') || lower.includes('forest') || lower.includes('rừng ma')) {
+      smartFallback = `🌲 **Granny Ghost Forest 3D Survival Tactics:**\n\n1. **FPS Controls:** **W** (Forward), **S** (Backward), **A** (Strafe Left), **D** (Strafe Right).\n2. **360° Mouse Look:** Pan your mouse smoothly for authentic AAA shooter exploration.\n3. **Magic Flashlight:** Press **F** to pierce the nighttime gloom.\n4. **Objective:** Collect scattered ancient Hanzi glyphs, break Granny's line of sight, and unlock the escape portal!`;
+    } else if (lower.includes('chicken') || lower.includes('stark') || lower.includes('typing') || lower.includes('bắn gà')) {
+      smartFallback = `🚀 **Stark Galaxy Typist Guide:** Type the displayed vocabulary or Pinyin accurately to fire plasma laser salvos. Faster typing speeds build higher Combo streaks!`;
+    } else if (lower.includes('magic') || lower.includes('rune') || lower.includes('vẽ phép')) {
+      smartFallback = `✨ **Doctor Strange Mystic Rune Guide:** Draw gesture symbols (—, |, /, \\, V, ^, O, ⚡) with your mouse or finger matching balloons to burst them and rescue vocabulary!`;
+    } else if (lower.includes('vlm') || lower.includes('vision') || lower.includes('ocr')) {
+      smartFallback = `🤖 **VLM (Vision-Language Model) OCR Mechanism:**\n\nEmploys convolutional vision encoders combined with Transformer cross-attention to isolate connected cursive strokes, predict character bounding boxes, and cross-reference calligraphy corpora for 99.4% extraction accuracy!`;
     }
 
     if (smartFallback) {
       let suffix = '';
       if (!currentKey) {
-        suffix = '\n\n*(💡 Bạn chưa nhập API Key. Hãy bấm vào nút **🔑 Kết nối API** ở thanh trên để trò chuyện tự do với AI Gemini trực tuyến!)*';
+        suffix = '\n\n*(💡 You haven\'t entered an API Key yet. Click **🔑 Connect API** in the header to chat freely with live Google Gemini AI!)*';
       } else if (detailedError) {
-        suffix = `\n\n*(⚠️ Google Gemini API thông báo: "${detailedError}". JARVIS đang trả lời bằng tri thức nội tại của hệ thống)*`;
+        suffix = `\n\n*(⚠️ Google Gemini API notice: "${detailedError}". JARVIS is answering using built-in system knowledge)*`;
       }
       setMessages((prev) => [
         ...prev,
@@ -302,10 +302,10 @@ export const AICopilotChatWidget: React.FC = () => {
       return;
     }
 
-    // 5. Nếu không khớp từ khóa chuyên biệt và API thất bại:
+    // 5. Fallback notice if no keyword matches and API fails:
     const errorNotice = !currentKey
-      ? '⚠️ **Chatbot chưa kết nối API Key**: Bạn vui lòng bấm vào nút **🔑 Cấu hình API** ở thanh trên của hộp chat để nhập Gemini API Key miễn phí (lấy tại aistudio.google.com), AI sẽ hoạt động thông minh tức thì!'
-      : `⚠️ **Không thể kết nối đến Google Gemini AI**: ${detailedError || 'Lỗi mạng hoặc giới hạn API'}.\n\n👉 Bạn hãy kiểm tra lại mã API Key tại nút **🔑 Cấu hình API** ở góc trên nhé!`;
+      ? '⚠️ **Chatbot API Key Missing**: Please click **🔑 Connect API** in the chat header to enter a free Gemini API Key (obtain at aistudio.google.com) for real-time AI responses!'
+      : `⚠️ **Unable to connect to Google Gemini AI**: ${detailedError || 'Network timeout or API quota limit'}.\n\n👉 Please verify your key under **🔑 API Key** settings!`;
 
     setMessages((prev) => [
       ...prev,
@@ -323,9 +323,9 @@ export const AICopilotChatWidget: React.FC = () => {
   };
 
   const quickPrompts = [
-    'Phân tích chữ "你" và "好" gồm những nét nào?',
-    'Cách chơi Game Ma Granny ghép chữ?',
-    'Cơ chế VLM xử lý chữ dính nhau như thế nào?'
+    'Analyze stroke structure of "你" and "好"',
+    'How to survive Granny 3D Ghost Forest?',
+    'How does VLM OCR handle cursive handwriting?'
   ];
 
   return (
@@ -335,7 +335,7 @@ export const AICopilotChatWidget: React.FC = () => {
         <button
           onClick={() => setIsOpen(true)}
           className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-purple-500/30 transition-all hover:scale-105 cursor-pointer border border-cyan-400/40 min-h-[44px]"
-          title="Trò chuyện với AI Copilot"
+          title="Chat with AI Copilot"
         >
           <div className="relative">
             <Bot className="w-5 h-5 text-yellow-300" />
@@ -346,7 +346,7 @@ export const AICopilotChatWidget: React.FC = () => {
           <span className="sm:hidden font-bold">AI Copilot</span>
           {!apiKey && (
             <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/50 px-1.5 py-0.5 rounded-full">
-              Cần Key
+              Key Needed
             </span>
           )}
         </button>
@@ -366,7 +366,7 @@ export const AICopilotChatWidget: React.FC = () => {
                   JARVIS AI Copilot
                   <span className={`w-2 h-2 rounded-full ${apiKey ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                 </h4>
-                <p className="text-[10px] text-gray-400">Trợ Lý Giáo Dục & Phân Tích Chữ Hán</p>
+                <p className="text-[10px] text-gray-400">AI Learning Copilot & Language Mentor</p>
               </div>
             </div>
 
@@ -374,7 +374,7 @@ export const AICopilotChatWidget: React.FC = () => {
               {/* API Key Status Pill / Button */}
               <button
                 onClick={() => setShowKeyInput(!showKeyInput)}
-                title={apiKey ? 'Gemini API đã kết nối (Bấm để thay đổi key)' : 'Bấm để cấu hình Gemini API Key'}
+                title={apiKey ? 'Gemini API connected (Click to modify key)' : 'Click to configure Gemini API Key'}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-bold transition cursor-pointer ${
                   apiKey
                     ? 'bg-emerald-500/15 border border-emerald-400/50 text-emerald-300 hover:bg-emerald-500/25'
@@ -382,7 +382,7 @@ export const AICopilotChatWidget: React.FC = () => {
                 }`}
               >
                 <Key className="w-3 h-3 text-yellow-400" />
-                <span>{apiKey ? 'API Online' : 'Kết nối API'}</span>
+                <span>{apiKey ? 'API Online' : 'Connect API'}</span>
               </button>
 
               <button
@@ -400,7 +400,7 @@ export const AICopilotChatWidget: React.FC = () => {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-cyan-300 flex items-center gap-1.5">
                   <Key className="w-3.5 h-3.5 text-yellow-400" />
-                  Cấu Hình Google Gemini API Key
+                  Configure Google Gemini API Key
                 </span>
                 <a
                   href="https://aistudio.google.com/"
@@ -408,7 +408,7 @@ export const AICopilotChatWidget: React.FC = () => {
                   rel="noreferrer"
                   className="text-[10px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-0.5"
                 >
-                  Lấy Key Miễn Phí <ExternalLink className="w-2.5 h-2.5" />
+                  Get Free Key <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -419,14 +419,14 @@ export const AICopilotChatWidget: React.FC = () => {
                     setKeyDraft(e.target.value);
                     setKeyTestStatus(null);
                   }}
-                  placeholder="Dán mã AIzaSy... hoặc AQ... vào đây"
+                  placeholder="Paste AIzaSy... or AQ... key here"
                   className="flex-1 bg-[#0b101c] border border-gray-700 focus:border-cyan-400 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowKeyText(!showKeyText)}
                   className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10"
-                  title="Hiện/Ẩn key"
+                  title="Toggle key visibility"
                 >
                   {showKeyText ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
@@ -437,13 +437,13 @@ export const AICopilotChatWidget: React.FC = () => {
                   className="px-2.5 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/50 text-purple-200 font-bold text-xs transition cursor-pointer flex items-center gap-1 shrink-0"
                 >
                   {isTestingKey ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                  <span>Kiểm Tra</span>
+                  <span>Test</span>
                 </button>
                 <button
                   onClick={handleSaveApiKey}
                   className="px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition cursor-pointer shrink-0"
                 >
-                  Lưu
+                  Save
                 </button>
               </div>
 
@@ -457,7 +457,7 @@ export const AICopilotChatWidget: React.FC = () => {
                   {keyTestStatus.success ? (
                     <>
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span>Key hợp lệ! Đã kết nối thành công với <strong>{keyTestStatus.model}</strong>.</span>
+                      <span>Valid key! Successfully connected to <strong>{keyTestStatus.model}</strong>.</span>
                     </>
                   ) : (
                     <>
@@ -471,7 +471,7 @@ export const AICopilotChatWidget: React.FC = () => {
               {apiKey && (
                 <div className="flex items-center justify-between text-[10px] text-gray-400 pt-0.5">
                   <span className="text-emerald-400 flex items-center gap-1">
-                    <Check className="w-3 h-3 text-emerald-400" /> Đang dùng: ••••••••••••{apiKey.slice(-4)}
+                    <Check className="w-3 h-3 text-emerald-400" /> Active: ••••••••••••{apiKey.slice(-4)}
                   </span>
                   <button
                     onClick={() => {
@@ -481,7 +481,7 @@ export const AICopilotChatWidget: React.FC = () => {
                     }}
                     className="text-red-400 hover:underline cursor-pointer"
                   >
-                    Xóa Key
+                    Remove Key
                   </button>
                 </div>
               )}
@@ -491,7 +491,7 @@ export const AICopilotChatWidget: React.FC = () => {
           {/* Quick Notice if Key Saved */}
           {keySavedMessage && (
             <div className="bg-emerald-500/20 border-b border-emerald-500/40 px-3 py-1 text-center text-xs text-emerald-300 font-bold flex items-center justify-center gap-1.5">
-              <Check className="w-3.5 h-3.5" /> Đã kết nối API thành công!
+              <Check className="w-3.5 h-3.5" /> API Key saved successfully!
             </div>
           )}
 
@@ -503,9 +503,9 @@ export const AICopilotChatWidget: React.FC = () => {
             >
               <div className="flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5 text-amber-400" />
-                <span>Chưa nhập API Key. Bấm vào đây để kết nối AI!</span>
+                <span>No API Key set. Click here to connect AI!</span>
               </div>
-              <span className="text-xs font-bold underline">Nhập ↗</span>
+              <span className="text-xs font-bold underline">Setup ↗</span>
             </div>
           )}
 
@@ -558,7 +558,7 @@ export const AICopilotChatWidget: React.FC = () => {
             {isLoading && (
               <div className="flex items-center gap-2 text-cyan-400 text-xs py-1">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>JARVIS đang suy nghĩ và phân tích...</span>
+                <span>JARVIS is thinking and analyzing...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -576,7 +576,7 @@ export const AICopilotChatWidget: React.FC = () => {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Hỏi AI về chữ cứng, nghĩa, nét vẽ hoặc mẹo game..."
+              placeholder="Ask AI about vocabulary, stroke structure, or game tips..."
               className="flex-1 bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
             />
             <button

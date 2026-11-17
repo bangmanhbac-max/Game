@@ -34,12 +34,12 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
         </div>
 
         <h2 className={`font-game text-2xl font-black tracking-wider uppercase ${isVictory ? 'text-amber-400' : 'text-red-400'}`}>
-          {isVictory ? 'CHIẾN THẮNG TUYỆT ĐỐI!' : 'HẾT MÁU / GAME OVER'}
+          {isVictory ? 'DECISIVE VICTORY!' : 'OUT OF HP / GAME OVER'}
         </h2>
         <p className="text-sm text-gray-300 mt-1">
           {isVictory
-            ? 'Bạn đã làm chủ hoàn toàn các từ vựng trong bài học này!'
-            : 'Đừng nản lòng, hãy luyện tập lại để tăng tốc độ phản xạ!'}
+            ? 'You have completely mastered all vocabulary in this deck!'
+            : "Don't give up! Practice again to sharpen your reflexes!"}
         </p>
 
         {/* Stats Grid */}
@@ -47,7 +47,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           <div className="bg-[#0B0F19] p-3.5 rounded-2xl border border-gray-800">
             <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
               <Trophy className="w-3.5 h-3.5 text-amber-400" />
-              <span>Tổng Điểm</span>
+              <span>Total Score</span>
             </div>
             <p className="font-game font-bold text-xl text-white">{stats.score.toLocaleString()}</p>
           </div>
@@ -63,7 +63,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           <div className="bg-[#0B0F19] p-3.5 rounded-2xl border border-gray-800">
             <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
               <Target className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Độ Chính Xác</span>
+              <span>Accuracy</span>
             </div>
             <p className="font-game font-bold text-xl text-emerald-400">{stats.accuracy}%</p>
           </div>
@@ -71,7 +71,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           <div className="bg-[#0B0F19] p-3.5 rounded-2xl border border-gray-800">
             <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
               <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Số Từ Hạ Gục</span>
+              <span>Words Defeated</span>
             </div>
             <p className="font-game font-bold text-xl text-cyan-400">{stats.wordsDefeated}</p>
           </div>
@@ -84,14 +84,14 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold py-3 px-4 rounded-xl text-sm transition shadow-lg shadow-cyan-500/25"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Chơi Lại</span>
+            <span>Play Again</span>
           </button>
 
           <button
             onClick={onBackToMenu}
             className="flex items-center justify-center gap-2 bg-[#0B0F19] hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-xl text-sm border border-gray-700 transition"
           >
-            <span>Trang Chủ</span>
+            <span>Dashboard</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

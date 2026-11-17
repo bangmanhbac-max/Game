@@ -19,7 +19,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'Ý kiến đóng góp EduPlay AI',
+    subject: 'EduPlay AI Feedback',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,7 +29,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setError('Vui lòng điền đầy đủ thông tin');
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -38,9 +38,9 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
     try {
       await submitContactForm(formData);
       setIsSuccess(true);
-      setFormData({ name: '', email: '', subject: 'Ý kiến đóng góp EduPlay AI', message: '' });
+      setFormData({ name: '', email: '', subject: 'EduPlay AI Feedback', message: '' });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Lỗi gửi tin nhắn';
+      const msg = err instanceof Error ? err.message : 'Failed to send message';
       setError(msg);
     } finally {
       setIsSubmitting(false);
@@ -59,8 +59,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               <Mail className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-black text-white">Liên Hệ & Đóng Góp Ý Kiến</h3>
-              <p className="text-xs text-gray-400">Đội ngũ Avengers AI EduPlay luôn lắng nghe phản hồi của bạn</p>
+              <h3 className="text-base font-black text-white">Contact & Feedback</h3>
+              <p className="text-xs text-gray-400">The EduPlay AI team is always eager to hear your suggestions</p>
             </div>
           </div>
 
@@ -74,15 +74,15 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
           {isSuccess ? (
             <div className="bg-emerald-500/10 border border-emerald-500/40 rounded-3xl p-8 text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto" />
-              <h4 className="text-xl font-bold text-white">Gửi Ý Kiến Thành Công!</h4>
+              <h4 className="text-xl font-bold text-white">Feedback Submitted Successfully!</h4>
               <p className="text-sm text-gray-300">
-                Cảm ơn bạn đã liên hệ. Chúng tôi đã nhận được thông tin và sẽ phản hồi qua email trong thời gian sớm nhất!
+                Thank you for contacting us! We have received your message and will respond via email as soon as possible.
               </p>
               <button
                 onClick={() => setIsSuccess(false)}
                 className="px-6 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs transition"
               >
-                Gửi thêm liên hệ khác
+                Send Another Message
               </button>
             </div>
           ) : (
@@ -95,18 +95,18 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1.5">Họ và Tên</label>
+                  <label className="block text-xs font-bold text-gray-300 mb-1.5">Full Name</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Nguyễn Văn A"
+                    placeholder="Tony Stark"
                     className="w-full bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-xl p-3 text-xs text-white focus:outline-none transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1.5">Email Phản Hồi</label>
+                  <label className="block text-xs font-bold text-gray-300 mb-1.5">Your Email</label>
                   <input
                     type="email"
                     required
@@ -119,24 +119,24 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1.5">Chủ Đề</label>
+                <label className="block text-xs font-bold text-gray-300 mb-1.5">Subject</label>
                 <input
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  placeholder="Góp ý tính năng / Báo lỗi / Hợp tác..."
+                  placeholder="Feature Request / Bug Report / Collaboration..."
                   className="w-full bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-xl p-3 text-xs text-white focus:outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-300 mb-1.5">Nội Dung</label>
+                <label className="block text-xs font-bold text-gray-300 mb-1.5">Message</label>
                 <textarea
                   rows={4}
                   required
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Mô tả chi tiết ý kiến hoặc góp ý của bạn..."
+                  placeholder="Describe your feedback or suggestions in detail..."
                   className="w-full bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-xl p-3 text-xs text-white focus:outline-none transition"
                 />
               </div>
@@ -149,12 +149,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Đang gửi ý kiến...</span>
+                    <span>Sending message...</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Gửi Tin Nhắn Liên Hệ</span>
+                    <span>Send Message</span>
                   </>
                 )}
               </button>

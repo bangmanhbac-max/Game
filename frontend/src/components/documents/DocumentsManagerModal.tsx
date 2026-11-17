@@ -40,7 +40,7 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) return;
+    if (!window.confirm('Are you sure you want to delete this document?')) return;
     try {
       await deleteUploadedDocument(id);
       setDocuments((prev) => prev.filter((d) => d.id !== id));
@@ -64,8 +64,8 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
               <FolderArchive className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-black text-white">Kho Quản Lý File & Tài Liệu Từ Vựng</h3>
-              <p className="text-xs text-gray-400">Xem và quản lý tất cả các tài liệu đã nạp vào mô hình VLM</p>
+              <h3 className="text-base font-black text-white">Document & Vocabulary Vault</h3>
+              <p className="text-xs text-gray-400">View and manage all documents ingested into the VLM neural model</p>
             </div>
           </div>
 
@@ -82,12 +82,12 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm kiếm tài liệu theo tên file hoặc prompt..."
+              placeholder="Search documents by filename or prompt..."
               className="w-full bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-gray-500 focus:outline-none transition"
             />
           </div>
           <span className="text-xs text-gray-400 font-mono font-bold">
-            {filteredDocs.length} tài liệu
+            {filteredDocs.length} documents
           </span>
         </div>
 
@@ -96,12 +96,12 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
           {isLoading ? (
             <div className="h-full flex items-center justify-center text-cyan-400 gap-2">
               <Loader2 className="w-6 h-6 animate-spin" />
-              <span>Đang tải danh sách tài liệu...</span>
+              <span>Loading documents...</span>
             </div>
           ) : filteredDocs.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-2">
               <FileCheck className="w-12 h-12 text-gray-600" />
-              <p>Chưa có file nào được lưu trong kho.</p>
+              <p>No documents stored in the vault yet.</p>
             </div>
           ) : (
             filteredDocs.map((doc) => (
@@ -128,11 +128,11 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
                       <Cpu className="w-3.5 h-3.5 text-cyan-400" />
                       {doc.vlm_mode}
                     </span>
-                    <span>{doc.char_count} ký tự</span>
+                    <span>{doc.char_count} chars</span>
                     {doc.created_at && (
                       <span className="flex items-center gap-1 text-gray-500">
                         <Calendar className="w-3.5 h-3.5" />
-                        {new Date(doc.created_at).toLocaleDateString('vi-VN')}
+                        {new Date(doc.created_at).toLocaleDateString('en-US')}
                       </span>
                     )}
                   </div>
@@ -142,7 +142,7 @@ export const DocumentsManagerModal: React.FC<DocumentsManagerModalProps> = ({ is
                   <button
                     onClick={() => handleDelete(doc.id)}
                     className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/25 border border-red-500/30 text-red-400 transition cursor-pointer"
-                    title="Xóa tài liệu"
+                    title="Delete document"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

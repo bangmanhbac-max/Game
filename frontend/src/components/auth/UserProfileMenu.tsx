@@ -75,7 +75,7 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ onOpenLeaderbo
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-gray-800/60 transition"
             >
               <Shield className="w-4 h-4 text-cyan-400" />
-              <span>Đổi Siêu Anh Hùng Đại Diện</span>
+              <span>Change Superhero Avatar</span>
             </button>
 
             <button
@@ -83,14 +83,14 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ onOpenLeaderbo
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-gray-800/60 transition"
             >
               <Trophy className="w-4 h-4 text-amber-400" />
-              <span>Bảng Xếp Hạng Top 4K</span>
+              <span>4K Leaderboard</span>
             </button>
           </div>
 
           {/* Avatar Switcher Submenu */}
           {isChangingAvatar && (
             <div className="pt-2 border-t border-gray-800">
-              <p className="text-[10px] font-bold text-gray-400 mb-2">CHỌN AVATAR MỚI:</p>
+              <p className="text-[10px] font-bold text-gray-400 mb-2">SELECT NEW AVATAR:</p>
               <div className="grid grid-cols-4 gap-1.5">
                 {HERO_AVATARS.map((hero) => (
                   <button
@@ -117,7 +117,7 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ onOpenLeaderbo
               className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition font-bold"
             >
               <LogOut className="w-4 h-4" />
-              <span>Đăng Xuất</span>
+              <span>Sign Out</span>
             </button>
           </div>
         </div>

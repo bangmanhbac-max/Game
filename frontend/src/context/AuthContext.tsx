@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setToken(savedToken);
         })
         .catch(() => {
-          // Token hết hạn hoặc không hợp lệ
+          // Token expired or invalid
           localStorage.removeItem('eduplay_token');
           setUser(null);
           setToken(null);

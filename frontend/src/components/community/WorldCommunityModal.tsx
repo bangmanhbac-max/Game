@@ -50,7 +50,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
     e.preventDefault();
     if (!inputText.trim()) return;
 
-    const user = localStorage.getItem('eduplay_username') || 'Chiến Binh Avengers';
+    const user = localStorage.getItem('eduplay_username') || 'Avenger Warrior';
     const text = inputText.trim();
     setInputText('');
 
@@ -71,7 +71,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
       setAddUsername('');
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Không thể kết bạn';
+      const msg = err instanceof Error ? err.message : 'Unable to send friend request';
       setFeedbackMsg(`❌ ${msg}`);
     }
   };
@@ -92,7 +92,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Globe className="w-4 h-4" /> Kênh Chat Thế Giới
+              <Globe className="w-4 h-4" /> Global Chat
             </button>
             <button
               onClick={() => setActiveTab('friends')}
@@ -102,7 +102,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Users className="w-4 h-4" /> Bạn Bè & Kết Bạn
+              <Users className="w-4 h-4" /> Friends & Community
             </button>
           </div>
 
@@ -124,7 +124,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-cyan-300">{m.sender_name}</span>
                       <span className="text-[10px] text-gray-500">
-                        {m.created_at ? new Date(m.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : 'Vừa xong'}
+                        {m.created_at ? new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                       </span>
                     </div>
                     <p className="text-gray-200 leading-relaxed">{m.content}</p>
@@ -139,7 +139,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Nhắn tin với mọi người trên toàn cầu..."
+                placeholder="Chat with players across the globe..."
                 className="flex-1 bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
               />
               <button
@@ -159,21 +159,21 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
             {/* Add Friend Form */}
             <form onSubmit={handleAddFriend} className="bg-[#131b2c] p-4 rounded-2xl border border-gray-800 space-y-3">
               <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                <UserPlus className="w-4 h-4 text-purple-400" /> Kết Bạn Mới
+                <UserPlus className="w-4 h-4 text-purple-400" /> Add New Friend
               </h4>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={addUsername}
                   onChange={(e) => setAddUsername(e.target.value)}
-                  placeholder="Nhập username của bạn bè (vd: avenger_hero)..."
+                  placeholder="Enter friend's username (e.g. avenger_hero)..."
                   className="flex-1 bg-[#0b0f19] border border-gray-700 focus:border-purple-400 rounded-xl px-4 py-2 text-xs text-white focus:outline-none transition"
                 />
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition cursor-pointer"
                 >
-                  Gửi Lời Mời
+                  Send Request
                 </button>
               </div>
               {feedbackMsg && (
@@ -184,7 +184,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
             {/* Friends List */}
             <div>
               <h4 className="font-bold text-gray-300 mb-3 text-sm flex items-center gap-2">
-                <Users className="w-4 h-4 text-cyan-400" /> Người Học Trong Cộng Đồng
+                <Users className="w-4 h-4 text-cyan-400" /> Learners in the Community
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {friends.map((f) => (
@@ -203,7 +203,7 @@ export const WorldCommunityModal: React.FC<WorldCommunityModalProps> = ({ isOpen
                     </div>
 
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-semibold">
-                      Bạn Bè
+                      Friends
                     </span>
                   </div>
                 ))}

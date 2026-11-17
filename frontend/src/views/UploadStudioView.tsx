@@ -36,7 +36,7 @@ export const UploadStudioView: React.FC<UploadStudioViewProps> = ({
           className="flex items-center gap-2 text-xs 3xl:text-sm font-semibold text-gray-400 hover:text-white px-4 py-2 rounded-xl bg-[#161F30] border border-gray-800 transition hover:border-cyan-500/40"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Về Dashboard</span>
+          <span>Back to Dashboard</span>
         </button>
 
         <div className="flex items-center gap-3">
@@ -45,7 +45,7 @@ export const UploadStudioView: React.FC<UploadStudioViewProps> = ({
           </div>
           <div>
             <h2 className="font-game text-lg 3xl:text-xl font-bold text-white tracking-wider">AI CONTENT STUDIO</h2>
-            <p className="text-[11px] 3xl:text-xs text-gray-400">Nạp tài liệu, tạo sinh bộ thẻ và điều chỉnh nội dung</p>
+            <p className="text-[11px] 3xl:text-xs text-gray-400">Upload documents, auto-generate interactive decks, and edit learning assets</p>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@ export const UploadStudioView: React.FC<UploadStudioViewProps> = ({
       {/* Section 2: Deck Editor */}
       <div>
         <h3 className="font-game text-base 3xl:text-lg font-bold text-cyan-300 mb-4 flex items-center gap-2">
-          <span>{hasGenerated ? '✨ BỘ DỮ LIỆU VỪA TẠO TỪ AI' : '📝 BỘ DỮ LIỆU ĐANG KÍCH HOẠT'}</span>
+          <span>{hasGenerated ? '✨ AI-GENERATED LEARNING PACKAGE' : '📝 ACTIVE LEARNING PACKAGE'}</span>
         </h3>
         <DeckEditor
           packageData={activePackage}

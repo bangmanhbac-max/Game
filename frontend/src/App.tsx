@@ -27,52 +27,52 @@ import { ALL_CURRICULUM_DECKS } from './lib/curriculumData';
 
 const DEFAULT_CHINESE_DECK: LearningPackage = {
   package_id: 'default-chinese-hsk1',
-  title: 'Tiếng Trung Giao Tiếp HSK 1 Căn Bản',
+  title: 'Conversational Mandarin HSK 1 Core',
   source_filename: 'tieng_trung_hsk1.pdf',
   created_at: new Date().toISOString(),
   vocabulary_deck: {
     id: 'deck-zh-default',
-    title: 'Từ Vựng Tiếng Trung HSK 1',
-    description: 'Các từ giao tiếp căn bản: Chào hỏi, cảm ơn, bạn bè, học tập',
+    title: 'Mandarin Vocabulary HSK 1',
+    description: 'Essential communication words: Greetings, Gratitude, Friends, Study',
     target_language: 'zh-CN',
     items: [
-      { id: 'zh-1', target_text: '你好', phonetic: 'nǐ hǎo', type_target: 'nihao', meaning: 'Xin chào', difficulty: 1, stroke_gesture: 'horizontal', characters: ['你', '好'] },
-      { id: 'zh-2', target_text: '谢谢', phonetic: 'xièxie', type_target: 'xiexie', meaning: 'Cảm ơn', difficulty: 1, stroke_gesture: 'vertical', characters: ['谢', '谢'] },
-      { id: 'zh-3', target_text: '再见', phonetic: 'zàijiàn', type_target: 'zaijian', meaning: 'Tạm biệt', difficulty: 1, stroke_gesture: 'slash', characters: ['再', '见'] },
-      { id: 'zh-4', target_text: '老师', phonetic: 'lǎoshī', type_target: 'laoshi', meaning: 'Thầy/Cô giáo', difficulty: 2, stroke_gesture: 'caret', characters: ['老', '师'] },
-      { id: 'zh-5', target_text: '朋友', phonetic: 'péngyou', type_target: 'pengyou', meaning: 'Bạn bè', difficulty: 2, stroke_gesture: 'lightning', characters: ['朋', '友'] },
-      { id: 'zh-6', target_text: '学习', phonetic: 'xuéxí', type_target: 'xuexi', meaning: 'Học tập', difficulty: 2, stroke_gesture: 'circle', characters: ['学', '习'] },
-      { id: 'zh-7', target_text: '开心', phonetic: 'kāixīn', type_target: 'kaixin', meaning: 'Vui vẻ', difficulty: 1, stroke_gesture: 'v_shape', characters: ['开', '心'] },
-      { id: 'zh-8', target_text: '苹果', phonetic: 'píngguǒ', type_target: 'pingguo', meaning: 'Quả táo', difficulty: 2, stroke_gesture: 'backslash', characters: ['苹', '果'] },
+      { id: 'zh-1', target_text: '你好', phonetic: 'nǐ hǎo', type_target: 'nihao', meaning: 'Hello', difficulty: 1, stroke_gesture: 'horizontal', characters: ['你', '好'] },
+      { id: 'zh-2', target_text: '谢谢', phonetic: 'xièxie', type_target: 'xiexie', meaning: 'Thank you', difficulty: 1, stroke_gesture: 'vertical', characters: ['谢', '谢'] },
+      { id: 'zh-3', target_text: '再见', phonetic: 'zàijiàn', type_target: 'zaijian', meaning: 'Goodbye', difficulty: 1, stroke_gesture: 'slash', characters: ['再', '见'] },
+      { id: 'zh-4', target_text: '老师', phonetic: 'lǎoshī', type_target: 'laoshi', meaning: 'Teacher', difficulty: 2, stroke_gesture: 'caret', characters: ['老', '师'] },
+      { id: 'zh-5', target_text: '朋友', phonetic: 'péngyou', type_target: 'pengyou', meaning: 'Friend', difficulty: 2, stroke_gesture: 'lightning', characters: ['朋', '友'] },
+      { id: 'zh-6', target_text: '学习', phonetic: 'xuéxí', type_target: 'xuexi', meaning: 'Study / Learn', difficulty: 2, stroke_gesture: 'circle', characters: ['学', '习'] },
+      { id: 'zh-7', target_text: '开心', phonetic: 'kāixīn', type_target: 'kaixin', meaning: 'Happy', difficulty: 1, stroke_gesture: 'v_shape', characters: ['开', '心'] },
+      { id: 'zh-8', target_text: '苹果', phonetic: 'píngguǒ', type_target: 'pingguo', meaning: 'Apple', difficulty: 2, stroke_gesture: 'backslash', characters: ['苹', '果'] },
     ],
   },
   quiz_deck: {
     id: 'quiz-zh-default',
-    title: 'Đấu Trường Quiz Tiếng Trung HSK 1',
-    description: 'Thử thách phản xạ nghĩa từ vựng và pinyin',
+    title: 'Mandarin HSK 1 Speed Quiz Arena',
+    description: 'Reflex challenge on vocabulary meanings and pinyin',
     items: [
       {
         id: 'q1',
-        question: "Từ '你好' (nǐ hǎo) có ý nghĩa là gì?",
-        options: ['A. Tạm biệt', 'B. Xin chào', 'C. Cảm ơn', 'D. Không có chi'],
+        question: "What does '你好' (nǐ hǎo) mean?",
+        options: ['A. Goodbye', 'B. Hello', 'C. Thank you', 'D. You are welcome'],
         correct_index: 1,
-        explanation: "'你好' (nǐ hǎo) nghĩa là Xin chào trong tiếng Trung.",
+        explanation: "'你好' (nǐ hǎo) means 'Hello' in Mandarin.",
         points: 100,
       },
       {
         id: 'q2',
-        question: "Khi muốn nói 'Cảm ơn', bạn dùng từ nào?",
+        question: "Which word means 'Thank you'?",
         options: ['A. 谢谢 (xièxie)', 'B. 再见 (zàijiàn)', 'C. 老师 (lǎoshī)', 'D. 学习 (xuéxí)'],
         correct_index: 0,
-        explanation: "'谢谢' (xièxie) có nghĩa là Cảm ơn.",
+        explanation: "'谢谢' (xièxie) translates to 'Thank you'.",
         points: 100,
       },
       {
         id: 'q3',
-        question: "Từ '苹果' (píngguǒ) nghĩa là gì?",
-        options: ['A. Quả dưa hấu', 'B. Quả táo', 'C. Quả chuối', 'D. Quả xoài'],
+        question: "What does '苹果' (píngguǒ) mean?",
+        options: ['A. Watermelon', 'B. Apple', 'C. Banana', 'D. Mango'],
         correct_index: 1,
-        explanation: "'苹果' (píngguǒ) có nghĩa là Quả táo.",
+        explanation: "'苹果' (píngguǒ) translates to 'Apple'.",
         points: 100,
       },
     ],
@@ -271,7 +271,7 @@ const AppContent: React.FC = () => {
 
       {/* Footer */}
       <footer className="border-t border-gray-900 bg-[#070A12] py-5 sm:py-6 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] text-center text-xs 3xl:text-sm text-gray-500 relative z-10">
-        <p>AI EduPlay Platform • Nền Tảng Học Tập Trò Chơi Hóa Thế Hệ Mới • 🛡️ Biệt Đội Avengers 4K & Hệ Thống Cơ Sở Dữ Liệu Toàn Diện</p>
+        <p>EduPlay AI Platform • Next-Gen Gamified AI Learning Universe • 🛡️ Avengers 4K Edition & Full Database Integration</p>
       </footer>
 
       {/* API Key Modal */}

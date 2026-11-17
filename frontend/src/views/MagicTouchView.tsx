@@ -14,14 +14,14 @@ interface MagicTouchViewProps {
 }
 
 const RUNE_GUIDES = [
-  { symbol: '—', name: 'Ngang', color: 'border-rose-500/50 text-rose-300 bg-rose-500/10' },
-  { symbol: '|', name: 'Sổ Dọc', color: 'border-sky-500/50 text-sky-300 bg-sky-500/10' },
-  { symbol: '/', name: 'Phẩy', color: 'border-amber-500/50 text-amber-300 bg-amber-500/10' },
-  { symbol: '\\', name: 'Mác', color: 'border-orange-500/50 text-orange-300 bg-orange-500/10' },
-  { symbol: 'V', name: 'Chữ V', color: 'border-purple-500/50 text-purple-300 bg-purple-500/10' },
-  { symbol: '^', name: 'Dấu Mũ', color: 'border-pink-500/50 text-pink-300 bg-pink-500/10' },
-  { symbol: 'O', name: 'Vòng Tròn', color: 'border-emerald-500/50 text-emerald-300 bg-emerald-500/10' },
-  { symbol: '⚡', name: 'Sét (Z)', color: 'border-yellow-500/50 text-yellow-300 bg-yellow-500/10' },
+  { symbol: '—', name: 'Horizontal', color: 'border-rose-500/50 text-rose-300 bg-rose-500/10' },
+  { symbol: '|', name: 'Vertical', color: 'border-sky-500/50 text-sky-300 bg-sky-500/10' },
+  { symbol: '/', name: 'Slash', color: 'border-amber-500/50 text-amber-300 bg-amber-500/10' },
+  { symbol: '\\', name: 'Backslash', color: 'border-orange-500/50 text-orange-300 bg-orange-500/10' },
+  { symbol: 'V', name: 'V-Shape', color: 'border-purple-500/50 text-purple-300 bg-purple-500/10' },
+  { symbol: '^', name: 'Caret', color: 'border-pink-500/50 text-pink-300 bg-pink-500/10' },
+  { symbol: 'O', name: 'Circle', color: 'border-emerald-500/50 text-emerald-300 bg-emerald-500/10' },
+  { symbol: '⚡', name: 'Lightning (Z)', color: 'border-yellow-500/50 text-yellow-300 bg-yellow-500/10' },
 ];
 
 export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
@@ -112,7 +112,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
           className="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2 rounded-xl bg-[#161F30] border border-gray-800 transition hover:border-pink-500/40"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Thoát Game</span>
+          <span>Exit Game</span>
         </button>
 
         <div className="flex-1 max-w-2xl 2xl:max-w-4xl">
@@ -129,7 +129,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
         {/* Floating Gesture Feedback */}
         {lastDrawnGesture && (
           <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 bg-amber-500/30 border border-amber-400/70 backdrop-blur-md px-5 py-2 rounded-full text-xs 3xl:text-sm font-black text-amber-200 shadow-2xl animate-bounce">
-            ⚡ Phép Thuật Kích Hoạt: {lastDrawnGesture}
+            ⚡ Spell Triggered: {lastDrawnGesture}
           </div>
         )}
 
@@ -143,12 +143,12 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
               DOCTOR STRANGE: MAGIC TOUCH (4K)
             </h2>
             <p className="text-sm 3xl:text-base text-gray-200 max-w-xl mb-6 leading-relaxed">
-              Dùng chuột hoặc ngón tay vẽ tự do các nét phép thuật (— Ngang, | Sổ, / Phẩy, \ Mác, V, ^, O Tròn, ⚡ Sét) tương ứng với ký hiệu in trên bóng bay để giải cứu từ vựng và tiêu diệt quái vật!
+              Use mouse or touch to draw mystic runes (— Horizontal, | Vertical, / Slash, \ Backslash, V, ^, O Circle, ⚡ Lightning) matching balloon targets to pop them and clear vocab monsters!
             </p>
 
             <div className="flex items-center gap-2 mb-8 bg-[#161F30]/90 px-5 py-2.5 rounded-2xl border border-gray-700 text-xs 3xl:text-sm text-gray-300 shadow-inner">
               <MousePointer className="w-4 h-4 text-amber-400" />
-              <span>Hỗ trợ cả Chuột máy tính, Touchpad và Màn hình cảm ứng 4K</span>
+              <span>Compatible with Mouse, Trackpad, and 4K Touchscreens</span>
             </div>
 
             <button
@@ -156,7 +156,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
               className="flex items-center gap-3 bg-gradient-to-r from-amber-500 via-pink-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white font-black text-base 3xl:text-lg px-9 py-4 3xl:py-5 rounded-2xl shadow-2xl shadow-pink-500/30 transition transform hover:scale-105 cursor-pointer"
             >
               <Sparkles className="w-5 h-5 3xl:w-6 3xl:h-6 text-yellow-300" />
-              <span>KHỞI TẠO MA TRẬN PHÉP THUẬT (4K)</span>
+              <span>INITIALIZE MYSTIC MATRIX (4K)</span>
             </button>
           </div>
         )}
@@ -164,13 +164,13 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
         {/* Paused Overlay */}
         {gameState === 'PAUSED' && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/85 backdrop-blur-md p-6 text-center animate-fade-in">
-            <h3 className="font-game text-2xl 3xl:text-3xl font-bold text-white mb-4">TẠM DỪNG PHÉP THUẬT</h3>
+            <h3 className="font-game text-2xl 3xl:text-3xl font-bold text-white mb-4">SPELL PAUSED</h3>
             <button
               onClick={handlePauseResume}
               className="flex items-center gap-2 bg-pink-500 hover:bg-pink-400 text-white font-bold px-7 py-3.5 rounded-xl transition shadow-lg shadow-pink-500/25"
             >
               <Play className="w-4 h-4 fill-white" />
-              <span>Tiếp Tục Chơi</span>
+              <span>Resume Game</span>
             </button>
           </div>
         )}
@@ -188,7 +188,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
       <div className="bg-[#161F30]/90 border border-gray-800 rounded-2xl p-3 px-4 shadow-lg backdrop-blur-md">
         <div className="flex items-center justify-between gap-2 overflow-x-auto">
           <span className="text-xs font-bold text-gray-400 shrink-0 hidden sm:inline">
-            8 Nét Phép Thuật:
+            8 Mystic Runes:
           </span>
           <div className="flex items-center gap-2 flex-wrap">
             {RUNE_GUIDES.map((rune, idx) => (
@@ -206,7 +206,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
 
       {/* Bottom Controls Bar */}
       <div className="flex items-center justify-between text-xs 3xl:text-sm text-gray-400 px-2">
-        <span>Bài học: <b className="text-white">{packageData.title}</b></span>
+        <span>Deck: <b className="text-white">{packageData.title}</b></span>
         <div className="flex items-center gap-3">
           {gameState === 'PLAYING' && (
             <button
@@ -214,7 +214,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#161F30] hover:bg-gray-800 text-white rounded-xl border border-gray-700 transition"
             >
               <Pause className="w-3.5 h-3.5" />
-              <span>Tạm Dừng</span>
+              <span>Pause</span>
             </button>
           )}
           <button
@@ -222,7 +222,7 @@ export const MagicTouchView: React.FC<MagicTouchViewProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#161F30] hover:bg-gray-800 text-white rounded-xl border border-gray-700 transition"
           >
             <RotateCcw className="w-3.5 h-3.5 text-pink-400" />
-            <span>Chơi Lại</span>
+            <span>Restart</span>
           </button>
         </div>
       </div>

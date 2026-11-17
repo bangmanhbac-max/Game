@@ -77,8 +77,8 @@ export async function loginUser(creds: LoginCredentials): Promise<AuthResponse> 
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ detail: 'Đăng nhập thất bại' }));
-        throw new Error(errorData.detail || 'Đăng nhập thất bại');
+        const errorData = await res.json().catch(() => ({ detail: 'Login failed' }));
+        throw new Error(errorData.detail || 'Login failed');
       }
       const data = await res.json();
       localStorage.setItem('eduplay_current_user', JSON.stringify(data.user));
@@ -97,7 +97,7 @@ export async function loginUser(creds: LoginCredentials): Promise<AuthResponse> 
   const found = users.find(u => (u.username.toLowerCase() === ident || u.email.toLowerCase() === ident));
 
   if (!found || (found.password && found.password !== creds.password)) {
-    throw new Error('Tên đăng nhập, email hoặc mật khẩu không chính xác.');
+    throw new Error('Incorrect username, email, or password.');
   }
 
   const userObj: User = {
@@ -130,8 +130,8 @@ export async function registerUser(data: RegisterData): Promise<AuthResponse> {
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ detail: 'Đăng ký thất bại' }));
-        throw new Error(errorData.detail || 'Đăng ký thất bại');
+        const errorData = await res.json().catch(() => ({ detail: 'Registration failed' }));
+        throw new Error(errorData.detail || 'Registration failed');
       }
       const authRes = await res.json();
       localStorage.setItem('eduplay_current_user', JSON.stringify(authRes.user));
@@ -149,10 +149,10 @@ export async function registerUser(data: RegisterData): Promise<AuthResponse> {
   const lowerEmail = data.email.toLowerCase().trim();
 
   if (users.some(u => u.username.toLowerCase() === lowerUser)) {
-    throw new Error('Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên khác.');
+    throw new Error('This username is already taken. Please choose another.');
   }
   if (users.some(u => u.email.toLowerCase() === lowerEmail)) {
-    throw new Error('Địa chỉ Email này đã được đăng ký tài khoản.');
+    throw new Error('This email address is already registered.');
   }
 
   const newRecord: LocalUserRecord = {
@@ -213,7 +213,7 @@ export async function getCurrentUser(token?: string): Promise<User> {
     } catch {}
   }
 
-  throw new Error('Phiên đăng nhập đã hết hạn');
+  throw new Error('Session has expired');
 }
 
 export async function updateProfile(data: { full_name?: string; avatar?: string }): Promise<User> {
@@ -240,7 +240,7 @@ export async function updateProfile(data: { full_name?: string; avatar?: string 
     localStorage.setItem('eduplay_current_user', JSON.stringify(u));
     return u;
   }
-  throw new Error('Lỗi cập nhật');
+  throw new Error('Update failed');
 }
 
 // ================= DOCUMENT & AI GENERATOR APIS =================
@@ -268,8 +268,8 @@ function generateClientFallbackPackage(rawText: string, filename?: string): Lear
       meaning = parts.slice(1).join('-').trim();
     } else {
       const words = line.split(/\s+/);
-      word = words[0] || 'Từ vựng';
-      meaning = words.slice(1).join(' ') || 'Kiến thức cốt lõi';
+      word = words[0] || 'Word';
+      meaning = words.slice(1).join(' ') || 'Core concept';
     }
 
     if (!word) continue;
@@ -281,22 +281,22 @@ function generateClientFallbackPackage(rawText: string, filename?: string): Lear
       target_text: word,
       phonetic: word,
       type_target: cleanType,
-      meaning: meaning || 'Ý nghĩa trọng tâm',
+      meaning: meaning || 'Core definition',
       difficulty: (idx % 3) + 1,
       stroke_gesture: gesture,
     });
 
     quizItems.push({
       id: `quiz_${Date.now()}_${idx}`,
-      question: `Ý nghĩa chính xác của "${word}" trong bài học là gì?`,
+      question: `What is the accurate meaning of "${word}" in this lesson?`,
       options: [
-        `A. ${meaning || 'Kiến thức cơ bản'}`,
-        'B. Khái niệm mở rộng ngoài phạm vi bài',
-        'C. Định nghĩa phản đề chưa chính xác',
-        'D. Thuật ngữ bổ trợ ngữ cảnh phụ'
+        `A. ${meaning || 'Fundamental concept'}`,
+        'B. Distant peripheral term',
+        'C. Contrasting incorrect definition',
+        'D. Secondary contextual note'
       ],
       correct_index: 0,
-      explanation: `"${word}" mang ý nghĩa: ${meaning || 'Kiến thức bài học đã được phân tích.'}`,
+      explanation: `"${word}" represents: ${meaning || 'Core lesson knowledge.'}`,
       points: 100
     });
 
@@ -307,16 +307,16 @@ function generateClientFallbackPackage(rawText: string, filename?: string): Lear
   // Nếu không tách được dòng nào hợp lệ, sinh bài học mẫu chất lượng cao
   if (items.length === 0) {
     items.push(
-      { id: 'v1', target_text: 'Artificial Intelligence', phonetic: 'AI', type_target: 'ai', meaning: 'Trí tuệ nhân tạo', difficulty: 1, stroke_gesture: 'circle' as const },
-      { id: 'v2', target_text: 'Machine Learning', phonetic: 'ML', type_target: 'ml', meaning: 'Học máy', difficulty: 2, stroke_gesture: 'lightning' as const },
-      { id: 'v3', target_text: 'Neural Network', phonetic: 'Mạng nơ-ron', type_target: 'neural', meaning: 'Mô hình phỏng sinh học', difficulty: 2, stroke_gesture: 'v_shape' as const }
+      { id: 'v1', target_text: 'Artificial Intelligence', phonetic: 'AI', type_target: 'ai', meaning: 'Artificial Intelligence', difficulty: 1, stroke_gesture: 'circle' as const },
+      { id: 'v2', target_text: 'Machine Learning', phonetic: 'ML', type_target: 'ml', meaning: 'Machine Learning', difficulty: 2, stroke_gesture: 'lightning' as const },
+      { id: 'v3', target_text: 'Neural Network', phonetic: 'Neural Network', type_target: 'neural', meaning: 'Biological neural computation model', difficulty: 2, stroke_gesture: 'v_shape' as const }
     );
     quizItems.push(
-      { id: 'q1', question: 'Mô hình học máy phổ biến trong AI là gì?', options: ['A. Neural Network', 'B. Loop While', 'C. CSS Box', 'D. HTML Tag'], correct_index: 0, explanation: 'Neural Network là kiến trúc học sâu cơ bản.', points: 100 }
+      { id: 'q1', question: 'What is a core machine learning model in modern AI?', options: ['A. Neural Network', 'B. Loop While', 'C. CSS Box', 'D. HTML Tag'], correct_index: 0, explanation: 'Neural Networks are the foundation of deep learning.', points: 100 }
     );
   }
 
-  const pkgTitle = filename ? `Bài Học: ${filename.replace(/\.[^/.]+$/, '')}` : 'Bộ Thẻ Kiến Thức Tùy Biến';
+  const pkgTitle = filename ? `Lesson: ${filename.replace(/\.[^/.]+$/, '')}` : 'Custom Knowledge Deck';
   const pkg: LearningPackage = {
     package_id: `pkg_local_${Date.now()}`,
     title: pkgTitle,
@@ -324,15 +324,15 @@ function generateClientFallbackPackage(rawText: string, filename?: string): Lear
     created_at: new Date().toISOString(),
     vocabulary_deck: {
       id: `deck_v_${Date.now()}`,
-      title: `${pkgTitle} (Từ Vựng)`,
-      description: 'Được tạo tự động và tối ưu hóa cho các chế độ trò chơi',
+      title: `${pkgTitle} (Vocabulary)`, 
+      description: 'Auto-generated and optimized for 3D gaming arenas',
       target_language: 'vi-VN',
       items,
     },
     quiz_deck: {
       id: `deck_q_${Date.now()}`,
-      title: `${pkgTitle} (Quiz Đấu Trường)`,
-      description: 'Bộ câu hỏi trắc nghiệm phản xạ nhanh',
+      title: `${pkgTitle} (Speed Quiz)`, 
+      description: 'Fast-reflex multiple choice questions',
       items: quizItems,
     }
   };
@@ -360,7 +360,7 @@ export const GEMINI_WORKING_MODELS = [
 export async function testGeminiApiKey(apiKey: string): Promise<{ success: boolean; model?: string; error?: string }> {
   const cleanKey = sanitizeGeminiApiKey(apiKey);
   if (!cleanKey) {
-    return { success: false, error: 'API Key không được để trống' };
+    return { success: false, error: 'API Key cannot be empty' };
   }
 
   let lastError = '';
@@ -387,59 +387,59 @@ export async function testGeminiApiKey(apiKey: string): Promise<{ success: boole
 
       // If invalid key or permission denied, fail immediately
       if (res.status === 400 && (msg.includes('API_KEY_INVALID') || msg.includes('API key not valid'))) {
-        return { success: false, error: 'Mã API Key không hợp lệ. Vui lòng kiểm tra lại trên Google AI Studio.' };
+        return { success: false, error: 'Invalid API Key. Please verify on Google AI Studio.' };
       }
     } catch (e: any) {
-      lastError = e?.message || 'Lỗi mạng khi kết nối tới Google Gemini';
+      lastError = e?.message || 'Network error connecting to Google Gemini';
     }
   }
 
-  return { success: false, error: lastError || 'Không thể kết nối tới các mô hình Gemini khả dụng.' };
+  return { success: false, error: lastError || 'Unable to connect to available Gemini models.' };
 }
 
 export async function generateWithClientGemini(rawText: string, apiKey: string, filename?: string, customPrompt?: string): Promise<LearningPackage> {
   const cleanKey = sanitizeGeminiApiKey(apiKey);
-  const systemPrompt = `Bạn là Siêu AI Giáo Dục EduPlay. Nhiệm vụ của bạn là phân tích tài liệu học tập sau và tạo ra gói bài học JSON chuẩn gồm từ vựng và câu hỏi trắc nghiệm theo schema sau:
+  const systemPrompt = `You are EduPlay AI Copilot. Your task is to analyze the following educational material and generate a standardized JSON learning package containing vocabulary and quiz questions matching the schema below:
 {
-  "title": "Tên bài học phù hợp",
-  "description": "Mô tả ngắn gọn nội dung bài học",
+  "title": "Appropriate lesson title in English",
+  "description": "Concise summary of lesson content in English",
   "vocabulary_deck": {
-    "title": "Bộ Từ Vựng",
-    "description": "Danh sách các từ vựng trọng tâm",
+    "title": "Vocabulary Deck",
+    "description": "List of core target vocabulary items",
     "target_language": "zh-CN",
     "items": [
       {
         "id": "vocab_1",
-        "target_text": "từ vựng (chữ Hán hoặc từ tiếng Anh)",
-        "phonetic": "phiên âm pinyin hoặc IPA",
-        "type_target": "ký tự không dấu hoặc pinyin không dấu để gõ phím trong game",
-        "meaning": "nghĩa tiếng Việt",
+        "target_text": "target word (Chinese characters or English term)",
+        "phonetic": "pinyin or IPA phonetic transcription",
+        "type_target": "lowercase unaccented string or pinyin without accents for typing games",
+        "meaning": "English definition and meaning",
         "difficulty": 1,
         "stroke_gesture": "horizontal",
-        "characters": ["mảng", "từng", "ký", "tự"]
+        "characters": ["individual", "component", "chars"]
       }
     ]
   },
   "quiz_deck": {
-    "title": "Bộ Câu Hỏi Quiz",
-    "description": "Trắc nghiệm kiến thức phản xạ",
+    "title": "Speed Quiz Arena",
+    "description": "Reflex multiple choice questions",
     "items": [
       {
         "id": "quiz_1",
-        "question": "Nội dung câu hỏi trắc nghiệm?",
-        "options": ["A. Đáp án 1", "B. Đáp án 2", "C. Đáp án 3", "D. Đáp án 4"],
+        "question": "Question prompt in English?",
+        "options": ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"],
         "correct_index": 0,
-        "explanation": "Giải thích chi tiết",
+        "explanation": "Detailed explanation in English",
         "points": 100
       }
     ]
   }
 }
-Lưu ý quan trọng:
-- Giá trị stroke_gesture cho mỗi từ vựng PHẢI là một trong các giá trị: "horizontal", "vertical", "slash", "backslash", "v_shape", "caret", "circle", "lightning".
-- Hãy trích xuất từ 6 đến 12 từ vựng trọng tâm và từ 3 đến 6 câu hỏi quiz phản xạ.
-${customPrompt ? `Yêu cầu bổ sung: ${customPrompt}` : ''}
-Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
+Important requirements:
+- The stroke_gesture value for each vocabulary item MUST be one of: "horizontal", "vertical", "slash", "backslash", "v_shape", "caret", "circle", "lightning".
+- Extract between 6 and 12 essential vocabulary items and 3 to 6 reflex quiz questions.
+${customPrompt ? `Additional instructions: ${customPrompt}` : ''}
+Document Source Content:\n${rawText.slice(0, 7000)}`;
 
   for (const model of GEMINI_WORKING_MODELS) {
     try {
@@ -476,13 +476,13 @@ Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
           const pkgId = `pkg_gemini_${Date.now()}`;
           return {
             package_id: pkgId,
-            title: parsed.title || filename || 'Bài Học Gemini AI',
+            title: parsed.title || filename || 'Gemini AI Lesson',
             source_filename: filename,
             created_at: new Date().toISOString(),
             vocabulary_deck: {
               id: `vocab_deck_${pkgId}`,
-              title: parsed.vocabulary_deck?.title || 'Bộ từ vựng',
-              description: parsed.vocabulary_deck?.description || `Được tạo tự động bởi Google Gemini (${model})`,
+              title: parsed.vocabulary_deck?.title || 'Vocabulary Deck',
+              description: parsed.vocabulary_deck?.description || `Auto-generated by Google Gemini (${model})`, 
               target_language: parsed.vocabulary_deck?.target_language || 'zh-CN',
               items: (parsed.vocabulary_deck?.items || []).map((it: any, idx: number) => ({
                 id: it.id || `voc_${pkgId}_${idx + 1}`,
@@ -499,7 +499,7 @@ Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
             },
             quiz_deck: {
               id: `quiz_deck_${pkgId}`,
-              title: parsed.quiz_deck?.title || 'Bộ trắc nghiệm',
+              title: parsed.quiz_deck?.title || 'Quiz Arena',
               description: parsed.quiz_deck?.description || '',
               items: (parsed.quiz_deck?.items || []).map((q: any, idx: number) => ({
                 id: q.id || `quiz_${pkgId}_${idx + 1}`,
@@ -518,7 +518,7 @@ Nội dung tài liệu:\n${rawText.slice(0, 7000)}`;
     }
   }
 
-  throw new Error('Không thể tạo bài học qua Gemini API trực tiếp.');
+  throw new Error('Unable to generate lesson via Gemini API directly.');
 }
 
 export async function uploadDocument(file: File, geminiApiKey?: string, customPrompt?: string): Promise<DocumentExtractResult> {
@@ -548,8 +548,8 @@ export async function uploadDocument(file: File, geminiApiKey?: string, customPr
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ detail: 'Lỗi tải file lên máy chủ' }));
-        throw new Error(errorData.detail || 'Lỗi tải file');
+        const errorData = await res.json().catch(() => ({ detail: 'Failed to upload file to server' }));
+        throw new Error(errorData.detail || 'File upload error');
       }
       return await res.json();
     }
@@ -596,7 +596,7 @@ export async function uploadDocument(file: File, geminiApiKey?: string, customPr
     };
   }
 
-  throw new Error('Máy chủ Backend Python hiện chưa bật để xử lý file nhị phân (' + ext.toUpperCase() + '). Vui lòng bật start_all.bat trên máy tính, hoặc tải file văn bản (.txt, .md) để tạo bài học ngay!');
+  throw new Error('Python Backend server is offline for binary files (' + ext.toUpperCase() + '). Please upload plain text files (.txt, .md) to generate lessons instantly!');
 }
 
 export async function generateLearningContent(rawText: string, filename?: string, apiKey?: string, customPrompt?: string): Promise<LearningPackage> {
@@ -618,8 +618,8 @@ export async function generateLearningContent(rawText: string, filename?: string
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ detail: 'Lỗi khi AI tạo sinh nội dung' }));
-        throw new Error(errorData.detail || 'Lỗi AI');
+        const errorData = await res.json().catch(() => ({ detail: 'AI content generation error' }));
+        throw new Error(errorData.detail || 'AI error');
       }
       return await res.json();
     }
@@ -728,7 +728,7 @@ export async function fetchUploadedDocuments(): Promise<UploadedDocRecord[]> {
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể tải danh sách tài liệu');
+    throw new Error('Unable to load documents');
   }
   return res.json();
 }
@@ -739,7 +739,7 @@ export async function deleteUploadedDocument(docId: string): Promise<void> {
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể xóa tài liệu');
+    throw new Error('Unable to delete document');
   }
 }
 
@@ -760,7 +760,7 @@ export async function fetchChatMessages(channel = 'world_chat'): Promise<ChatMes
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể tải lịch sử trò chuyện');
+    throw new Error('Unable to load chat history');
   }
   return res.json();
 }
@@ -768,7 +768,7 @@ export async function fetchChatMessages(channel = 'world_chat'): Promise<ChatMes
 export async function sendChatMessage(
   content: string, 
   channel = 'world_chat',
-  senderName = 'Người học',
+  senderName = 'Learner',
   senderAvatar = 'iron-man',
   geminiKey?: string
 ): Promise<{ user_message: ChatMessage; ai_reply?: ChatMessage }> {
@@ -794,12 +794,12 @@ export async function sendChatMessage(
 
   const contentType = res.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
-    throw new Error('Máy chủ phản hồi định dạng không hợp lệ (offline/static mode)');
+    throw new Error('Server returned invalid format (offline/static mode)');
   }
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ detail: 'Lỗi gửi tin nhắn' }));
-    throw new Error(errorData.detail || 'Lỗi gửi tin nhắn');
+    const errorData = await res.json().catch(() => ({ detail: 'Failed to send message' }));
+    throw new Error(errorData.detail || 'Failed to send message');
   }
 
   return res.json();
@@ -822,7 +822,7 @@ export async function fetchCommunityFriends(): Promise<CommunityFriend[]> {
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể tải danh sách cộng đồng');
+    throw new Error('Unable to load community list');
   }
   return res.json();
 }
@@ -834,8 +834,8 @@ export async function sendFriendRequest(friendUsername: string): Promise<any> {
     body: JSON.stringify({ friend_username: friendUsername }),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: 'Không thể gửi kết bạn' }));
-    throw new Error(err.detail || 'Không thể gửi kết bạn');
+    const err = await res.json().catch(() => ({ detail: 'Unable to send friend request' }));
+    throw new Error(err.detail || 'Unable to send friend request');
   }
   return res.json();
 }
@@ -849,8 +849,8 @@ export async function submitContactForm(data: { name: string; email: string; sub
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: 'Không thể gửi liên hệ' }));
-    throw new Error(err.detail || 'Không thể gửi liên hệ');
+    const err = await res.json().catch(() => ({ detail: 'Unable to submit feedback' }));
+    throw new Error(err.detail || 'Unable to submit feedback');
   }
   return res.json();
 }
@@ -874,7 +874,7 @@ export async function fetchDbTables(): Promise<DbAdminOverview> {
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể tải danh sách bảng cơ sở dữ liệu');
+    throw new Error('Unable to load database tables');
   }
   return res.json();
 }
@@ -888,7 +888,7 @@ export async function fetchTableData(tableName: string, limit = 50, offset = 0, 
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error(`Không thể tải dữ liệu bảng ${tableName}`);
+    throw new Error(`Unable to load data for table ${tableName}`);
   }
   return res.json();
 }
@@ -899,7 +899,7 @@ export async function deleteTableRow(tableName: string, rowId: string): Promise<
     headers: getAuthHeaders(),
   });
   if (!res.ok) {
-    throw new Error('Không thể xóa bản ghi');
+    throw new Error('Unable to delete record');
   }
   return res.json();
 }
@@ -911,8 +911,8 @@ export async function executeSqlQuery(query: string): Promise<any> {
     body: JSON.stringify({ query }),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: 'Lỗi thực thi SQL' }));
-    throw new Error(err.detail || 'Lỗi thực thi SQL');
+    const err = await res.json().catch(() => ({ detail: 'SQL execution error' }));
+    throw new Error(err.detail || 'SQL execution error');
   }
   return res.json();
 }

@@ -78,7 +78,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Sấm chớp bão vũ trụ
+      // Cosmic storm lightning flashes
       if (weather === 'cosmic-storm') {
         lightningTimer++;
         if (lightningTimer > 180 && Math.random() < 0.05) {
@@ -148,19 +148,19 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#161F30]/80 hover:bg-[#1f2b42] border border-cyan-500/40 text-xs font-semibold text-cyan-300 transition shadow-lg backdrop-blur-md cursor-pointer"
-          title="Tùy chỉnh Cảnh 4K, Sáng/Tối & Bão Vũ Trụ"
+          title="Customize 4K Themes, Dark/Light & Cosmic Storms"
         >
           {weather === 'cosmic-storm' && <Zap className="w-3.5 h-3.5 text-purple-400 animate-pulse" />}
           {weather === 'cyber-rain' && <CloudRain className="w-3.5 h-3.5 text-cyan-400" />}
           {weather === 'quantum-realm' && <Orbit className="w-3.5 h-3.5 text-amber-400" />}
           {weather === 'none' && <Sun className="w-3.5 h-3.5 text-yellow-400" />}
-          <span>Cảnh 4K & Hiệu Ứng</span>
+          <span>4K Atmosphere</span>
         </button>
 
         {isOpen && (
           <div className="absolute right-0 mt-2 w-64 bg-[#0d1527] border border-cyan-500/40 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
             <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> Cảnh Khí Quyển 4K
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> 4K Atmosphere Preset
             </h4>
 
             {/* Weather selector */}
@@ -174,7 +174,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-purple-400" /> Bão Vũ Trụ (Cosmic Storm)
+                  <Zap className="w-3.5 h-3.5 text-purple-400" /> Cosmic Storm
                 </span>
                 {weather === 'cosmic-storm' && <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />}
               </button>
@@ -188,7 +188,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <CloudRain className="w-3.5 h-3.5 text-cyan-400" /> Mưa Cyber (Cyber Rain)
+                  <CloudRain className="w-3.5 h-3.5 text-cyan-400" /> Cyber Rain
                 </span>
                 {weather === 'cyber-rain' && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />}
               </button>
@@ -202,7 +202,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Orbit className="w-3.5 h-3.5 text-amber-400" /> Cổng Lượng Tử (Quantum)
+                  <Orbit className="w-3.5 h-3.5 text-amber-400" /> Quantum Realm
                 </span>
                 {weather === 'quantum-realm' && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
               </button>
@@ -216,7 +216,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Sun className="w-3.5 h-3.5 text-gray-400" /> Tắt hiệu ứng
+                  <Sun className="w-3.5 h-3.5 text-gray-400" /> Disable Effects
                 </span>
                 {weather === 'none' && <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />}
               </button>
@@ -224,7 +224,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
 
             {/* Theme mode */}
             <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2 pt-2 border-t border-gray-800 flex items-center gap-1.5">
-              <Moon className="w-3.5 h-3.5 text-cyan-400" /> Chế Độ Màu Sắc
+              <Moon className="w-3.5 h-3.5 text-cyan-400" /> Color Theme
             </h4>
             <div className="grid grid-cols-3 gap-1.5 text-center">
               <button
@@ -245,7 +245,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                     : 'bg-[#161F30] text-gray-400 border-gray-800'
                 }`}
               >
-                Tối Deep
+                Deep Dark
               </button>
               <button
                 onClick={() => setTheme('light')}
@@ -255,7 +255,7 @@ export const AtmosphereController: React.FC<AtmosphereControllerProps> = ({
                     : 'bg-[#161F30] text-gray-400 border-gray-800'
                 }`}
               >
-                Sáng Dịu
+                Soft Light
               </button>
             </div>
           </div>

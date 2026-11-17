@@ -104,7 +104,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
   const activeVocab = activeItems[currentWordIndex] || activeItems[0] || {
     target_text: '你好',
     phonetic: 'nǐ hǎo',
-    meaning: 'Xin chào',
+    meaning: 'Hello',
     characters: ['你', '好']
   };
 
@@ -464,7 +464,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
       setNearbyPaper(null);
 
       if (Math.random() < 0.35) {
-        setGrannyAlertMsg('Granny nghe thấy tiếng sột soạt lật giấy!');
+        setGrannyAlertMsg('Granny heard paper rustling nearby!');
         playSfx('alert');
         setTimeout(() => setGrannyAlertMsg(null), 3500);
       }
@@ -831,10 +831,10 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
       return wObj;
     };
 
-    makeWardrobe('w-bedroom', -8, 4.2, 8, 2, 'Phòng Ngủ Tầng 2');
-    makeWardrobe('w-living', 8, 0, 6, 1, 'Phòng Khách Tầng 1');
+    makeWardrobe('w-bedroom', -8, 4.2, 8, 2, '2nd Floor Bedroom');
+    makeWardrobe('w-living', 8, 0, 6, 1, '1st Floor Living Room');
 
-    // 1) Spawn Bedroom Props (Tầng 2)
+    // 1) Spawn Bedroom Props (2nd Floor)
     const bedGroup = new THREE.Group();
     bedGroup.position.set(0, 4.2, 9);
     const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.5, 3.4), woodPropMat);
@@ -879,7 +879,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     houseGroup.add(trunk);
     addPropCollider(0, 4.2, 6.7, 1.8, 0.8, 1.0);
 
-    // 2) Bathroom Props (Tầng 2)
+    // 2) Bathroom Props (2nd Floor)
     const bathtub = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.9, 2.8), new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.6 }));
     bathtub.position.set(-8, 4.65, -8);
     const toilet = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.1, 1.0), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.5 }));
@@ -887,7 +887,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     houseGroup.add(bathtub, toilet);
     addPropCollider(-8, 4.2, -8, 1.7, 1.0, 3.0);
 
-    // 3) Living Room Props (Tầng 1)
+    // 3) Living Room Props (1st Floor)
     // Stone Fireplace with glowing embers
     const fireplace = new THREE.Mesh(new THREE.BoxGeometry(3.2, 2.8, 1.2), stoneBasementMat);
     fireplace.position.set(0, 1.4, -11.3);
@@ -929,7 +929,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     houseGroup.add(clockGroup);
     addPropCollider(11, 0, 8, 1.0, 3.2, 0.8);
 
-    // 4) Kitchen & Dining Props (Tầng 1)
+    // 4) Kitchen & Dining Props (1st Floor)
     const tableGroup = new THREE.Group();
     tableGroup.position.set(-7, 0, -6);
     const tableTop = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.15, 2.0), woodPropMat);
@@ -956,7 +956,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     houseGroup.add(counter, fridge);
     addPropCollider(-10.8, 0, -6, 1.4, 2.4, 5.5);
 
-    // 5) Basement Props (Tầng Hầm)
+    // 5) Basement Props (Basement Dungeon)
     // Carpenter Workbench
     const bench = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.0, 1.6), woodPropMat);
     bench.position.set(0, -3.7, -8);
@@ -996,13 +996,13 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
     const talismanItems: PaperTalismanItem[] = [];
 
     const spawnLocations = [
-      { pos: new THREE.Vector3(-7, 1.25, -6), room: 'Bàn Ăn Nhà Bếp (Tầng 1)', floor: 1 },
-      { pos: new THREE.Vector3(0, 5.25, 9), room: 'Đầu Giường Phòng Ngủ (Tầng 2)', floor: 2 },
-      { pos: new THREE.Vector3(0, -2.9, -8), room: 'Bàn Thợ Mộc (Tầng Hầm)', floor: 0 },
-      { pos: new THREE.Vector3(5.5, 0.75, 2), room: 'Bàn Trà Phòng Khách (Tầng 1)', floor: 1 },
-      { pos: new THREE.Vector3(-7, -3.2, -7), room: 'Ngục Giam Khung Xương (Tầng Hầm)', floor: 0 },
-      { pos: new THREE.Vector3(3, 5.9, 9), room: 'Kệ Sách Cổ Tầng 2', floor: 2 },
-      { pos: new THREE.Vector3(-8, 5.25, 4.5), room: 'Bàn Viết Cổ Điển (Tầng 2)', floor: 2 }
+      { pos: new THREE.Vector3(-7, 1.25, -6), room: '1st Floor Kitchen Table', floor: 1 },
+      { pos: new THREE.Vector3(0, 5.25, 9), room: '2nd Floor Bedside', floor: 2 },
+      { pos: new THREE.Vector3(0, -2.9, -8), room: 'Basement Workbench', floor: 0 },
+      { pos: new THREE.Vector3(5.5, 0.75, 2), room: '1st Floor Living Table', floor: 1 },
+      { pos: new THREE.Vector3(-7, -3.2, -7), room: 'Basement Skeleton Cell', floor: 0 },
+      { pos: new THREE.Vector3(3, 5.9, 9), room: '2nd Floor Ancient Bookshelf', floor: 2 },
+      { pos: new THREE.Vector3(-8, 5.25, 4.5), room: '2nd Floor Classic Desk', floor: 2 }
     ];
 
     const decoyChars = ['坏', '怪', '危', '险', '逃', '锁', '鬼'];
@@ -1071,7 +1071,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         id: `paper-decoy-${dIdx}`,
         char: decoyCh,
         pinyin: '',
-        meaning: 'Chữ không khớp bùa',
+        meaning: 'Unmatched decoy glyph',
         isTarget: false,
         orderIndex: -1,
         roomName: loc.room,
@@ -1155,15 +1155,15 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
 
     // Granny Multi-Floor Patrol Nodes
     const patrolNodes = [
-      { pos: new THREE.Vector3(5, 0, 2), floor: 1, name: 'Phòng Khách Tầng 1' },
-      { pos: new THREE.Vector3(0, 0, 7), floor: 1, name: 'Sảnh Cửa Chính' },
-      { pos: new THREE.Vector3(-6, 0, -5), floor: 1, name: 'Bếp Ăn Tầng 1' },
-      { pos: new THREE.Vector3(0, 4.2, 7), floor: 2, name: 'Phòng Ngủ Tầng 2' },
-      { pos: new THREE.Vector3(-5, 4.2, -1), floor: 2, name: 'Phòng Tắm Tầng 2' },
-      { pos: new THREE.Vector3(5, 4.2, 6), floor: 2, name: 'Hành Lang Tầng 2' },
-      { pos: new THREE.Vector3(0, -4.2, -6), floor: 0, name: 'Bàn Thợ Mộc Hầm' },
-      { pos: new THREE.Vector3(-6, -4.2, -3), floor: 0, name: 'Phòng Giam Hầm' },
-      { pos: new THREE.Vector3(6, -4.2, 4), floor: 0, name: 'Kho Thùng Hầm' }
+      { pos: new THREE.Vector3(5, 0, 2), floor: 1, name: '1st Floor Living Room' },
+      { pos: new THREE.Vector3(0, 0, 7), floor: 1, name: 'Main Entrance Hall' },
+      { pos: new THREE.Vector3(-6, 0, -5), floor: 1, name: '1st Floor Kitchen' },
+      { pos: new THREE.Vector3(0, 4.2, 7), floor: 2, name: '2nd Floor Bedroom' },
+      { pos: new THREE.Vector3(-5, 4.2, -1), floor: 2, name: '2nd Floor Bathroom' },
+      { pos: new THREE.Vector3(5, 4.2, 6), floor: 2, name: '2nd Floor Corridor' },
+      { pos: new THREE.Vector3(0, -4.2, -6), floor: 0, name: 'Basement Workbench' },
+      { pos: new THREE.Vector3(-6, -4.2, -3), floor: 0, name: 'Basement Prison Cell' },
+      { pos: new THREE.Vector3(6, -4.2, 4), floor: 0, name: 'Basement Storage Vault' }
     ];
     let patrolIdx = 0;
     let grannySpeed = 0.028;
@@ -1287,7 +1287,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
       if (now - lastHowlTime > 32000) {
         lastHowlTime = now + (Math.random() * 14000); // 32 - 46 seconds interval
         playHorrorHowl();
-        setGrannyAlertMsg('Tiếng hú ma quái rợn người vọng qua các hành lang lạnh buốt...');
+        setGrannyAlertMsg('A chilling spectral howl echoes through the freezing corridors...');
         setTimeout(() => setGrannyAlertMsg(null), 4000);
       }
 
@@ -1334,7 +1334,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           camera.position.y += Math.sin(bobbingTimer) * 0.015;
 
           if (isSprinting && Math.random() < 0.035) {
-            setGrannyAlertMsg('Granny nghe thấy tiếng bước chân chạy dồn dập!');
+            setGrannyAlertMsg('Granny heard rapid sprinting footsteps!');
             playSfx('alert');
             setTimeout(() => setGrannyAlertMsg(null), 3000);
           }
@@ -1671,7 +1671,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           className="absolute top-20 left-1/2 -translate-x-1/2 z-25 bg-[#0b0f19]/90 border border-cyan-500/50 px-5 py-2 rounded-2xl text-xs text-cyan-300 font-bold flex items-center gap-2 cursor-pointer hover:bg-[#161F30] backdrop-blur-md shadow-xl transition"
         >
           <MousePointer className="w-4 h-4 text-cyan-400 animate-pulse" />
-          <span>Click chuột vào màn hình để khóa góc nhìn 3D (FPS Mode)</span>
+          <span>Click canvas to lock 3D cursor (FPS Mode)</span>
         </div>
       )}
 
@@ -1690,7 +1690,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
             💀
           </div>
           <div className="text-4xl font-black text-red-500 uppercase tracking-widest mt-4 font-mono animate-ping">
-            GRANNY ĐÃ BẮT ĐƯỢC BẠN!
+            GRANNY HAS CAUGHT YOU!
           </div>
         </div>
       )}
@@ -1701,7 +1701,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-bold text-red-400 uppercase tracking-widest flex items-center gap-1">
               <Lock className="w-3.5 h-3.5 text-red-400" />
-              MẬT MÃ CỔ BÙA MỞ KHÓA CỔNG GRANNY:
+              ANCIENT GLYPH CIPHER TO UNLOCK PORTAL:
             </span>
           </div>
           <div className="flex items-baseline gap-3 mt-0.5">
@@ -1742,7 +1742,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           onClick={handleExit}
           className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#0b0f19]/85 hover:bg-[#161F30] border border-gray-700 text-xs font-bold text-gray-200 backdrop-blur-md transition cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" /> Thoát Game
+          <ArrowLeft className="w-4 h-4" /> Exit Game
         </button>
 
         <button
@@ -1762,7 +1762,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         {grannyOnSameFloor && (
           <div className="bg-red-950/90 border border-red-500/60 px-3 py-1.5 rounded-2xl text-[11px] font-black text-red-300 backdrop-blur-md flex items-center gap-1.5 animate-pulse">
             <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-            <span>GRANNY ĐANG Ở CÙNG TẦNG VỚI BẠN!</span>
+            <span>GRANNY IS ON THE SAME FLOOR AS YOU!</span>
           </div>
         )}
       </div>
@@ -1773,7 +1773,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         <div className="bg-[#0B0F19]/95 border-2 border-cyan-500/40 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md flex flex-col items-center">
           <div className="w-full flex items-center justify-between gap-3 pb-1.5 px-1 border-b border-gray-800">
             <span className="text-[10px] font-black text-cyan-400 tracking-wider flex items-center gap-1 uppercase">
-              <Compass className="w-3 h-3 text-cyan-400" /> BẢN ĐỒ DINH THỰ
+              <Compass className="w-3 h-3 text-cyan-400" /> MANSION RADAR
             </span>
             <button
               onClick={() => setIsMinimapExpanded(!isMinimapExpanded)}
@@ -1793,10 +1793,10 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
 
           {/* Legend */}
           <div className="flex items-center gap-3 pt-2 text-[9px] text-gray-400 font-mono">
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-400" /> Bạn</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-400" /> You</span>
             <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500" /> Granny</span>
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400" /> Bùa</span>
-            <span className="flex items-center gap-1"><span className="w-2 h-2 bg-purple-500" /> Tủ</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400" /> Rune</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 bg-purple-500" /> Wardrobe</span>
           </div>
         </div>
 
@@ -1804,7 +1804,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 bg-[#0b0f19]/85 border border-gray-700 rounded-2xl px-3 py-1.5 text-xs text-amber-300 backdrop-blur-md">
             <Flashlight className={`w-4 h-4 ${flashlightOn ? 'text-amber-400' : 'text-gray-600'}`} />
-            <span>F: {flashlightOn ? `SIÊU SÁNG (${battery}%)` : 'TẮT'}</span>
+            <span>F: {flashlightOn ? `BEAM (${battery}%)` : 'OFF'}</span>
           </div>
 
           <div className="flex items-center gap-2 bg-[#0b0f19]/85 border border-red-500/40 rounded-2xl px-3 py-1.5 backdrop-blur-md">
@@ -1818,7 +1818,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
           </div>
 
           <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-2xl px-3 py-1.5 text-cyan-300 font-mono text-xs font-bold backdrop-blur-md">
-            Điểm: {score}
+            Score: {score}
           </div>
         </div>
       </div>
@@ -1839,7 +1839,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
             className="bg-[#1c120c]/95 border-2 border-amber-500 text-amber-300 text-xs font-bold px-6 py-3 rounded-2xl cursor-pointer hover:bg-amber-950/60 shadow-2xl transition animate-pulse flex items-center gap-2"
           >
             <Eye className="w-4 h-4 text-amber-400" />
-            <span>ĐANG TRỐN TRONG TỦ QUẦN ÁO (Nhấn [R] hoặc Click để bước ra ngoài)</span>
+            <span>HIDING IN WARDROBE (Press [R] or Click to step outside)</span>
           </button>
         </div>
       )}
@@ -1854,7 +1854,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
             >
               <FileText className="w-5 h-5 text-yellow-300" />
               <span>
-                Nhấn <strong>[E]</strong> hoặc Bấm vào đây để nhặt Mảnh Giấy Cổ Tự: <span className="text-yellow-200 text-2xl font-black">{nearbyPaper.char}</span> ({nearbyPaper.roomName})
+                Press <strong>[E]</strong> or Click here to collect Ancient Paper Glyph: <span className="text-yellow-200 text-2xl font-black">{nearbyPaper.char}</span> ({nearbyPaper.roomName})
               </span>
             </button>
           )}
@@ -1865,7 +1865,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
               className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black px-7 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-bounce cursor-pointer border-2 border-cyan-300 transition transform hover:scale-105"
             >
               <Lock className="w-5 h-5 text-yellow-300" />
-              <span>Nhấn <strong>[E]</strong> hoặc Bấm vào đây để dán Mảnh Giấy mở khóa Cổng Thoát Hiểm</span>
+              <span>Press <strong>[E]</strong> or Click here to place Glyph and unlock Escape Portal</span>
             </button>
           )}
 
@@ -1875,7 +1875,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
               className="bg-purple-900 hover:bg-purple-800 border-2 border-purple-400 text-white font-black px-6 py-2.5 rounded-full shadow-2xl flex items-center gap-2.5 cursor-pointer transition transform hover:scale-105"
             >
               <Eye className="w-5 h-5 text-purple-300" />
-              <span>Nhấn <strong>[R]</strong> hoặc Bấm vào đây để chui vào Tủ Quần Áo trốn Granny</span>
+              <span>Press <strong>[R]</strong> or Click here to hide in Wardrobe from Granny</span>
             </button>
           )}
         </div>
@@ -1884,10 +1884,10 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
       {/* BOTTOM INVENTORY BAR */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-[#0B0F19]/90 border border-gray-800 rounded-2xl px-4 py-2 backdrop-blur-md flex items-center gap-3">
         <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-          <FileText className="w-3.5 h-3.5 text-amber-400" /> Túi Giấy Cổ Tự:
+          <FileText className="w-3.5 h-3.5 text-amber-400" /> Glyph Inventory:
         </span>
         {collectedPapers.length === 0 ? (
-          <span className="text-xs text-gray-500 italic">Chưa nhặt mảnh giấy nào trong nhà Granny...</span>
+          <span className="text-xs text-gray-500 italic">No glyph fragments collected yet...</span>
         ) : (
           collectedPapers.map((paper) => (
             <div
@@ -1900,7 +1900,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
               }`}
             >
               <span className="text-base font-black">{paper.char}</span>
-              <span className="text-[10px] text-gray-400">({paper.pinyin || 'giả'})</span>
+              <span className="text-[10px] text-gray-400">({paper.pinyin || 'decoy'})</span>
             </div>
           ))
         )}
@@ -1916,7 +1916,7 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
 
             <div className="p-6 bg-[#eed9a2] text-slate-900 rounded-2xl border-4 border-amber-800/80 shadow-inner">
               <span className="text-xs font-serif font-bold text-red-800 uppercase block tracking-widest mb-2">
-                ★ BÙA CHÚ CỔ TỰ GRANNY ★
+                ★ ANCIENT GRANNY GLYPH ★
               </span>
               <h2 className="text-7xl font-black font-serif my-2 text-slate-950">
                 {inspectedPaper.char}
@@ -1934,13 +1934,13 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
                 onClick={() => speakHanzi(inspectedPaper.char)}
                 className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
               >
-                <Volume1 className="w-4 h-4" /> Nghe Phát Âm
+                <Volume1 className="w-4 h-4" /> Pronounce
               </button>
               <button
                 onClick={() => setInspectedPaper(null)}
                 className="px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs transition cursor-pointer"
               >
-                Đóng
+                Close
               </button>
             </div>
           </div>
@@ -1949,8 +1949,8 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
 
       {/* MOVEMENT GUIDES */}
       <div className="absolute bottom-4 left-4 z-20 bg-[#0b0f19]/80 border border-gray-800 rounded-xl px-3 py-2 text-[11px] text-gray-400 backdrop-blur-md pointer-events-none">
-        <div><strong>W, A, S, D</strong>: Đi chậm • <strong>Shift</strong>: Chạy (gây tiếng động!)</div>
-        <div><strong>Chuột</strong>: Nhìn • <strong>F</strong>: Đèn pin • <strong>E</strong>: Nhặt/Mở khóa • <strong>R</strong>: Trốn vào tủ</div>
+        <div><strong>W, A, S, D</strong>: Walk • <strong>Shift</strong>: Sprint (makes noise!)</div>
+        <div><strong>Mouse</strong>: Look • <strong>F</strong>: Flashlight • <strong>E</strong>: Collect/Unlock • <strong>R</strong>: Hide in Wardrobe</div>
       </div>
 
       {/* SUCCESS OVERLAY */}
@@ -1960,9 +1960,9 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
             <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400 flex items-center justify-center mx-auto text-emerald-400">
               <CheckCircle className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-black text-white">BẠN ĐÃ MỞ KHÓA CỔNG VÀ TRỐN THOÁT!</h3>
+            <h3 className="text-2xl font-black text-white">YOU UNLOCKED THE PORTAL AND ESCAPED!</h3>
             <p className="text-sm text-gray-300">
-              Bạn đã dán đủ các mảnh giấy cổ tự <strong className="text-cyan-400 text-base">{activeVocab.target_text}</strong> ({activeVocab.meaning}) lên cánh cổng và phá giải toàn bộ xiềng xích của ngôi nhà ma Granny!
+              You placed all required glyphs <strong className="text-cyan-400 text-base">{activeVocab.target_text}</strong> ({activeVocab.meaning}) onto the mystic gate and banished the curse of Granny's haunted manor!
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
@@ -1974,13 +1974,13 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
                 }}
                 className="px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/30 cursor-pointer"
               >
-                Tiếp tục từ vựng tiếp theo
+                Next Vocabulary Mission
               </button>
               <button
                 onClick={handleExit}
                 className="px-6 py-3 rounded-2xl bg-[#1e293b] hover:bg-[#334155] text-gray-300 font-bold text-sm transition cursor-pointer"
               >
-                Về Menu
+                Return to Menu
               </button>
             </div>
           </div>
@@ -1994,9 +1994,9 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
             <div className="w-16 h-16 rounded-full bg-red-600/20 border border-red-500 flex items-center justify-center mx-auto text-red-500 animate-bounce">
               <ShieldAlert className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-black text-red-400">BẠN ĐÃ BỊ GRANNY BẮT GẶP!</h3>
+            <h3 className="text-2xl font-black text-red-400">GRANNY CAUGHT YOU!</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
-              Granny đã phục kích bạn trên cùng một tầng! Hãy chú ý tiếng bước chân, quan sát vệt hào quang đỏ và chui vào tủ quần áo kịp thời nhé!
+              Granny ambushed you on your floor! Listen closely to footsteps, watch for her crimson aura, and dive into a wardrobe in time!
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
@@ -2010,13 +2010,13 @@ export const GrannyEscapeGame: React.FC<GrannyEscapeGameProps> = ({
                 }}
                 className="px-6 py-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition shadow-lg shadow-red-600/30 cursor-pointer flex items-center gap-2"
               >
-                <RotateCcw className="w-4 h-4" /> Thử Lại Vòng Này
+                <RotateCcw className="w-4 h-4" /> Retry This Round
               </button>
               <button
                 onClick={handleExit}
                 className="px-6 py-3 rounded-2xl bg-[#1e293b] hover:bg-[#334155] text-gray-300 font-bold text-sm transition cursor-pointer"
               >
-                Về Menu
+                Return to Menu
               </button>
             </div>
           </div>

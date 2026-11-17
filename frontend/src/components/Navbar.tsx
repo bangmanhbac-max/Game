@@ -78,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div 
           onClick={() => handleMobileTabSelect('dashboard')}
           className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none shrink-0"
-          title="EduPlay - Trò chơi hóa học tập đa chiều"
+          title="EduPlay - Multidimensional Gamified Learning Platform"
         >
           <div className="w-9 h-9 sm:w-10 sm:h-10 2xl:w-11 2xl:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-purple-600 to-pink-500 p-0.5 shadow-lg shadow-cyan-500/30 group-hover:scale-105 group-hover:shadow-cyan-400/50 transition-all duration-300 shrink-0">
             <img 
@@ -96,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 4K
               </span>
             </div>
-            <p className="text-[10px] 2xl:text-[11px] text-gray-400 -mt-0.5 hidden xl:block">Trò chơi hóa học tập đa chiều</p>
+            <p className="text-[10px] 2xl:text-[11px] text-gray-400 -mt-0.5 hidden xl:block">Multidimensional Gamified Learning</p>
           </div>
         </div>
 
@@ -111,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Gamepad2 className="w-3.5 h-3.5" />
-            <span>Kho Game</span>
+            <span>Game Universe</span>
           </button>
 
           <button
@@ -132,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Quick Play Tab Icons */}
           <button
             onClick={() => onSelectTab('chicken-shooter')}
-            title="Bắn Gà Luyện Gõ Phím 4K"
+            title="Stark Galaxy Typist 4K"
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition min-h-[38px] ${
               activeTab === 'chicken-shooter'
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
@@ -140,12 +140,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <span>🚀</span>
-            <span>Bắn Gà</span>
+            <span>Stark Typist</span>
           </button>
 
           <button
             onClick={() => onSelectTab('magic-touch')}
-            title="Vẽ Nét Phép Thuật Doctor Strange"
+            title="Doctor Strange Mystic Rune Slicer"
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition min-h-[38px] ${
               activeTab === 'magic-touch'
                 ? 'bg-pink-500/20 text-pink-300 border border-pink-500/40'
@@ -153,12 +153,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Feather className="w-3.5 h-3.5 text-pink-400" />
-            <span>Vẽ Phép</span>
+            <span>Mystic Rune</span>
           </button>
 
           <button
             onClick={() => onSelectTab('quiz-arena')}
-            title="Đấu Trường Speed Quiz"
+            title="Speed Quiz Arena"
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition min-h-[38px] ${
               activeTab === 'quiz-arena'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
@@ -166,12 +166,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Quiz</span>
+            <span>Speed Quiz</span>
           </button>
 
           <button
             onClick={() => onSelectTab('granny-forest')}
-            title="Trốn Thoát Rừng Ma Granny 3D"
+            title="Scarlet Ghost Forest 3D Escape"
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition min-h-[38px] ${
               activeTab === 'granny-forest'
                 ? 'bg-red-500/20 text-red-300 border border-red-500/40 shadow-sm shadow-red-500/20'
@@ -179,12 +179,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Ghost className="w-3.5 h-3.5 text-red-400" />
-            <span>Rừng Ma 3D</span>
+            <span>Ghost Forest 3D</span>
           </button>
 
           <button
             onClick={() => onSelectTab('flashcard')}
-            title="Thẻ Ghi Nhớ Flashcard 3D Đa Chiều"
+            title="3D Multi-Dimensional Spaced Repetition Flashcards"
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition min-h-[38px] ${
               activeTab === 'flashcard'
                 ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm shadow-blue-500/20'
@@ -203,25 +203,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-1 bg-[#161F30]/80 p-1 rounded-xl border border-gray-800">
             <button
               onClick={onOpenDocuments}
-              title="Quản Lý Kho File & Bộ Từ Đã Tải Lên"
+              title="Uploaded Files & Custom Decks Vault"
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-800/60 text-xs font-semibold transition min-h-[36px]"
             >
               <FolderOpen className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden xl:inline">Kho File</span>
+              <span className="hidden xl:inline">Doc Vault</span>
             </button>
 
             <button
               onClick={onOpenCommunity}
-              title="Kênh Chat Thế Giới & Kết Bạn"
+              title="Global Community Chat & Friends"
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-300 hover:text-purple-400 hover:bg-gray-800/60 text-xs font-semibold transition min-h-[36px]"
             >
               <Users className="w-3.5 h-3.5 text-purple-400" />
-              <span className="hidden xl:inline">Cộng Đồng</span>
+              <span className="hidden xl:inline">Community</span>
             </button>
 
             <button
               onClick={onOpenDbAdmin}
-              title="Quản Trị Cơ Sở Dữ Liệu SQLite Qua Web"
+              title="SQLite Database Web Admin"
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-amber-300 hover:text-amber-200 hover:bg-amber-950/40 text-xs font-bold transition min-h-[36px]"
             >
               <Database className="w-3.5 h-3.5 text-amber-400" />
@@ -230,11 +230,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={onOpenContact}
-              title="Trang Liên Hệ & Phản Hồi Hỗ Trợ"
+              title="Contact Support & Feedback"
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-300 hover:text-pink-400 hover:bg-gray-800/60 text-xs font-semibold transition min-h-[36px]"
             >
               <Mail className="w-3.5 h-3.5 text-pink-400" />
-              <span className="hidden xl:inline">Liên Hệ</span>
+              <span className="hidden xl:inline">Contact</span>
             </button>
           </div>
 
@@ -243,39 +243,39 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="tour-guide-btn"
               onClick={onStartTour}
-              title="Khởi động Hướng Dẫn Ánh Sáng Hội Tụ (Spotlight Tour)"
+              title="Launch Guided Spotlight Tour"
               className="flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-cyan-400/50 hover:border-cyan-300 text-cyan-300 text-xs font-bold transition hover:bg-cyan-500/30 shadow-md shadow-cyan-500/10 cursor-pointer min-h-[40px] sm:min-h-[42px] group"
             >
               <Compass className="w-4 h-4 text-cyan-400 group-hover:rotate-45 transition-transform duration-300" />
-              <span className="hidden sm:inline">Hướng Dẫn</span>
+              <span className="hidden sm:inline">Tour</span>
             </button>
           )}
 
-          {/* Quick Leaderboard Button (Always Accessible with 44px touch target) */}
+          {/* Quick Leaderboard Button */}
           <button
             id="tour-leaderboard"
             onClick={onOpenLeaderboard}
-            title="Bảng Vinh Danh Top Điểm Số 4K"
+            title="4K Hall of Fame Leaderboard"
             className="flex items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#161F30] border border-amber-500/30 hover:border-amber-400 text-amber-300 text-xs font-bold transition hover:bg-amber-500/10 shadow-md cursor-pointer min-h-[40px] sm:min-h-[42px]"
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="hidden sm:inline">BXH</span>
+            <span className="hidden sm:inline">Ranking</span>
           </button>
 
-          {/* Quick Sound Toggle on Header (Min 40px touch area) */}
+          {/* Quick Sound Toggle */}
           <button
             onClick={onToggleSound}
-            title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
             className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#161F30] border border-gray-800 text-gray-300 hover:text-cyan-400 hover:bg-gray-800/60 transition cursor-pointer"
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
           </button>
 
-          {/* Desktop Extra Utilities: Dolphin & API Key (Hidden on Mobile, Moved to Mobile Menu) */}
+          {/* Desktop Extra Utilities: Dolphin & API Key */}
           <div className="hidden lg:flex items-center gap-1 bg-[#161F30]/80 p-1 rounded-xl border border-gray-800">
             <button
               onClick={onToggleDolphin}
-              title={isDolphinActive ? 'Tắt Cá Heo & Chuột Ngôi Sao VN' : 'Bật Cá Heo & Chuột Ngôi Sao VN'}
+              title={isDolphinActive ? 'Disable Star Cursor & Dolphin' : 'Enable Star Cursor & Dolphin'}
               className={`flex items-center justify-center w-8 h-8 rounded-lg transition ${
                 isDolphinActive
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm'
@@ -287,7 +287,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={onOpenApiKeyModal}
-              title="Cấu hình Gemini API Key"
+              title="Configure Gemini API Key"
               className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-800/60 transition"
             >
               <Key className="w-3.5 h-3.5" />
@@ -303,14 +303,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black text-xs sm:text-xs 2xl:text-sm transition shadow-lg shadow-cyan-500/25 cursor-pointer min-h-[40px]"
             >
               <LogIn className="w-3.5 h-3.5 text-black" />
-              <span className="hidden xs:inline sm:inline">Đăng Nhập</span>
+              <span className="hidden xs:inline sm:inline">Sign In</span>
             </button>
           )}
 
-          {/* Mobile Hamburger Menu Toggle Button (Visible only < 1024px) */}
+          {/* Mobile Hamburger Menu Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Mở menu điều hướng"
+            aria-label="Toggle navigation menu"
             className="lg:hidden flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#161F30] border border-cyan-500/40 text-cyan-400 hover:text-white hover:bg-cyan-500/20 transition cursor-pointer"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5 text-pink-400" /> : <Menu className="w-5 h-5" />}
@@ -326,8 +326,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Section 1: Main Game Modes & Studio */}
           <div>
             <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-1 flex items-center justify-between">
-              <span>Đấu Trường Trò Chơi</span>
-              <span className="text-cyan-400 text-[10px]">7 Chế Độ 4K</span>
+              <span>Game Arena</span>
+              <span className="text-cyan-400 text-[10px]">7 4K Modes</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -339,7 +339,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Gamepad2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                <span>Kho Game</span>
+                <span>Game Universe</span>
               </button>
 
               <button
@@ -363,7 +363,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <span className="text-base">🚀</span>
-                <span>Bắn Gà Stark</span>
+                <span>Stark Typist</span>
               </button>
 
               <button
@@ -375,7 +375,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Feather className="w-4 h-4 text-pink-400 shrink-0" />
-                <span>Vẽ Phép</span>
+                <span>Mystic Rune</span>
               </button>
 
               <button
@@ -399,7 +399,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Ghost className="w-4 h-4 text-red-400 shrink-0" />
-                <span>Rừng Ma 3D</span>
+                <span>Ghost Forest 3D</span>
               </button>
 
               <button
@@ -411,7 +411,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Layers className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>Flashcard 3D Đa Chiều (Spaced Repetition)</span>
+                <span>3D Spaced Repetition Flashcards</span>
               </button>
             </div>
           </div>
@@ -427,11 +427,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full flex items-center justify-center gap-2 p-3 mb-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-cyan-400/50 text-cyan-300 text-xs font-bold min-h-[44px]"
               >
                 <Compass className="w-4 h-4 text-cyan-400" />
-                <span>Khám Phá Hướng Dẫn Ánh Sáng Hội Tụ (Tour)</span>
+                <span>Launch Interactive Spotlight Tour</span>
               </button>
             )}
             <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">
-              Quản Trị & Kết Nối
+              Management & Vault
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -439,7 +439,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="flex items-center gap-2 p-3 rounded-xl bg-[#161F30]/80 border border-gray-800 text-gray-200 hover:text-cyan-400 text-xs font-semibold min-h-[44px]"
               >
                 <FolderOpen className="w-4 h-4 text-cyan-400 shrink-0" />
-                <span>Kho File & Từ</span>
+                <span>Doc Vault</span>
               </button>
 
               <button
@@ -447,7 +447,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="flex items-center gap-2 p-3 rounded-xl bg-[#161F30]/80 border border-gray-800 text-gray-200 hover:text-purple-400 text-xs font-semibold min-h-[44px]"
               >
                 <Users className="w-4 h-4 text-purple-400 shrink-0" />
-                <span>Cộng Đồng</span>
+                <span>Community</span>
               </button>
 
               <button
@@ -463,7 +463,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="flex items-center gap-2 p-3 rounded-xl bg-[#161F30]/80 border border-gray-800 text-gray-200 hover:text-pink-400 text-xs font-semibold min-h-[44px]"
               >
                 <Mail className="w-4 h-4 text-pink-400 shrink-0" />
-                <span>Liên Hệ</span>
+                <span>Contact</span>
               </button>
             </div>
           </div>
@@ -479,7 +479,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <span>🐬</span>
-              <span>{isDolphinActive ? 'Bật Sao VN' : 'Tắt Sao VN'}</span>
+              <span>{isDolphinActive ? 'Star Cursor ON' : 'Star Cursor OFF'}</span>
             </button>
 
             <button

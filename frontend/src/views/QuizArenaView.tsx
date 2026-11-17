@@ -111,11 +111,11 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
           className="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2 rounded-xl bg-[#161F30] border border-gray-800 transition hover:border-emerald-500/40"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Thoát Quiz</span>
+          <span>Exit Quiz</span>
         </button>
 
         <div className="flex-1">
-          <ScoreHUD stats={stats} modeName="⚡ ĐẤU TRƯỜNG SPEED QUIZ (4K)" />
+          <ScoreHUD stats={stats} modeName="⚡ SPEED QUIZ ARENA (4K)" />
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
           <div>
             <div className="flex items-center justify-between text-xs 3xl:text-sm font-bold text-gray-400 mb-3">
               <span className="text-emerald-400">
-                CÂU HỎI {currentIndex + 1} / {totalQuestions}
+                QUESTION {currentIndex + 1} / {totalQuestions}
               </span>
               <div className="flex items-center gap-2 text-amber-300 font-mono">
                 <Clock className="w-4 h-4" />
@@ -190,18 +190,18 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
               <div className="flex items-center gap-2">
                 {answerResult.isCorrect ? (
                   <span className="text-xs 3xl:text-sm font-extrabold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/30">
-                    🎉 CHÍNH XÁC (+{currentQuestion.points + timeLeft * 10} điểm)
+                    🎉 CORRECT (+{currentQuestion.points + timeLeft * 10} pts)
                   </span>
                 ) : (
                   <span className="text-xs 3xl:text-sm font-extrabold text-red-400 bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/30">
-                    ❌ CHƯA CHÍNH XÁC
+                    ❌ INCORRECT
                   </span>
                 )}
               </div>
 
               {answerResult.explanation && (
                 <p className="text-sm 3xl:text-base text-gray-300 leading-relaxed">
-                  💡 <b className="text-white">Giải thích:</b> {answerResult.explanation}
+                  💡 <b className="text-white">Explanation:</b> {answerResult.explanation}
                 </p>
               )}
 
@@ -210,7 +210,7 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
                   onClick={handleNextQuestion}
                   className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-black font-extrabold px-7 py-3 rounded-xl text-sm 3xl:text-base transition shadow-lg shadow-emerald-500/25 cursor-pointer"
                 >
-                  <span>{currentIndex + 1 < totalQuestions ? 'Câu Tiếp Theo' : 'Xem Kết Quả Tổng'}</span>
+                  <span>{currentIndex + 1 < totalQuestions ? 'Next Question' : 'View Final Results'}</span>
                   <ArrowRight className="w-4 h-4 3xl:w-5 3xl:h-5" />
                 </button>
               </div>
@@ -228,17 +228,17 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
 
           <div>
             <h2 className="font-game text-3xl 3xl:text-4xl font-black text-white">
-              HOÀN THÀNH ĐẤU TRƯỜNG QUIZ!
+              QUIZ ARENA COMPLETED!
             </h2>
             <p className="text-sm 3xl:text-base text-gray-400 mt-2">
-              Bạn đã hoàn thành xuất sắc toàn bộ câu hỏi trong bộ kiến thức này.
+              You have successfully completed all questions in this curriculum deck.
             </p>
           </div>
 
           {/* Stats Summary Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
             <div className="bg-[#0B0F19] p-4 3xl:p-5 rounded-2xl border border-gray-800">
-              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Tổng Điểm</span>
+              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Total Score</span>
               <p className="font-game font-bold text-xl 3xl:text-2xl text-white">{stats.score.toLocaleString()}</p>
             </div>
 
@@ -248,12 +248,12 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
             </div>
 
             <div className="bg-[#0B0F19] p-4 3xl:p-5 rounded-2xl border border-gray-800">
-              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Độ Chính Xác</span>
+              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Accuracy</span>
               <p className="font-game font-bold text-xl 3xl:text-2xl text-emerald-400">{stats.accuracy}%</p>
             </div>
 
             <div className="bg-[#0B0F19] p-4 3xl:p-5 rounded-2xl border border-gray-800">
-              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Số Câu Đúng</span>
+              <span className="text-xs 3xl:text-sm text-gray-400 block mb-1">Correct Answers</span>
               <p className="font-game font-bold text-xl 3xl:text-2xl text-cyan-400">{stats.wordsDefeated} / {totalQuestions}</p>
             </div>
           </div>
@@ -264,14 +264,14 @@ export const QuizArenaView: React.FC<QuizArenaViewProps> = ({
               className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-black font-extrabold px-8 py-3.5 rounded-2xl text-sm 3xl:text-base transition shadow-xl shadow-emerald-500/25 cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>Luyện Tập Lại</span>
+              <span>Practice Again</span>
             </button>
 
             <button
               onClick={onBackToDashboard}
               className="flex items-center gap-2 bg-[#0B0F19] hover:bg-gray-800 text-white font-semibold px-8 py-3.5 rounded-2xl text-sm 3xl:text-base border border-gray-700 transition"
             >
-              <span>Về Trang Chủ</span>
+              <span>Return to Dashboard</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

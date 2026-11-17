@@ -50,7 +50,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [newDesc, setNewDesc] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // States cho thư viện 20 bộ bài học
+  // States for 20-lesson master curriculum library
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'hsk1' | 'hsk2' | 'hsk3' | 'english'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeModalTab, setActiveModalTab] = useState<'library' | 'manual'>('library');
@@ -66,7 +66,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }
     onSelectDeck(deck);
     setIsAddDeckModalOpen(false);
-    showToast(`Đã nạp bài học "${deck.title}" thành công!`);
+    showToast(`Loaded lesson "${deck.title}" successfully!`);
   };
 
   const handleAddAllCurriculum = () => {
@@ -77,7 +77,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         count++;
       }
     }
-    showToast(`Đã nạp toàn bộ 20 bộ bài học (${count} bài mới) vào hệ thống!`);
+    showToast(`Loaded all 20 curriculum lessons (${count} new decks) into library!`);
   };
 
   const filteredCurriculum = ALL_CURRICULUM_DECKS.filter((deck) => {
@@ -107,9 +107,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
     const title = newTitle.trim();
     const uniqueId = `pkg_custom_${Date.now()}`;
-    const sampleWord = newLang === 'zh-CN' ? '你好' : (newLang === 'en' ? 'Hello' : 'Xin chào');
-    const samplePhonetic = newLang === 'zh-CN' ? 'nǐ hǎo' : (newLang === 'en' ? '/həˈloʊ/' : 'xin chao');
-    const sampleType = newLang === 'zh-CN' ? 'nihao' : (newLang === 'en' ? 'hello' : 'xinchao');
+    const sampleWord = newLang === 'zh-CN' ? '你好' : (newLang === 'en' ? 'Hello' : 'Hello');
+    const samplePhonetic = newLang === 'zh-CN' ? 'nǐ hǎo' : (newLang === 'en' ? '/həˈloʊ/' : 'hello');
+    const sampleType = newLang === 'zh-CN' ? 'nihao' : (newLang === 'en' ? 'hello' : 'hello');
 
     const newPkg: LearningPackage = {
       package_id: uniqueId,
@@ -119,7 +119,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       vocabulary_deck: {
         id: `deck_v_${Date.now()}`,
         title,
-        description: newDesc.trim() || 'Bộ từ vựng tạo thủ công',
+        description: newDesc.trim() || 'Custom created vocabulary deck',
         target_language: newLang,
         items: [
           {
@@ -127,7 +127,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             target_text: sampleWord,
             phonetic: samplePhonetic,
             type_target: sampleType,
-            meaning: 'Xin chào',
+            meaning: 'Hello',
             difficulty: 1,
             stroke_gesture: 'horizontal',
             characters: newLang === 'zh-CN' ? ['你', '好'] : undefined
@@ -137,14 +137,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       quiz_deck: {
         id: `deck_q_${Date.now()}`,
         title: `Quiz: ${title}`,
-        description: 'Bộ câu hỏi trắc nghiệm kiểm tra phản xạ',
+        description: 'Reflex reaction quiz items',
         items: [
           {
             id: `q_${Date.now()}_1`,
-            question: `Ý nghĩa chính xác của "${sampleWord}" là gì?`,
-            options: ['A. Xin chào', 'B. Tạm biệt', 'C. Cảm ơn', 'D. Xin lỗi'],
+            question: `What is the correct meaning of "${sampleWord}"?`,
+            options: ['A. Hello', 'B. Goodbye', 'C. Thank you', 'D. Sorry'],
             correct_index: 0,
-            explanation: 'Từ chào hỏi căn bản nhất.',
+            explanation: 'Fundamental greeting phrase.',
             points: 100
           }
         ]
@@ -158,7 +158,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setIsAddDeckModalOpen(false);
     setNewTitle('');
     setNewDesc('');
-    showToast(`Đã tạo bộ từ "${title}"! Đang mở trình biên tập...`);
+    showToast(`Created custom deck "${title}"! Opening editor...`);
     onNavigateTab('upload');
   };
 
@@ -167,7 +167,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       onDeleteDeck(activeDeck.package_id);
     }
     setIsConfirmDeleteOpen(false);
-    showToast(`Đã xóa bộ bài học thành công!`);
+    showToast(`Successfully deleted learning deck!`);
   };
   return (
     <div className="space-y-6 sm:space-y-10 py-2 w-full mx-auto">
@@ -193,24 +193,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="relative z-10 max-w-3xl p-5 sm:p-8 lg:p-14 3xl:p-16">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[10px] sm:text-xs 3xl:text-sm font-black mb-3 sm:mb-5 shadow-lg shadow-cyan-500/20 backdrop-blur-md">
             <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-300 animate-pulse" />
-            <span>AVENGERS 4K ULTRA-HD EDITION • NỀN TẢNG HỌC TẬP THẾ HỆ MỚI</span>
+            <span>AVENGERS 4K ULTRA-HD EDITION • NEXT-GEN AI LEARNING PLATFORM</span>
           </div>
 
           <h1 className="font-game text-2xl sm:text-4xl lg:text-5xl 3xl:text-6xl font-black text-white leading-tight tracking-wide drop-shadow-md">
-            BIẾN MỌI TÀI LIỆU THÀNH <br />
+            TRANSFORM ANY DOCUMENT INTO <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-amber-300 to-red-500">
-              TRẬN CHIẾN SIÊU ANH HÙNG
+              EPIC SUPERHERO BATTLES
             </span>
           </h1>
 
           <p className="mt-3 sm:mt-5 text-xs sm:text-base 3xl:text-lg text-gray-200 leading-relaxed max-w-2xl drop-shadow">
-            Nạp file <span className="text-cyan-300 font-bold">PDF, DOCX, Ảnh chụp</span> hoặc dán nội dung. 
-            AI sẽ tức tốc phân tích và biến tài liệu thành các đấu trường đồ họa chân thực: 
+            Upload <span className="text-cyan-300 font-bold">PDF, DOCX, Scanned Images</span> or paste text. 
+            Gemini AI will instantly analyze vocabulary, syntax, and quiz questions into 4K gaming arenas: 
             <span className="text-amber-300 font-bold"> Iron Man Space Shooter</span>, 
             <span className="text-pink-300 font-bold"> Doctor Strange Magic Touch</span>, 
             <span className="text-emerald-300 font-bold"> Stark Tech Speed Quiz</span>, 
-            <span className="text-red-400 font-bold"> Trốn Thoát Rừng Ma 3D</span> và 
-            <span className="text-blue-400 font-bold"> Flashcard 3D Đa Chiều</span>!
+            <span className="text-red-400 font-bold"> Scarlet Ghost Forest 3D</span>, and 
+            <span className="text-blue-400 font-bold"> 3D Multi-Dimensional Flashcards</span>!
           </p>
 
           <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
@@ -220,7 +220,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm 3xl:text-base transition shadow-xl shadow-cyan-500/30 cursor-pointer hover:scale-105 min-h-[48px]"
             >
               <Sparkles className="w-5 h-5 text-black shrink-0" />
-              <span>Nạp File Tạo Game Với AI</span>
+              <span>Create AI Game From File</span>
             </button>
 
             <button
@@ -228,21 +228,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="flex items-center justify-center gap-2 bg-[#0B0F19]/80 hover:bg-[#161F30] text-white font-bold px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm 3xl:text-base border border-cyan-500/40 hover:border-cyan-400 transition shadow-lg backdrop-blur-md min-h-[48px]"
             >
               <Play className="w-4 h-4 text-cyan-400 fill-cyan-400 shrink-0" />
-              <span>Tham Chiến Ngay (4K)</span>
+              <span>Enter Battle (4K)</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 5 Game Modes Showcase with Responsive Grid (1 col Mobile, 2 col Tablet, 3 col Medium, 5 col Desktop) */}
+      {/* 5 Game Modes Showcase with Responsive Grid */}
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-4 sm:mb-6">
           <div>
             <h2 className="font-game text-lg sm:text-xl 3xl:text-2xl font-bold text-white tracking-wider flex items-center gap-2">
               <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
-              CÁC ĐẤU TRƯỜNG GAMING ĐỒ HỌA CAO (4K)
+              HIGH-FIDELITY GAMIFIED LEARNING ARENAS (4K)
             </h2>
-            <p className="text-xs 3xl:text-sm text-gray-400 mt-0.5">Nâng tầm trải nghiệm học từ vựng với visual bom tấn Hollywood</p>
+            <p className="text-xs 3xl:text-sm text-gray-400 mt-0.5">Elevate vocabulary memorization with Hollywood blockbuster visuals and AAA game mechanics</p>
           </div>
         </div>
 
@@ -250,7 +250,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           id="tour-games-grid"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 3xl:gap-6"
         >
-          {/* Game 1: Chicken Shooter (Iron Man Space Invaders) */}
+          {/* Game 1: Chicken Shooter */}
           <div
             onClick={() => onNavigateTab('chicken-shooter')}
             className="group relative overflow-hidden bg-[#161F30] border border-amber-500/30 hover:border-amber-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-amber-500/20 flex flex-col justify-between"
@@ -271,20 +271,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-4 sm:p-5 3xl:p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-game text-sm sm:text-base 3xl:text-lg font-bold text-amber-300 mb-2">
-                  BẮN GÀ LUYỆN GÕ PHÍM
+                  STARK GALAXY TYPIST
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Chiến đấu cơ Stark Nano-Armor đánh chặn đàn Drone mang từ vựng. Gõ đúng ký tự để khai hỏa tia Plasma!
+                  Stark Nano-Armor interceptor engaging drone fleets. Type words with precision to unleash particle laser strikes and master rapid spelling reflexes!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-amber-400 min-h-[36px]">
-                <span>Vào Buồng Lái</span>
+                <span>Enter Cockpit</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition" />
               </div>
             </div>
           </div>
 
-          {/* Game 2: Magic Touch (Doctor Strange Sanctum) */}
+          {/* Game 2: Magic Touch */}
           <div
             onClick={() => onNavigateTab('magic-touch')}
             className="group relative overflow-hidden bg-[#161F30] border border-pink-500/30 hover:border-pink-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-pink-500/20 flex flex-col justify-between"
@@ -305,20 +305,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-4 sm:p-5 3xl:p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-game text-sm sm:text-base 3xl:text-lg font-bold text-pink-300 mb-2">
-                  MAGIC TOUCH (VẼ PHÉP)
+                  DOCTOR STRANGE MYSTIC RUNE
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Vẽ tự do nét phép thuật (—, |, /, \, V, ^, O, ⚡) với hiệu ứng tia lửa Eldritch để phá nổ bóng bay ma thuật!
+                  Draw mystic gesture runes (—, |, /, \, V, ^, O, ⚡) with Eldritch spark particle VFX to slice flying balloons and build Chinese Hanzi stroke intuition.
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-pink-400 min-h-[36px]">
-                <span>Thi Triển Phép</span>
+                <span>Cast Mystic Runes</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition" />
               </div>
             </div>
           </div>
 
-          {/* Game 3: Speed Quiz Arena (Avengers Endgame Battle) */}
+          {/* Game 3: Speed Quiz Arena */}
           <div
             onClick={() => onNavigateTab('quiz-arena')}
             className="group relative overflow-hidden bg-[#161F30] border border-emerald-500/30 hover:border-emerald-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-emerald-500/20 flex flex-col justify-between"
@@ -342,17 +342,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   SPEED QUIZ ARENA
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Đấu trường trắc nghiệm phản xạ nhanh Stark Tech. Đánh giá độ thông hiểu và tích lũy Combo liên hoàn!
+                  Stark Tech rapid-fire trivia challenge. Test comprehensive vocabulary grasp and rack up combo multipliers before the clock expires!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-emerald-400 min-h-[36px]">
-                <span>Vào Đấu Trường</span>
+                <span>Enter Arena</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition" />
               </div>
             </div>
           </div>
 
-          {/* Game 4: Granny Escape 3D (Scarlet Witch Dark Multiverse) */}
+          {/* Game 4: Granny Escape 3D */}
           <div
             onClick={() => onNavigateTab('granny-forest')}
             className="group relative overflow-hidden bg-[#161F30] border border-red-500/40 hover:border-red-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-red-500/30 flex flex-col justify-between"
@@ -373,20 +373,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-4 sm:p-5 3xl:p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-game text-sm sm:text-base 3xl:text-lg font-bold text-red-400 mb-2">
-                  TRỐN THOÁT RỪNG MA 3D
+                  SCARLET GHOST FOREST 3D
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Đồ họa 3D 3 tầng rừng rậm. Bật đèn pin, né tránh ma quỷ Granny rình rập và nhặt cổ tự chữ Hán để mở khóa cổng!
+                  Immersive 3-tier forest graphics. Toggle flashlight, evade the stalking Granny specter, and collect ancient Hanzi glyphs to unlock the sanctuary portal!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-red-400 min-h-[36px]">
-                <span>Vào Rừng Ma</span>
+                <span>Enter Forest</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition" />
               </div>
             </div>
           </div>
 
-          {/* Game 5: Flashcard 3D Arena (Captain America Quantum Realm) */}
+          {/* Game 5: Flashcard 3D Arena */}
           <div
             onClick={() => onNavigateTab('flashcard')}
             className="group relative overflow-hidden bg-[#161F30] border border-blue-500/40 hover:border-blue-400 rounded-3xl transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-xl hover:shadow-blue-500/30 flex flex-col justify-between"
@@ -407,14 +407,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-4 sm:p-5 3xl:p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-game text-sm sm:text-base 3xl:text-lg font-bold text-blue-400 mb-2">
-                  FLASHCARD 3D ĐA CHIỀU
+                  3D MULTI-DIMENSIONAL FLASHCARD
                 </h3>
                 <p className="text-xs text-gray-300 leading-relaxed mb-4">
-                  Thẻ 3D lật 360°, bóc tách từng nét bút chữ cứng, phát âm audio chuẩn và lặp lại ngắt quãng Spaced Repetition!
+                  360° flip cards with stroke-by-stroke dissection, native pronunciation audio, and Spaced Repetition SRS optimization!
                 </p>
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-gray-800 text-xs font-bold text-blue-400 min-h-[36px]">
-                <span>Mở Flashcard</span>
+                <span>Open Flashcards</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition" />
               </div>
             </div>
@@ -435,10 +435,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  Gói Bài Học Đang Chọn
+                  Active Learning Deck
                 </span>
                 <span className="text-[11px] sm:text-xs text-gray-400">
-                  {activeDeck.vocabulary_deck?.items?.length || 0} từ vựng • {activeDeck.quiz_deck?.items?.length || 0} câu quiz
+                  {activeDeck.vocabulary_deck?.items?.length || 0} words • {activeDeck.quiz_deck?.items?.length || 0} quiz items
                 </span>
               </div>
               <h3 className="text-lg sm:text-xl 3xl:text-2xl font-bold text-white mt-1.5">{activeDeck.title}</h3>
@@ -447,7 +447,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="flex flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
-            {/* Bộ chọn danh sách các bộ bài học */}
+            {/* Deck Selector Dropdown */}
             <div className="relative min-w-[200px] flex-1 sm:flex-initial">
               <select
                 value={activeDeck.package_id}
@@ -459,55 +459,55 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               >
                 {decks.map((d) => (
                   <option key={d.package_id} value={d.package_id} className="bg-[#0B0F19] text-white">
-                    📚 {d.title} ({d.vocabulary_deck?.items?.length || 0} từ)
+                    📚 {d.title} ({d.vocabulary_deck?.items?.length || 0} words)
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Nút Thêm Bộ Từ Mới */}
+            {/* Add New Deck */}
             <button
               onClick={() => setIsAddDeckModalOpen(true)}
               className="flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/25 to-teal-500/25 hover:from-emerald-500/35 hover:to-teal-500/35 border border-emerald-400/60 text-emerald-300 hover:text-emerald-100 text-xs 3xl:text-sm font-bold transition min-h-[44px] shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
-              title="Thêm hoặc tạo một bộ từ vựng mới"
+              title="Add or create a new learning deck"
             >
               <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Thêm Bộ Từ</span>
+              <span>Add Deck</span>
             </button>
 
-            {/* Nút Chỉnh Sửa Bộ Từ */}
+            {/* Edit Deck */}
             <button
               onClick={() => onNavigateTab('upload')}
               className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-gray-700 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-xs 3xl:text-sm font-semibold text-gray-300 hover:text-cyan-300 transition min-h-[44px] cursor-pointer"
-              title="Chỉnh sửa nội dung, thêm/xóa từ vựng trong bộ này"
+              title="Edit vocabulary and quizzes in this deck"
             >
               <Edit3 className="w-4 h-4 text-cyan-400 shrink-0" />
-              <span>Chỉnh Sửa Bộ Từ</span>
+              <span>Edit Deck</span>
             </button>
 
-            {/* Nút Xóa Bộ Từ */}
+            {/* Delete Deck */}
             <button
               onClick={() => setIsConfirmDeleteOpen(true)}
               className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-red-500/40 hover:border-red-400 bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-red-100 text-xs 3xl:text-sm font-bold transition min-h-[44px] cursor-pointer hover:scale-105 active:scale-95"
-              title="Xóa bộ từ vựng đang chọn"
+              title="Delete active learning deck"
             >
               <Trash2 className="w-4 h-4 text-red-400 shrink-0" />
-              <span>Xóa Bộ Từ</span>
+              <span>Delete Deck</span>
             </button>
 
-            {/* Nút Chơi Ngay */}
+            {/* Play Now */}
             <button
               onClick={() => onNavigateTab('chicken-shooter')}
               className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black text-xs 3xl:text-sm font-black transition shadow-lg shadow-cyan-500/25 min-h-[44px] cursor-pointer hover:scale-105 active:scale-95"
             >
               <Zap className="w-4 h-4 fill-black shrink-0" />
-              <span>Chơi Ngay</span>
+              <span>Play Now</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Modal Thêm Bộ Từ Vựng Mới / Kho 20 Bài Học Chuẩn */}
+      {/* Modal Add New Vocabulary Deck / 20 Master Curriculum Decks */}
       {isAddDeckModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 animate-in fade-in">
           <div className="bg-[#0f172a] border border-cyan-500/40 rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl space-y-5 max-h-[92vh] flex flex-col overflow-hidden">
@@ -519,12 +519,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
-                    <span>Kho Học Liệu Mẫu & Thêm Bộ Từ Vựng</span>
+                    <span>Curated Lesson Vault & Add Deck</span>
                     <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                      20 Bài Học • 400 Từ Vựng Chuẩn
+                      20 Lessons • 400 Core Words
                     </span>
                   </h3>
-                  <p className="text-xs text-gray-400">Khám phá lộ trình Tiếng Trung HSK 1 - HSK 3 và Tiếng Anh chuyên đề</p>
+                  <p className="text-xs text-gray-400">Explore structured Chinese HSK 1 - HSK 3 & Specialized English curriculum, or build custom decks</p>
                 </div>
               </div>
               <button
@@ -548,7 +548,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   }`}
                 >
                   <BookOpen className="w-3.5 h-3.5" />
-                  <span>Kho 20 Bài Học Chuẩn (Có Sẵn)</span>
+                  <span>Curated 20 Master Lessons</span>
                 </button>
 
                 <button
@@ -561,7 +561,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   }`}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                  <span>Tự Tạo Bộ Từ Thủ Công</span>
+                  <span>Create Custom Deck</span>
                 </button>
               </div>
 
@@ -570,10 +570,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   type="button"
                   onClick={handleAddAllCurriculum}
                   className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold transition shadow-sm flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
-                  title="Thêm nhanh tất cả 20 bộ bài vào danh sách học"
+                  title="Load all 20 curriculum decks into your study list"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                  <span>⚡ Nạp Toàn Bộ 20 Bộ Bài Vào Học</span>
+                  <span>⚡ Load All 20 Decks Into Library</span>
                 </button>
               )}
             </div>
@@ -593,7 +593,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           : 'bg-[#162032] text-gray-400 hover:text-white'
                       }`}
                     >
-                      Tất Cả (20)
+                      All (20)
                     </button>
                     <button
                       type="button"
@@ -604,7 +604,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           : 'bg-[#162032] text-gray-400 hover:text-cyan-300'
                       }`}
                     >
-                      🇨🇳 HSK 1 (6 bài)
+                      🇨🇳 HSK 1 (6 Decks)
                     </button>
                     <button
                       type="button"
@@ -615,7 +615,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           : 'bg-[#162032] text-gray-400 hover:text-blue-300'
                       }`}
                     >
-                      🇨🇳 HSK 2 (5 bài)
+                      🇨🇳 HSK 2 (5 Decks)
                     </button>
                     <button
                       type="button"
@@ -626,7 +626,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           : 'bg-[#162032] text-gray-400 hover:text-purple-300'
                       }`}
                     >
-                      🇨🇳 HSK 3 (3 bài)
+                      🇨🇳 HSK 3 (3 Decks)
                     </button>
                     <button
                       type="button"
@@ -637,7 +637,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           : 'bg-[#162032] text-gray-400 hover:text-amber-300'
                       }`}
                     >
-                      🇬🇧 Tiếng Anh (6 bài)
+                      🇬🇧 English (6 Decks)
                     </button>
                   </div>
 
@@ -647,7 +647,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Tìm bài học hoặc từ vựng..."
+                      placeholder="Search lessons or vocabulary..."
                       className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
                     />
                   </div>
@@ -685,10 +685,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                             <div className="flex items-center gap-2 mt-2">
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                {deck.vocabulary_deck.items.length} từ vựng
+                                {deck.vocabulary_deck.items.length} words
                               </span>
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                                {deck.quiz_deck.items.length} câu quiz
+                                {deck.quiz_deck.items.length} quizzes
                               </span>
                             </div>
 
@@ -708,15 +708,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             {isCurrent ? (
                               <span className="text-xs text-cyan-300 font-bold flex items-center gap-1">
                                 <Check className="w-3.5 h-3.5 text-cyan-400" />
-                                Đang chọn học bài này
+                                Active Learning Deck
                               </span>
                             ) : isAlreadyInList ? (
                               <span className="text-[11px] text-emerald-400 font-medium">
-                                ✓ Đã có trong danh sách
+                                ✓ In Your Library
                               </span>
                             ) : (
                               <span className="text-[11px] text-gray-500">
-                                Bài học mẫu có sẵn
+                                Curated Master Lesson
                               </span>
                             )}
 
@@ -729,7 +729,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold shadow-sm'
                               }`}
                             >
-                              <span>{isCurrent ? 'Học Ngay' : '+ Nạp Bài Này'}</span>
+                              <span>{isCurrent ? 'Study Now' : '+ Load Deck'}</span>
                             </button>
                           </div>
                         </div>
@@ -739,7 +739,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                   {filteredCurriculum.length === 0 && (
                     <div className="py-12 text-center text-gray-400 text-xs">
-                      Không tìm thấy bài học phù hợp với từ khóa "{searchQuery}".
+                      No lessons found matching "{searchQuery}".
                     </div>
                   )}
                 </div>
@@ -751,37 +751,37 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <form onSubmit={handleCreateManualDeck} className="space-y-4 py-2 overflow-y-auto">
                 <div className="p-4 rounded-2xl bg-[#131d2e] border border-gray-800 space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">Tên bộ từ vựng (*):</label>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Deck Title (*):</label>
                     <input
                       type="text"
                       required
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
-                      placeholder="Vd: Tiếng Trung HSK 2 Căn Bản, IELTS Speaking, Từ Vựng Lập Trình..."
+                      placeholder="e.g.: HSK 2 Core Vocabulary, IELTS Speaking, Tech Vocabulary..."
                       className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">Ngôn ngữ mục tiêu:</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">Target Language:</label>
                       <select
                         value={newLang}
                         onChange={(e) => setNewLang(e.target.value)}
                         className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none transition"
                       >
-                        <option value="zh-CN">🇨🇳 Tiếng Trung (zh-CN)</option>
-                        <option value="en">🇬🇧 Tiếng Anh (en)</option>
-                        <option value="vi-VN">🇻🇳 Tiếng Việt (vi-VN)</option>
+                        <option value="zh-CN">🇨🇳 Chinese (zh-CN)</option>
+                        <option value="en">🇬🇧 English (en)</option>
+                        <option value="vi-VN">🇻🇳 Vietnamese (vi-VN)</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">Mô tả bài học:</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">Lesson Description:</label>
                       <input
                         type="text"
                         value={newDesc}
                         onChange={(e) => setNewDesc(e.target.value)}
-                        placeholder="Mô tả mục tiêu của bộ bài học này..."
+                        placeholder="Describe learning goals for this deck..."
                         className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none transition"
                       />
                     </div>
@@ -798,7 +798,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Wand2 className="w-3.5 h-3.5" />
-                    Hoặc tải tài liệu PDF/Scan/Word để AI tự động trích xuất &rarr;
+                    Or upload PDF/Scan/Word files for automatic AI extraction &rarr;
                   </button>
 
                   <button
@@ -806,7 +806,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     disabled={!newTitle.trim()}
                     className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 cursor-pointer"
                   >
-                    Tạo & Chỉnh Sửa Ngay
+                    Create & Edit Now
                   </button>
                 </div>
               </form>
@@ -815,7 +815,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       )}
 
-      {/* Modal Xác Nhận Xóa Bộ Bài Học */}
+      {/* Modal Confirm Delete Deck */}
       {isConfirmDeleteOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
           <div className="bg-[#121826] border border-red-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
@@ -824,17 +824,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             <div className="text-center space-y-2">
-              <h3 className="text-lg font-black text-white">Xác Nhận Xóa Bộ Từ Vựng?</h3>
+              <h3 className="text-lg font-black text-white">Confirm Deck Deletion</h3>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Bạn có chắc chắn muốn xóa bộ từ vựng <span className="font-bold text-red-400">"{activeDeck.title}"</span>?
+                Are you sure you want to delete the deck <span className="font-bold text-red-400">"{activeDeck.title}"</span>?
               </p>
               <div className="p-3 rounded-xl bg-[#0B0F19] border border-gray-800 text-left text-xs text-gray-400 space-y-1">
-                <div>• Số từ vựng: <span className="text-white font-bold">{activeDeck.vocabulary_deck?.items?.length || 0} từ</span></div>
-                <div>• Số câu hỏi quiz: <span className="text-white font-bold">{activeDeck.quiz_deck?.items?.length || 0} câu</span></div>
-                <div>• Ngôn ngữ: <span className="text-cyan-300 font-mono">{activeDeck.vocabulary_deck?.target_language || 'Chưa định nghĩa'}</span></div>
+                <div>• Vocabulary: <span className="text-white font-bold">{activeDeck.vocabulary_deck?.items?.length || 0} words</span></div>
+                <div>• Quiz items: <span className="text-white font-bold">{activeDeck.quiz_deck?.items?.length || 0} quizzes</span></div>
+                <div>• Language: <span className="text-cyan-300 font-mono">{activeDeck.vocabulary_deck?.target_language || 'Undefined'}</span></div>
               </div>
               <p className="text-[11px] text-gray-500">
-                Lưu ý: Dữ liệu bộ từ này sẽ bị gỡ khỏi danh sách và bộ nhớ máy.
+                Note: This deck will be permanently removed from your library and local storage.
               </p>
             </div>
 
@@ -844,7 +844,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 onClick={() => setIsConfirmDeleteOpen(false)}
                 className="flex-1 py-2.5 rounded-xl border border-gray-700 hover:border-gray-500 text-xs font-bold text-gray-300 hover:text-white transition cursor-pointer"
               >
-                Hủy Bỏ
+                Cancel
               </button>
               <button
                 type="button"
@@ -852,7 +852,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-lg shadow-red-600/30 flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
-                <span>Xác Nhận Xóa</span>
+                <span>Confirm Delete</span>
               </button>
             </div>
           </div>

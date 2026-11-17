@@ -25,7 +25,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
   const handleTestKey = async () => {
     const cleanKey = sanitizeGeminiApiKey(apiKey);
     if (!cleanKey) {
-      setTestResult({ success: false, error: 'Vui lòng nhập mã API Key trước khi kiểm tra.' });
+      setTestResult({ success: false, error: 'Please enter an API Key before testing.' });
       return;
     }
 
@@ -38,7 +38,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
         localStorage.setItem('gemini_api_key', cleanKey);
       }
     } catch (e: any) {
-      setTestResult({ success: false, error: e?.message || 'Lỗi mạng không xác định' });
+      setTestResult({ success: false, error: e?.message || 'Unknown network error' });
     } finally {
       setIsTesting(false);
     }
@@ -77,8 +77,8 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
               <Key className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-white font-game tracking-wider">Cấu Hình Gemini API</h3>
-              <p className="text-xs text-gray-400">Kết nối trực tiếp Google AI Studio & Gemini Models</p>
+              <h3 className="text-lg font-black text-white font-game tracking-wider">Gemini API Configuration</h3>
+              <p className="text-xs text-gray-400">Direct integration with Google AI Studio & Gemini Models</p>
             </div>
           </div>
           <button 
@@ -92,13 +92,13 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
         {/* Body Content */}
         <div className="mt-5 space-y-4">
           <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-            Nhập <span className="text-cyan-400 font-bold">Google Gemini API Key</span> của bạn để phân tích sách, tài liệu học tập, sinh câu hỏi và tương tác AI trực tiếp từ trình duyệt mà không bị giới hạn.
+            Enter your <span className="text-cyan-400 font-bold">Google Gemini API Key</span> to analyze textbooks, learning documents, generate quizzes, and chat with AI directly in your browser without restrictions.
           </p>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs uppercase tracking-wider text-gray-300 font-bold">
-                Mã API Key (AIzaSy... hoặc AQ...)
+                API Key (AIzaSy... or AQ...)
               </label>
               <button
                 type="button"
@@ -106,7 +106,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                 className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
               >
                 {showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                <span>{showKey ? 'Ẩn mã' : 'Hiện mã'}</span>
+                <span>{showKey ? 'Hide key' : 'Show key'}</span>
               </button>
             </div>
 
@@ -118,7 +118,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                   setApiKey(e.target.value);
                   setTestResult(null);
                 }}
-                placeholder="Dán mã API Key (ví dụ: AQ.Ab8... hoặc AIzaSy...)"
+                placeholder="Paste API Key (e.g.: AQ.Ab8... or AIzaSy...)"
                 className="w-full bg-[#0B0F19] border border-gray-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/40 transition font-mono pr-28"
               />
 
@@ -131,10 +131,10 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                 {isTesting ? (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Đang thử...</span>
+                    <span>Testing...</span>
                   </>
                 ) : (
-                  <span>Kiểm Tra</span>
+                  <span>Test Key</span>
                 )}
               </button>
             </div>
@@ -155,11 +155,11 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                 )}
                 <div>
                   <div className="font-bold text-sm mb-0.5">
-                    {testResult.success ? 'Kết Nối Thành Công!' : 'Kết Nối Thất Bại'}
+                    {testResult.success ? 'Connection Succeeded!' : 'Connection Failed'}
                   </div>
                   <div>
                     {testResult.success ? (
-                      <span>Đã xác thực thành công với Google Gemini! Mô hình khả dụng: <strong className="text-white font-mono">{testResult.model}</strong>. Bạn có thể sử dụng AI để tạo bài học ngay bây giờ!</span>
+                      <span>Successfully authenticated with Google Gemini! Active model: <strong className="text-white font-mono">{testResult.model}</strong>. You can now use AI to generate interactive lessons!</span>
                     ) : (
                       <span>{testResult.error}</span>
                     )}
@@ -173,7 +173,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
           <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-start gap-2.5 text-xs text-amber-200 leading-relaxed">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
             <div>
-              <span className="font-bold">Lưu ý:</span> Khóa API của bạn được lưu an toàn cục bộ trong trình duyệt của bạn (LocalStorage) và gửi trực tiếp tới máy chủ Google khi tạo bài học, hoàn toàn bảo mật.
+              <span className="font-bold">Privacy Note:</span> Your API Key is stored securely in your browser's LocalStorage and sent directly to Google servers during generation.
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
               onClick={handleClear}
               className="px-3.5 py-2 text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition cursor-pointer"
             >
-              Xóa Key Này
+              Clear Key
             </button>
           ) : <div />}
 
@@ -194,7 +194,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
               onClick={onClose}
               className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-gray-200 transition cursor-pointer"
             >
-              Hủy
+              Cancel
             </button>
 
             <button
@@ -202,7 +202,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
               className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-cyan-500/20 cursor-pointer transform hover:scale-105"
             >
               {saved ? <Check className="w-4 h-4" /> : null}
-              <span>{saved ? 'Đã Lưu Thành Công!' : 'Lưu Cấu Hình'}</span>
+              <span>{saved ? 'Saved Successfully!' : 'Save Configuration'}</span>
             </button>
           </div>
         </div>

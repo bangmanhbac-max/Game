@@ -18,14 +18,14 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
   const [saveNotification, setSaveNotification] = useState(false);
 
   const gestureOptions: { value: StrokeGestureType; label: string }[] = [
-    { value: 'horizontal', label: '— Ngang' },
-    { value: 'vertical', label: '| Sổ' },
-    { value: 'slash', label: '/ Phẩy' },
-    { value: 'backslash', label: '\\ Mác' },
+    { value: 'horizontal', label: '— Horizontal' },
+    { value: 'vertical', label: '| Vertical' },
+    { value: 'slash', label: '/ Slash' },
+    { value: 'backslash', label: '\\ Backslash' },
     { value: 'v_shape', label: 'V Shape' },
     { value: 'caret', label: '^ Caret' },
-    { value: 'circle', label: 'O Tròn' },
-    { value: 'lightning', label: '⚡ Chớp' },
+    { value: 'circle', label: '◯ Circle' },
+    { value: 'lightning', label: '⚡ Lightning' },
   ];
 
   const handleUpdateVocab = (index: number, field: keyof VocabularyItem, val: string | number) => {
@@ -40,7 +40,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
       target_text: '新词',
       phonetic: 'xīncí',
       type_target: 'xinci',
-      meaning: 'Từ mới',
+      meaning: 'New word',
       difficulty: 1,
       stroke_gesture: 'horizontal',
     };
@@ -83,7 +83,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-800">
         <div className="flex-1">
           <label className="text-xs uppercase tracking-wider text-gray-400 font-bold mb-1 block">
-            Tiêu Đề Bài Học
+            Lesson Deck Title
           </label>
           <input
             type="text"
@@ -100,7 +100,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
             className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm border border-gray-700 transition"
           >
             <Save className="w-4 h-4 text-cyan-400" />
-            <span>{saveNotification ? 'Đã Lưu Bộ Thẻ!' : 'Lưu Bộ Thẻ'}</span>
+            <span>{saveNotification ? 'Deck Saved!' : 'Save Deck'}</span>
           </button>
         </div>
       </div>
@@ -110,9 +110,9 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
         <div>
           <h4 className="font-bold text-white text-sm flex items-center gap-2">
             <Gamepad2 className="w-4 h-4 text-cyan-400" />
-            Chọn Game Để Bắt Đầu Học:
+            Launch Game With This Deck:
           </h4>
-          <p className="text-xs text-gray-400">Tất cả dữ liệu từ vựng bên dưới sẽ được nạp ngay vào game</p>
+          <p className="text-xs text-gray-400">All vocabulary below will be immediately loaded into the game</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -121,7 +121,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
             className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-amber-500/20"
           >
             <span>🐔</span>
-            <span>Chơi Bắn Gà</span>
+            <span>Play Stark Typist</span>
             <Play className="w-3.5 h-3.5 fill-black" />
           </button>
 
@@ -130,7 +130,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
             className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-pink-500/20"
           >
             <span>✨</span>
-            <span>Chơi Vẽ Chữ (Magic)</span>
+            <span>Play Mystic Rune</span>
             <Play className="w-3.5 h-3.5 fill-white" />
           </button>
 
@@ -139,7 +139,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
             className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-black font-bold px-4 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-500/20"
           >
             <HelpCircle className="w-4 h-4" />
-            <span>Đấu Trường Quiz</span>
+            <span>Play Speed Quiz</span>
             <Play className="w-3.5 h-3.5 fill-black" />
           </button>
         </div>
@@ -155,7 +155,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
               : 'text-gray-400 hover:text-white'
           }`}
         >
-          <span>Danh Sách Từ Vựng & Nét Vẽ ({vocabItems.length})</span>
+          <span>Vocabulary & Gestures ({vocabItems.length})</span>
         </button>
 
         <button
@@ -166,7 +166,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
               : 'text-gray-400 hover:text-white'
           }`}
         >
-          <span>Câu Hỏi Trắc Nghiệm ({quizItems.length})</span>
+          <span>Quiz Questions ({quizItems.length})</span>
         </button>
       </div>
 
@@ -184,14 +184,14 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => soundManager.speakText(item.target_text)}
-                      title="Nghe phát âm"
+                      title="Listen pronunciation"
                       className="p-1 rounded-lg text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition"
                     >
                       <Volume2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteVocab(idx)}
-                      title="Xóa từ này"
+                      title="Delete word"
                       className="p-1 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -202,7 +202,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] text-gray-400 font-semibold mb-0.5 block">
-                      Từ Gốc / Chữ Cứng
+                      Target Text / Character
                     </label>
                     <input
                       type="text"
@@ -214,7 +214,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
 
                   <div>
                     <label className="text-[11px] text-gray-400 font-semibold mb-0.5 block">
-                      Phiên Âm / Pinyin
+                      Phonetics / Pinyin / IPA
                     </label>
                     <input
                       type="text"
@@ -228,7 +228,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] text-gray-400 font-semibold mb-0.5 block">
-                      Ký Tự Gõ Phím (Type Target)
+                      Typing Target (Galaxy Shooter)
                     </label>
                     <input
                       type="text"
@@ -240,7 +240,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
 
                   <div>
                     <label className="text-[11px] text-gray-400 font-semibold mb-0.5 block">
-                      Cử Chỉ Nét Vẽ (Magic Stroke)
+                      Gesture Stroke (Magic Touch)
                     </label>
                     <select
                       value={item.stroke_gesture}
@@ -258,7 +258,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
 
                 <div>
                   <label className="text-[11px] text-gray-400 font-semibold mb-0.5 block">
-                    Ý Nghĩa Tiếng Việt
+                    English Meaning
                   </label>
                   <input
                     type="text"
@@ -276,7 +276,7 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
             className="w-full py-3 border border-dashed border-gray-700 hover:border-cyan-400 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold text-cyan-400 hover:bg-cyan-500/10 transition cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Thêm Từ Vựng Mới</span>
+            <span>Add New Vocabulary</span>
           </button>
         </div>
       )}
@@ -290,12 +290,12 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
               className="bg-[#0B0F19] border border-gray-800 rounded-2xl p-5 space-y-4"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-purple-400">Câu Hỏi #{qIdx + 1}</span>
-                <span className="text-xs text-gray-500">100 Điểm</span>
+                <span className="text-xs font-bold text-purple-400">Question #{qIdx + 1}</span>
+                <span className="text-xs text-gray-500">100 Points</span>
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 font-semibold mb-1 block">Nội dung câu hỏi</label>
+                <label className="text-xs text-gray-400 font-semibold mb-1 block">Question Prompt</label>
                 <input
                   type="text"
                   value={q.question}
@@ -337,12 +337,12 @@ export const DeckEditor: React.FC<DeckEditorProps> = ({ packageData, onSave, onL
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 font-semibold mb-1 block">Giải thích đáp án</label>
+                <label className="text-xs text-gray-400 font-semibold mb-1 block">Answer Explanation</label>
                 <input
                   type="text"
                   value={q.explanation || ''}
                   onChange={(e) => handleUpdateQuiz(qIdx, 'explanation', e.target.value)}
-                  placeholder="Giải thích vì sao đáp án đúng..."
+                  placeholder="Explain why this answer is correct..."
                   className="w-full bg-[#161F30] border border-gray-700 focus:border-cyan-400 rounded-xl px-4 py-1.5 text-xs text-gray-300 focus:outline-none"
                 />
               </div>

@@ -77,9 +77,9 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
   if (!currentItem) {
     return (
       <div className="p-8 text-center text-white">
-        <p>Chưa có từ vựng nào trong bộ thẻ.</p>
+        <p>No vocabulary cards found in this deck.</p>
         <button onClick={handleExit} className="mt-4 px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold">
-          Về Menu
+          Return to Menu
         </button>
       </div>
     );
@@ -93,12 +93,12 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
           onClick={handleExit}
           className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#161F30] hover:bg-[#1f2b42] border border-gray-700 text-xs font-bold text-gray-300 transition cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" /> Về Danh Sách Game
+          <ArrowLeft className="w-4 h-4" /> Back to Game Universe
         </button>
 
         <div className="flex items-center gap-2 bg-[#161F30] border border-cyan-500/30 rounded-2xl px-4 py-2 text-xs text-cyan-300 font-mono font-bold">
           <Layers className="w-4 h-4 text-cyan-400" />
-          <span>Thẻ: {currentIndex + 1} / {activeItems.length}</span>
+          <span>Card: {currentIndex + 1} / {activeItems.length}</span>
         </div>
       </div>
 
@@ -128,7 +128,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  {isFlipped ? 'MẶT SAU: Ý NGHĨA & VÍ DỤ' : 'MẶT TRƯỚC: TỪ VỰNG GỐC'}
+                  {isFlipped ? 'BACK: MEANING & CONTEXT' : 'FRONT: TARGET WORD'}
                 </span>
 
                 <button
@@ -138,7 +138,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
                     speakWord(currentItem.target_text);
                   }}
                   className="p-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition cursor-pointer"
-                  title="Phát âm từ vựng"
+                  title="Pronounce word"
                 >
                   <Volume2 className="w-5 h-5" />
                 </button>
@@ -158,7 +158,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
                   {/* Character breakdown */}
                   {currentItem.characters && currentItem.characters.length > 0 && (
                     <div className="flex items-center justify-center gap-2 pt-2">
-                      <span className="text-xs text-gray-400 font-semibold">Chữ cấu thành:</span>
+                      <span className="text-xs text-gray-400 font-semibold">Component characters:</span>
                       {currentItem.characters.map((c, i) => (
                         <span key={i} className="px-2.5 py-1 rounded-lg bg-cyan-500/15 text-cyan-300 text-sm font-bold border border-cyan-500/30 font-mono">
                           {c}
@@ -179,8 +179,8 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
                     </p>
                   )}
                   <div className="flex items-center justify-center gap-4 text-xs text-gray-400 pt-2">
-                    <span>Độ khó: {Array.from({ length: currentItem.difficulty }).map(() => '⭐').join('')}</span>
-                    <span>Gõ phím: <strong className="text-cyan-400 font-mono">{currentItem.type_target}</strong></span>
+                    <span>Difficulty: {Array.from({ length: currentItem.difficulty }).map(() => '⭐').join('')}</span>
+                    <span>Typing: <strong className="text-cyan-400 font-mono">{currentItem.type_target}</strong></span>
                   </div>
                 </div>
               )}
@@ -188,7 +188,7 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
               {/* Card Bottom Hint */}
               <div className="text-center">
                 <span className="text-xs text-gray-500 group-hover:text-cyan-400 transition flex items-center justify-center gap-1.5 font-medium">
-                  <RotateCw className="w-3.5 h-3.5" /> Nhấp vào thẻ để lật mặt
+                  <RotateCw className="w-3.5 h-3.5" /> Click card to flip
                 </span>
               </div>
             </div>
@@ -200,14 +200,14 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
               onClick={() => handleNext(false)}
               className="py-4 rounded-2xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 font-bold text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>🔴 Cần Ôn Lại (Chưa nhớ)</span>
+              <span>🔴 Needs Review (Forgot)</span>
             </button>
             <button
               onClick={() => handleNext(true)}
               className="py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle className="w-4 h-4" />
-              <span>🟢 Đã Thuộc Lòng (Tiếp theo)</span>
+              <span>🟢 Mastered (Next)</span>
             </button>
           </div>
         </div>
@@ -219,18 +219,18 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
           </div>
 
           <div>
-            <h2 className="text-2xl font-black text-white">XUẤT SẮC! HOÀN THÀNH BỘ FLASHCARD</h2>
-            <p className="text-sm text-gray-400 mt-1">Bạn đã duyệt qua toàn bộ {activeItems.length} thẻ từ vựng.</p>
+            <h2 className="text-2xl font-black text-white">OUTSTANDING! FLASHCARD DECK COMPLETED</h2>
+            <p className="text-sm text-gray-400 mt-1">You reviewed all {activeItems.length} vocabulary flashcards.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <div className="bg-[#0b0f19] p-4 rounded-2xl border border-emerald-500/30">
               <span className="text-2xl font-black text-emerald-400 block">{masteredCount}</span>
-              <span className="text-xs text-gray-400 font-semibold">Đã thuộc làu</span>
+              <span className="text-xs text-gray-400 font-semibold">Mastered</span>
             </div>
             <div className="bg-[#0b0f19] p-4 rounded-2xl border border-red-500/30">
               <span className="text-2xl font-black text-red-400 block">{reviewCount}</span>
-              <span className="text-xs text-gray-400 font-semibold">Cần ôn lại</span>
+              <span className="text-xs text-gray-400 font-semibold">Needs Review</span>
             </div>
           </div>
 
@@ -239,13 +239,13 @@ export const FlashcardArena: React.FC<FlashcardArenaProps> = ({
               onClick={restartDeck}
               className="px-6 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/30 flex items-center gap-2 cursor-pointer"
             >
-              <RefreshCw className="w-4 h-4" /> Học Lại Bộ Này
+              <RefreshCw className="w-4 h-4" /> Review This Deck
             </button>
             <button
               onClick={handleExit}
               className="px-6 py-3 rounded-2xl bg-[#1e293b] hover:bg-[#334155] text-gray-300 font-bold text-sm transition cursor-pointer"
             >
-              Về Danh Sách Game
+              Back to Game Universe
             </button>
           </div>
         </div>

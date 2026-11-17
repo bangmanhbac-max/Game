@@ -1,24 +1,24 @@
 export type StrokeGestureType = 
-  | 'horizontal'  // Nét ngang (-)
-  | 'vertical'    // Nét sổ (|)
-  | 'slash'       // Nét phẩy (/)
-  | 'backslash'   // Nét mác (\)
-  | 'v_shape'     // Chữ V
-  | 'caret'       // Nét mũ (^)
-  | 'circle'      // Hình tròn (O)
-  | 'lightning';  // Tia chớp (Z)
+  | 'horizontal'  // Horizontal stroke (-)
+  | 'vertical'    // Vertical stroke (|)
+  | 'slash'       // Slash stroke (/)
+  | 'backslash'   // Backslash stroke (\)
+  | 'v_shape'     // V-Shape
+  | 'caret'       // Caret stroke (^)
+  | 'circle'      // Circle (O)
+  | 'lightning';  // Lightning bolt (Z)
 
 export interface VocabularyItem {
   id: string;
-  target_text: string;     // vd: 你好
-  phonetic: string;        // vd: nǐ hǎo
-  type_target: string;     // vd: nihao (chuỗi cần gõ)
-  meaning: string;         // vd: Xin chào
-  example?: string;        // vd: 你好！
+  target_text: string;     // e.g., 你好
+  phonetic: string;        // e.g., nǐ hǎo
+  type_target: string;     // e.g., nihao (keystroke target string)
+  meaning: string;         // e.g., Hello
+  example?: string;        // e.g., 你好！
   difficulty: number;      // 1-5
   stroke_gesture: StrokeGestureType;
-  characters?: string[];   // vd: ["你", "好"] từng chữ cứng đơn vị ghép chữ trong game ma
-  stroke_count?: number;   // số nét ước tính
+  characters?: string[];   // e.g., ["你", "好"] glyph components for rune/magic games
+  stroke_count?: number;   // estimated stroke count
 }
 
 
